@@ -10,12 +10,3 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
-class Request(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='requests')
-    title = models.CharField(max_length=200)
-    status = models.CharField(max_length=50)
-    date = models.DateField()
-    description = models.TextField()
-
-    def __str__(self):
-        return self.title

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'eduassist_app',
     'accounts',
+    'request',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DATABASES = {
     "default": dj_database_url.config(
-    default="sqlite:///db.sqlite3",
+    default=os.getenv("DATABASE_URL"),
     conn_max_age=600, # persistent connections
     ssl_require=True # enforce SSL
     )
