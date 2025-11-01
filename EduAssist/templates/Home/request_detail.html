@@ -46,10 +46,25 @@
       <div class="description-box">{{ req.description }}</div>
     </div>
 
+    <div class="detail-item">
+      <strong>Attachment:</strong>
+      {% if req.attachment %}
+        <a href="{{ req.attachment.url }}" target="_blank">View Attachment</a>
+      {% else %}
+        <span>No attachment provided.</span>
+      {% endif %}
+
+    </div>
+
     <div class="detail-actions">
       {% if request.user == req.user or request.user.is_staff %}
       <a href="{% url 'edit_request' req.id %}" class="btn-primary">Edit</a>
-      <a href="{% url 'delete_request' req.id %}" class="btn-danger" onclick="return confirm('Are you sure you want to delete this request?');">Delete</a>
+      <form id="delete-form" method="POST" action="{% url 'delete_request' req.id %}" style="display:none;">
+        {% csrf_token %}
+      </form>
+      <a href="#" class="btn-danger" onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this request?')) { document.getElementById('delete-form').submit(); }">
+        Delete
+      </a>
       {% endif %}
       <a href="{% url 'dashboard' %}" class="btn-secondary">Back</a>
     </div>
