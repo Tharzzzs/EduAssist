@@ -1,0 +1,277 @@
+/* Dashboard - EduAssist Theme */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f7f6f3;
+  margin: 0;
+  padding: 0;
+  color: #1e1e2f;
+  line-height: 1.6;
+}
+
+/* ===== Navbar (Matched with Edit Request Page) ===== */
+header {
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 3rem;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: 0.5px;
+}
+
+nav {
+  display: flex;
+  gap: 2rem;
+}
+
+nav a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  padding: 0.4rem 0.6rem;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect: underline grows in smoothly */
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background-color: #000;
+  transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* Optional: soft background fade */
+nav a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+}
+
+.user-icon {
+  color: #000;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+}
+
+.user-icon:hover {
+  transform: scale(1.05);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ===== Main Container ===== */
+.container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== Top Actions ===== */
+.top-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Primary Buttons */
+.top-actions a {
+  background: #000;
+  color: #fff;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.top-actions a:hover {
+  background: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Search Bar ===== */
+#search {
+  padding: 0.7rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 250px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+#search:focus {
+  outline: none;
+  border-color: #000;
+}
+
+/* ===== Table ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+table th,
+table td {
+  padding: 1rem 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+table th {
+  background: #f8f9fa;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.8px;
+  color: #000;
+  font-weight: 700;
+}
+
+table tr:hover {
+  background: #f9faff;
+}
+
+/* ===== Status Badges ===== */
+.status {
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status.Pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.Approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.Cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ===== View Button ===== */
+.view-btn {
+  background: #000;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.view-btn:hover {
+  background: #333;
+  transform: translateY(-1px);
+}
+
+/* ===== Empty State ===== */
+p.empty {
+  text-align: center;
+  color: #777;
+  font-size: 1rem;
+  margin-top: 2rem;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #a9aba9;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  nav {
+    gap: 1rem;
+  }
+
+  .container {
+    padding: 1.5rem;
+  }
+
+  .top-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #search {
+    width: 100%;
+  }
+
+  table th,
+  table td {
+    font-size: 0.85rem;
+    padding: 0.7rem 0.5rem;
+  }
+
+  .button,
+  .view-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+
+#noResultsMessage {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .filter-select {
+      margin-left: 10px;
+      padding: 5px;
+      border-radius: 5px;
+    }

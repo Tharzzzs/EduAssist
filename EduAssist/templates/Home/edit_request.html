@@ -45,6 +45,21 @@
         <label for="description">Description:</label>
         <textarea id="description" name="description" rows="4" required>{{ request_obj.description }}</textarea>
 
+        <div class="form-group">
+          <label for="attachment">Attachment (optional):</label>
+
+          {% if request_obj.attachment %}
+            <p>Current file:
+              <a href="{{ request_obj.attachment.url }}" target="_blank">
+                {{ request_obj.attachment.name|cut:"/" }}
+              </a>
+            </p>
+          {% else %}
+            <p>No attachment uploaded.</p>
+          {% endif %}
+
+          <input type="file" id="attachment" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+        </div>
         <hr>
         <div class="btn-group">
           <button type="submit" class="button edit">Save Changes</button>
