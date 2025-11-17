@@ -1,0 +1,124 @@
+/* Tag Chips */
+.tag-chip {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 4px;
+    background: #eef;
+    border-radius: 12px;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.tag-chip:hover {
+    background: #ddf;
+}
+
+.tag-chip .remove {
+    margin-left: 6px;
+    cursor: pointer;
+    color: #900;
+    font-weight: bold;
+}
+
+.tag-chip .remove:hover {
+    color: #c00;
+}
+
+/* Tag Input Area */
+.tag-input-area {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+#tagTextInput {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#suggestions {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.suggest-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggest-item:hover {
+    background: #f0f0f0;
+}
+
+/* Tag Container */
+#tagChips {
+    margin: 8px 0;
+    min-height: 36px;
+    padding: 4px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+/* Error Messages */
+.error {
+    color: #900;
+    display: none;
+    margin: 5px 0;
+    padding: 8px;
+    background: #fee;
+    border-radius: 4px;
+}
+
+/* Category Form */
+.category-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.category-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.category-form input,
+.category-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Request List Tags */
+.tag-cell {
+    min-width: 150px;
+}
+
+.tag-filter-area {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.tag-filter-active {
+    background: #007bff;
+    color: white;
+}
+
+.no-results {
+    padding: 2rem;
+    text-align: center;
+    color: #666;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin: 1rem 0;
+}

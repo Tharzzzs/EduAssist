@@ -94,6 +94,9 @@ body {
     background: #333333; /* Slightly lighter black */
     transform: translateY(-2px); /* Lift button slightly */
 }
+.dot.red { background: #fc605d; }
+.dot.yellow { background: #fdbc40; }
+.dot.green { background: #34c749; }
 
 /* --- Hero Section (Main Content) --- */
 .hero {
