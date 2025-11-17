@@ -7,62 +7,130 @@
   <link rel="stylesheet" href="{% static 'pos_app/css/add_requestStyle.css' %}">
 </head>
 <body>
-  <!-- ===== NAVIGATION BAR ===== -->
-   <header>
+  <header>
     <div class="logo">EduAssist</div>
     <nav>
       <a href="{% url 'dashboard' %}">Request</a>
       {% if user.is_staff %}
-      <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+        <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
       {% endif %}
       <a href="{% url 'add_request' %}">New Request</a>
       <a href="{% url 'logout' %}">Logout</a>
     </nav>
     <a class="user-icon" href="{% url 'profile' %}">Profile</a>
   </header>
-  
 
-  <!-- ===== MAIN CONTENT ===== -->
   <main>
     <div class="card">
-      <h1>Add New Request</h1>
-      <p class="subtitle">Fill out the form below to submit a new request.</p>
+      <h1>Submit a New Query</h1>
+      <p class="subtitle">Fill out the form below to submit your query.</p>
 
-      <form method="post" class="request-form">
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" class="request-form">
         {% csrf_token %}
 
+        <!-- Title -->
         <div class="form-group">
           <label for="title">Title:</label>
-          <input type="text" id="title" name="title" required>
+          <input type="text" id="title" name="title" required value="{{ request.POST.title }}">
         </div>
 
+        <!-- Status -->
         <div class="form-group">
           <label for="status">Status:</label>
           <select id="status" name="status" required>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Cancelled">Cancelled</option>
+            <option value="pending" {% if request.POST.status == "pending" %}selected{% endif %}>Pending</option>
+            <option value="approved" {% if request.POST.status == "approved" %}selected{% endif %}>Approved</option>
+            <option value="cancelled" {% if request.POST.status == "cancelled" %}selected{% endif %}>Cancelled</option>
           </select>
         </div>
 
+        <!-- Priority -->
+        <div class="form-group">
+          <label for="priority">Priority:</label>
+          <select id="priority" name="priority" required>
+            <option value="low" {% if request.POST.priority == "low" %}selected{% endif %}>Low</option>
+            <option value="medium" {% if request.POST.priority == "medium" %}selected{% endif %}>Medium</option>
+            <option value="high" {% if request.POST.priority == "high" %}selected{% endif %}>High</option>
+            <option value="critical" {% if request.POST.priority == "critical" %}selected{% endif %}>Critical</option>
+          </select>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label for="category">Category:</label>
+          <select id="category" name="category" required>
+            <option value="">Please select a category</option>
+            <option value="1" {% if request.POST.category == "1" %}selected{% endif %}>Academic</option>
+            <option value="2" {% if request.POST.category == "2" %}selected{% endif %}>Finance</option>
+            <option value="3" {% if request.POST.category == "3" %}selected{% endif %}>Technical</option>
+            <option value="4" {% if request.POST.category == "4" %}selected{% endif %}>Administrative</option>
+          </select>
+        </div>
+
+        <!-- Category Choice / Query Type -->
+        <div class="form-group">
+          <label for="category_choice">Query Type:</label>
+          <select id="category_choice" name="category_choice" required>
+            <option value="">Please select a query type</option>
+
+            <!-- Academic (Category ID = 1) -->
+            <option value="1" {% if request.POST.category_choice == "1" %}selected{% endif %}>Academic - Course Material</option>
+            <option value="2" {% if request.POST.category_choice == "2" %}selected{% endif %}>Academic - Grades</option>
+            <option value="3" {% if request.POST.category_choice == "3" %}selected{% endif %}>Academic - Assignments</option>
+            <option value="4" {% if request.POST.category_choice == "4" %}selected{% endif %}>Academic - Exam Schedule</option>
+
+            <!-- Finance (Category ID = 2) -->
+            <option value="5" {% if request.POST.category_choice == "5" %}selected{% endif %}>Finance - Tuition Fee</option>
+            <option value="6" {% if request.POST.category_choice == "6" %}selected{% endif %}>Finance - Scholarship</option>
+            <option value="7" {% if request.POST.category_choice == "7" %}selected{% endif %}>Finance - Refund</option>
+
+            <!-- Technical (Category ID = 3) -->
+            <option value="8" {% if request.POST.category_choice == "8" %}selected{% endif %}>Technical - Login Issue</option>
+            <option value="9" {% if request.POST.category_choice == "9" %}selected{% endif %}>Technical - Software Installation</option>
+            <option value="10" {% if request.POST.category_choice == "10" %}selected{% endif %}>Technical - Network Issue</option>
+
+            <!-- Administrative (Category ID = 4) -->
+            <option value="11" {% if request.POST.category_choice == "11" %}selected{% endif %}>Administrative - ID Card</option>
+            <option value="12" {% if request.POST.category_choice == "12" %}selected{% endif %}>Administrative - Room Allocation</option>
+            <option value="13" {% if request.POST.category_choice == "13" %}selected{% endif %}>Administrative - Library Access</option>
+          </select>
+        </div>
+
+        <!-- Date -->
         <div class="form-group">
           <label for="date">Date:</label>
-          <input type="date" id="date" name="date" required>
+          <input type="date" id="date" name="date" required value="{{ request.POST.date }}">
         </div>
 
+        <!-- Description -->
         <div class="form-group">
           <label for="description">Description:</label>
-          <textarea id="description" name="description"></textarea>
+          <textarea id="description" name="description">{{ request.POST.description }}</textarea>
         </div>
 
+        <!-- Tags -->
         <div class="form-group">
-          <label for="attachment">Attachment (Optional): </label>
-          <input type="file" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+          <label for="tags">Tags (Separate with commas):</label>
+          <input type="text" id="tags" name="tags" placeholder="urgent, bug, finance" value="{{ request.POST.tags }}">
+        </div>
+
+        <!-- Attachment -->
+        <div class="form-group">
+          <label for="attachment">Attachment (Optional):</label>
+          <input type="file" id="attachment" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
         </div>
 
         <hr>
         <div class="btn-group">
-          <button type="submit" class="button save">Save</button>
+          <button type="submit" class="button save">Submit</button>
           <a href="{% url 'dashboard' %}" class="button cancel">Back</a>
         </div>
       </form>
