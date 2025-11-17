@@ -2,37 +2,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'pos_app/css/register.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - EduAssist</title>
+    <link rel="stylesheet" href="{% static 'pos_app/css/register.css' %}">
 </head>
 <body>
-  <div class="register-container">
-    <h2>Register now!</h2>
-    <p class="subtitle">
-      From Queries to Clarity – Instantly. Sign up to enjoy smoother services and save your Queries!
-    </p>
+    <div class="auth-container">
+        <div class="logo-area">
+            <h1 class="logo">Edu<span class="highlight-logo">Assist</span></h1> 
+        </div>
 
-    <form method="post">
-      {% csrf_token %}
-      <input type="text" name="username" placeholder="Enter Full Name" required>
-      <input type="email" name="email" placeholder="Enter Email" required>
-      <input type="password" name="password" placeholder="Enter Password" required>
-      <input type="password" name="password2" placeholder="Enter Confirm Password" required>
-      <a href="#" class="forgot">Forgot Password?</a>
-      <button type="submit">Sign Up</button>
-    </form>
+        <h2 class="title">Get Started!</h2>
+        <p class="subtitle">
+            From Queries to Clarity – Instantly. Sign up to enjoy smoother services.
+        </p>
 
-    {% if messages %}
-      {% for message in messages %}
-        <p class="message">{{ message }}</p>
-      {% endfor %}
-    {% endif %}
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Confirm Password" required>
+            
+            <button type="submit" class="btn-primary">Sign Up</button>
+        </form>
 
-    <p class="login-link">Already have an account? <a href="{% url 'login' %}">Sign in here.</a></p>
-  </div>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="message">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <p class="login-link">Already have an account? <a href="{% url 'login' %}">Sign in here.</a></p>
+    </div>
 </body>
 </html>
- 
