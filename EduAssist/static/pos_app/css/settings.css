@@ -1,0 +1,238 @@
+/* ===== Base Color Palette ===== */
+:root {
+    --primary-red: #8B0000;
+    --dark-gray: #1e1e1e;
+    --light-gray: #f0f0f0;
+    --border: #e0e0e0;
+}
+
+/* ===== Container ===== */
+.settings-container {
+    width: 55%;
+    max-width: 780px;
+    margin: 50px auto;
+    padding: 35px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    transition: 0.3s ease;
+    font-family: "Segoe UI", sans-serif;
+    position: relative;
+}
+
+/* DARK MODE */
+.settings-container.dark {
+    background: #1e1e1e !important;
+    color: white !important;
+    border: 1px solid #333;
+}
+
+/* ===== Body ===== */
+body {
+    background: #ffffff;
+}
+
+body.dark {
+    background: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* ===== Titles ===== */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--primary-red);
+}
+
+.section h2 {
+    font-size: 19px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: var(--primary-red);
+}
+
+/* ===== Section Boxes ===== */
+.section {
+    background: #ffffff;
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    transition: 0.35s ease;
+}
+
+body.dark .section {
+    background: #262626 !important;
+    border-color: #3a3a3a;
+}
+
+/* ===== Labels & Inputs ===== */
+label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Moves toggle to the right */
+    padding: 12px 0;
+    font-size: 15px;
+    border-bottom: 1px solid var(--border);
+}
+label:last-child {
+    border-bottom: none;
+}
+
+/* ===== Dropdown ===== */
+.theme-select {
+    width: 180px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #bbb;
+    font-size: 15px;
+}
+
+body.dark .theme-select {
+    background: #333;
+    color: white;
+    border-color: #555;
+}
+
+/* ===== Toggles ===== */
+input[type="checkbox"] {
+    appearance: none;
+    width: 44px;
+    height: 24px;
+    background: #b3b3b3;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: 0.25s;
+}
+
+input[type="checkbox"]:checked {
+    background: var(--primary-red);
+}
+
+input[type="checkbox"]:checked::before {
+    transform: translateX(20px);
+}
+
+body.dark input[type="checkbox"] {
+    background: #777;
+}
+
+/* ===== Button ===== */
+.save-button {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.save-button:hover {
+    opacity: 0.92;
+}
+
+/* ===== Section Title with Icon ===== */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    font-size: 20px;
+    color: var(--primary-red);
+}
+
+/* Smooth transitions */
+html, body, .settings-container, .section {
+    transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+/* ===== Close Button ===== */
+.close-btn {
+    position: absolute;
+    top: 25px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: var(--primary-red);
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.close-btn:hover {
+    opacity: 0.7;
+}
+
+/* Message Styling */
+.success-message, .error-message {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.success-message {
+    background: #e6ffe6;
+    color: #006600;
+}
+
+.error-message {
+    background: #ffe6e6;
+    color: #990000;
+}
+
+/* ===== Fix: Theme section readability in dark mode ===== */
+body.dark .section-title i,
+body.dark .section h2,
+body.dark .h1,
+body.dark .section label,
+body.dark .section {
+    color: #ffffff !important;
+}
+
+body.dark .section {
+    background: #2a2a2a !important;
+    border-color: #3a3a3a !important;
+}
+
+/* Make description text white */
+body.dark .section label {
+    color: #ffffff !important;
+}
+
+/* ===== Fix: Toggles visibility in dark mode ===== */
+body.dark input[type="checkbox"] {
+    background: #444;            /* OFF state background */
+}
+
+body.dark input[type="checkbox"]::before {
+    background: #e6e6e6;         /* OFF state circle */
+}
+
+body.dark input[type="checkbox"]:checked {
+    background: var(--primary-red) !important;  /* ON track */
+}
+
+body.dark input[type="checkbox"]:checked::before {
+    background: white !important;  /* ON circle */
+}

@@ -1,0 +1,115 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Settings</title>
+
+    <link rel="stylesheet" href="{% static 'pos_app/css/settings.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="settings-container">
+
+    <!-- CLOSE BUTTON -->
+    <button type="button" class="close-btn" onclick="window.location.href='/dashboard/'">
+    <i class="fa-solid fa-xmark"></i>
+</button>
+
+
+    <h1>User Settings</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- ===== Theme Preferences ===== -->
+        <div class="section">
+            <h2 class="section-title"><i class="fa-solid fa-palette"></i> Theme Preferences</h2>
+
+            <label>
+                Choose Theme:
+                <select class="theme-select" name="theme" id="theme_selector">
+                    <option value="light" {% if not settings.dark_mode %}selected{% endif %}>Light Mode</option>
+                    <option value="dark" {% if settings.dark_mode %}selected{% endif %}>Dark Mode</option>
+                </select>
+            </label>
+        </div>
+
+       <!-- ===== Notification Settings ===== -->
+        <div class="section">
+            <h2 class="section-title"><i class="fa-solid fa-bell"></i> Notification Settings</h2>
+
+       <!-- Notification Email -->
+            <label>
+                Notification Email:
+                <input type="text" name="notification_email" 
+               value="{{ settings.notification_email }}">
+            </label>
+
+       <!-- Toggle -->
+            <label>
+                Receive Email Notifications
+                <input type="checkbox" name="receive_email" {% if settings.receive_email %}checked{% endif %}>
+            </label>
+</div>
+ 
+
+        <!-- ===== Privacy Options ===== -->
+        <div class="section">
+            <h2 class="section-title"><i class="fa-solid fa-user-shield"></i> Privacy Options</h2>
+
+            <label>Profile Visibility
+                <input type="checkbox" name="profile_visible" {% if settings.profile_visible %}checked{% endif %}>
+            </label>
+            
+
+            <label>Allow Data Sharing
+                <input type="checkbox" name="allow_data_sharing" {% if settings.allow_data_sharing %}checked{% endif %}>
+            </label>
+        </div>
+
+        <button type="submit" class="save-button">Save Changes</button>
+    </form>
+</div>
+
+<!-- ===== Theme Switching Script ===== -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const themeFromDB = "{{ settings.dark_mode|yesno:'dark,light' }}";
+        const container = document.querySelector(".settings-container");
+        const body = document.body;
+
+        if (themeFromDB === "dark") {
+            body.classList.add("dark");
+            container.classList.add("dark");
+        }
+
+        const themeSelector = document.getElementById("theme_selector");
+
+        themeSelector.addEventListener("change", function () {
+            if (themeSelector.value === "dark") {
+                body.classList.add("dark");
+                container.classList.add("dark");
+            } else {
+                body.classList.remove("dark");
+                container.classList.remove("dark");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

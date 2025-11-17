@@ -1,0 +1,55 @@
+/* ===========================
+   GLOBAL DARK MODE SYSTEM
+   =========================== */
+
+/* Apply dark backgrounds */
+html.dark, body.dark {
+    background: #1b1b1b !important;
+    color: white !important;
+}
+
+/* All cards/containers */
+html.dark .section,
+html.dark .card,
+html.dark .dashboard-container,
+html.dark .request-container,
+html.dark .profile-container,
+html.dark .content,
+html.dark .container,
+html.dark .box {
+    background: #262626 !important;
+    color: white !important;
+    border-color: #444 !important;
+}
+
+/* Inputs, select fields */
+html.dark input,
+html.dark select,
+html.dark textarea {
+    background: #333 !important;
+    color: white !important;
+    border-color: #666 !important;
+}
+
+/* Links */
+html.dark a {
+    color: #f8d7d7 !important;
+}
+
+/* Headers */
+html.dark h1, 
+html.dark h2, 
+html.dark h3 {
+    color: white !important;
+}
+
+/* Toggle fix */
+html.dark input[type="checkbox"] {
+    background: #555 !important;
+}
+html.dark input[type="checkbox"]:checked {
+    background: #8B0000 !important;
+}
+html.dark input[type="checkbox"]:checked::before {
+    background: white !important;
+}
