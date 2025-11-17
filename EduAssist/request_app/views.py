@@ -6,22 +6,42 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db.models import Q, Count
 from django.http import HttpResponseForbidden, JsonResponse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from .models import Request, Category, CategoryChoice, Tag
+from .models import Request, Tag
 from .forms import SearchForm, RequestForm
-from .serializers import RequestSerializer, CategorySerializer, TagSerializer
+from .serializers import RequestSerializer, TagSerializer
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-import json
 import re
-from datetime import datetime
 
+# ------------------------
+# Static Categories
+# ------------------------
+CATEGORY_CHOICES = [
+    ('Academic', 'Academic'),
+    ('Course Material', 'Course Material'),
+    ('Grades', 'Grades'),
+    ('Assignments', 'Assignments'),
+    ('Exam Schedule', 'Exam Schedule'),
+    ('Finance', 'Finance'),
+    ('Tuition Fee', 'Tuition Fee'),
+    ('Scholarship', 'Scholarship'),
+    ('Refund', 'Refund'),
+    ('Technical', 'Technical'),
+    ('Login Issue', 'Login Issue'),
+    ('Software Installation', 'Software Installation'),
+    ('Wi-Fi / Network Issue', 'Wi-Fi / Network Issue'),
+    ('Administrative', 'Administrative'),
+    ('ID Card', 'ID Card'),
+    ('Room Allocation', 'Room Allocation'),
+    ('Library Access', 'Library Access'),
+]
 
 # ------------------------
 # Function-Based Views
@@ -30,14 +50,11 @@ from datetime import datetime
 @login_required(login_url='login')
 def dashboard_view(request):
     form = SearchForm(request.GET or None)
-
-    # Staff sees all requests, regular users see their own
     if request.user.is_staff:
         requests = Request.objects.all()
     else:
         requests = Request.objects.filter(user=request.user)
 
-    # Apply search if form is valid and search exists
     if form.is_valid():
         query = form.cleaned_data.get('search')
         if query:
@@ -52,46 +69,32 @@ def request_detail(request, id):
     return render(request, 'Home/request_detail.html', {'req': req})
 
 
-@login_required(login_url='login')
+@login_required
 def edit_request(request, id):
     req = get_object_or_404(Request, id=id)
     if not (request.user == req.user or request.user.is_staff):
         return HttpResponseForbidden()
 
-    categories = Category.objects.all().order_by('name')
+    categories = [{'value': c[0], 'label': c[1]} for c in CATEGORY_CHOICES]
     current_tags_str = ", ".join([t.name for t in req.tags.all()])
 
     if request.method == 'POST':
-        title = request.POST.get('title')
-        status = request.POST.get('status')
-        priority = request.POST.get('priority')
-        date = request.POST.get('date')
-        description = request.POST.get('description')
-        category_id = request.POST.get('category')
-        category_choice_id = request.POST.get('category_choice')
-        tags_str = request.POST.get('tags', '')
+        req.title = request.POST.get('title')
+        req.status = request.POST.get('status')
+        req.priority = request.POST.get('priority')
+        req.description = request.POST.get('description')
+        req.category = request.POST.get('category')  # string assignment works now
+
         attachment = request.FILES.get('attachment')
-
-        category = get_object_or_404(Category, id=category_id)
-        category_choice = CategoryChoice.objects.filter(id=category_choice_id).first()
-
-        req.title = title
-        req.status = status
-        req.priority = priority
-        req.date = date
-        req.description = description
-        req.category = category
-        req.category_choice = category_choice
-
         if attachment:
             req.attachment = attachment
 
         req.tags.clear()
-        tag_names = [name.strip() for name in tags_str.split(',') if name.strip()]
+        tags_str = request.POST.get('tags', '')
+        tag_names = [name.strip().lower() for name in tags_str.split(',') if name.strip()]
         for name in tag_names:
-            if re.match(r'^[a-zA-Z0-9-]+$', name):
-                tag, _ = Tag.objects.get_or_create(name=name)
-                req.tags.add(tag)
+            tag, _ = Tag.objects.get_or_create(name=name)
+            req.tags.add(tag)
 
         req.save()
         return redirect('request_detail', id=req.id)
@@ -103,9 +106,10 @@ def edit_request(request, id):
     })
 
 
+
 @login_required(login_url='login')
 def delete_request(request, id):
-    if request.user.is_staff or request.user.is_superuser:
+    if request.user.is_staff:
         req = get_object_or_404(Request, id=id)
     else:
         req = get_object_or_404(Request, id=id, user=request.user)
@@ -119,36 +123,27 @@ def delete_request(request, id):
 
 @login_required
 def add_request(request):
-    categories = Category.objects.all()
-    choices = CategoryChoice.objects.all()  # or filter by default category
+    categories = [{'value': c[0], 'label': c[1]} for c in CATEGORY_CHOICES]
 
     if request.method == "POST":
         title = request.POST.get('title')
         status = request.POST.get('status')
         priority = request.POST.get('priority')
-        date = request.POST.get('date')
         description = request.POST.get('description')
+        category_value = request.POST.get('category')  # string matches your choices
         attachment = request.FILES.get('attachment')
-        category_id = request.POST.get('category')
-        category_choice_id = request.POST.get('category_choice')
         tags_input = request.POST.get('tags')
 
-        category = Category.objects.get(id=category_id) if category_id else None
-        category_choice = CategoryChoice.objects.get(id=category_choice_id) if category_choice_id else None
-
-        # Save request
         new_request = Request.objects.create(
             user=request.user,
             title=title,
             status=status,
             priority=priority,
             description=description,
-            category=category,
-            category_choice=category_choice,
+            category=category_value,
             attachment=attachment
         )
 
-        # Handle tags
         if tags_input:
             tag_names = [t.strip().lower() for t in tags_input.split(',')]
             for tag_name in tag_names:
@@ -158,11 +153,7 @@ def add_request(request):
         messages.success(request, "Request submitted successfully!")
         return redirect('dashboard')
 
-    context = {
-        'categories': categories,
-        'choices': choices
-    }
-    return render(request, 'Home/add_request.html', context)
+    return render(request, 'Home/add_request.html', {'categories': categories})
 
 
 def landing_page(request):
@@ -180,15 +171,14 @@ class RequestListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        queryset = Request.objects.select_related('user', 'category').prefetch_related('tags').all()
-        
-        category_slug = self.request.GET.get('category')
+        queryset = Request.objects.prefetch_related('tags').all()
+        category_value = self.request.GET.get('category')
         tag_slug = self.request.GET.get('tag')
         status = self.request.GET.get('status')
         search = self.request.GET.get('q')
 
-        if category_slug:
-            queryset = queryset.filter(category__slug=category_slug)
+        if category_value:
+            queryset = queryset.filter(category=category_value)
         if tag_slug:
             queryset = queryset.filter(tags__slug=tag_slug)
         if status:
@@ -203,7 +193,7 @@ class RequestListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.annotate(request_count=Count('requests')).filter(request_count__gt=0)
+        context['categories'] = [{'value': c[0], 'label': c[1]} for c in CATEGORY_CHOICES]
         context['tags'] = Tag.objects.annotate(request_count=Count('requests')).filter(request_count__gt=0).order_by('name')
         context['current_category'] = self.request.GET.get('category')
         context['current_tag'] = self.request.GET.get('tag')
@@ -212,10 +202,13 @@ class RequestListView(LoginRequiredMixin, ListView):
         return context
 
 
-class CategoryListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    model = Category
+class CategoryListView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'request/category_list.html'
-    context_object_name = 'categories'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = [{'value': c[0], 'label': c[1]} for c in CATEGORY_CHOICES]
+        return context
 
     def test_func(self):
         return self.request.user.is_staff
@@ -279,10 +272,12 @@ class RequestDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 # API Views
 # ------------------------
 
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+class CategoryListAPI(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        data = [{'id': i, 'value': c[0], 'label': c[1]} for i, c in enumerate(CATEGORY_CHOICES, 1)]
+        return Response(data)
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -295,7 +290,6 @@ class TagViewSet(viewsets.ModelViewSet):
         query = request.query_params.get('q', '')
         if len(query) < 2:
             return Response([])
-
         tags = Tag.objects.filter(name__icontains=query).distinct()[:10]
         serializer = self.get_serializer(tags, many=True)
         return Response(serializer.data)
@@ -306,7 +300,7 @@ class RequestViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Request.objects.select_related('user', 'category').prefetch_related('tags')
+        queryset = Request.objects.prefetch_related('tags')
         if not self.request.user.is_staff:
             queryset = queryset.filter(user=self.request.user)
         return queryset
