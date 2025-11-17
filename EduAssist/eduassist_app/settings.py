@@ -44,10 +44,8 @@ INSTALLED_APPS = [
 
     'eduassist_app',
     'accounts',
-    'request',
-    'settings',
     'request_app',
-    
+    'settings',
 ]
 
 MIDDLEWARE = [
