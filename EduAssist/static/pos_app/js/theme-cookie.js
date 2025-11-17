@@ -1,4 +1,4 @@
-// static/pos_app/js/theme-cookie.js
+
 (function () {
     function getCookie(name) {
         const value = "; " + document.cookie;
@@ -19,7 +19,6 @@
         }
     }
 
-    // Apply as soon as possible after DOM loaded (or earlier if you insert this script in head)
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", applyThemeFromCookie);
     } else {

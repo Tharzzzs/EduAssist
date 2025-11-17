@@ -7,19 +7,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Settings</title>
 
+    <link rel="stylesheet" href="{% static 'pos_app/css/profileStyle.css' %}">
     <link rel="stylesheet" href="{% static 'pos_app/css/settings.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
-
+  <header>
+    <div class="logo">EduAssist</div>
+    <nav>
+      <a href="{% url 'dashboard' %}">Request</a>
+      {% if user.is_staff %}
+      <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+      {% endif %}
+      <a href="{% url 'add_request' %}">New Request</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+    <nav>
+    <a class="user-icon" href="{% url 'profile' %}">Profile</a>
+    <a href="{% url 'settings' %}">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+      </nav>
+  </header>
 <div class="settings-container">
-
-    <!-- CLOSE BUTTON -->
-    <button type="button" class="close-btn" onclick="window.location.href='/dashboard/'">
-    <i class="fa-solid fa-xmark"></i>
-</button>
-
 
     <h1>User Settings</h1>
 
@@ -35,7 +46,6 @@
     <form method="POST">
         {% csrf_token %}
 
-        <!-- ===== Theme Preferences ===== -->
         <div class="section">
             <h2 class="section-title"><i class="fa-solid fa-palette"></i> Theme Preferences</h2>
 
@@ -48,18 +58,15 @@
             </label>
         </div>
 
-       <!-- ===== Notification Settings ===== -->
         <div class="section">
             <h2 class="section-title"><i class="fa-solid fa-bell"></i> Notification Settings</h2>
 
-       <!-- Notification Email -->
             <label>
                 Notification Email:
                 <input type="text" name="notification_email" 
                value="{{ settings.notification_email }}">
             </label>
 
-       <!-- Toggle -->
             <label>
                 Receive Email Notifications
                 <input type="checkbox" name="receive_email" {% if settings.receive_email %}checked{% endif %}>
@@ -67,7 +74,6 @@
 </div>
  
 
-        <!-- ===== Privacy Options ===== -->
         <div class="section">
             <h2 class="section-title"><i class="fa-solid fa-user-shield"></i> Privacy Options</h2>
 
@@ -85,7 +91,7 @@
     </form>
 </div>
 
-<!-- ===== Theme Switching Script ===== -->
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const themeFromDB = "{{ settings.dark_mode|yesno:'dark,light' }}";

@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Request Details - EduAssist</title>
   <link rel="stylesheet" href="{% static 'pos_app/css/request_detailStyle.css' %}">
+  <link rel="stylesheet" href="{% static 'pos_app/css/theme.css' %}">
+  <script src="{% static 'pos_app/js/theme-cookie.js' %}" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -20,7 +23,12 @@
       <a href="{% url 'add_request' %}">New Request</a>
       <a href="{% url 'logout' %}">Logout</a>
     </nav>
+    <nav>
     <a class="user-icon" href="{% url 'profile' %}">Profile</a>
+    <a href="{% url 'settings' %}">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+      </nav>
   </header>
 
   <!-- ===== Request Details ===== -->

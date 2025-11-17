@@ -30,7 +30,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('request_app.urls')), 
     path('accounts/', include('accounts.urls')),
-    path('Home/', include('request.urls')),
-    path('settings/', include('settings.urls')),
     path('Home/', include('request_app.urls')),
+    path('settings/', include('settings.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

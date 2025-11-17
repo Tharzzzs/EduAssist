@@ -1,55 +1,206 @@
-/* ===========================
-   GLOBAL DARK MODE SYSTEM
-   =========================== */
+html.dark,
+body.dark {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
 
-/* Apply dark backgrounds */
-html.dark, body.dark {
+html.dark header,
+html.dark header nav {
     background: #1b1b1b !important;
-    color: white !important;
 }
 
-/* All cards/containers */
-html.dark .section,
-html.dark .card,
-html.dark .dashboard-container,
-html.dark .request-container,
+html.dark header nav a,
+html.dark header a,
+html.dark .user-icon {
+    color: #ffffff !important;
+}
+
+html.dark label,
+html.dark .form-label,
+html.dark .field-label,
+html.dark .title-label {
+    color: #eaeaea !important;
+}
+
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark .section-title,
+html.dark .profile-title {
+    color: #ffffff !important;
+}
+
+html.dark .profile-container > div:first-child,
+html.dark .profile-container .profile-header-box,
+html.dark .profile-container .profile-info-box,
+html.dark .profile-container .user-details-box,
+html.dark .profile-container .profile-top-box,
+html.dark .profile-container .info-box,
+html.dark .profile-container .account-box,
+html.dark .profile-container .profile-box,
+html.dark .profile-container div:not(.form-group):not(.input-field) {
+    background: #2a2a2a !important;
+    color: #ffffff !important;
+    border: 1px solid #555 !important;
+}
+
+html.dark .profile-container strong,
+html.dark .profile-container b,
+html.dark .profile-container span,
+html.dark .profile-container p {
+    color: #ffffff !important;
+}
+
+
 html.dark .profile-container,
-html.dark .content,
-html.dark .container,
-html.dark .box {
-    background: #262626 !important;
-    color: white !important;
-    border-color: #444 !important;
+html.dark .profile-card,
+html.dark .profile-content {
+    background: #1d1d1d !important;
+    color: #ffffff !important;
 }
 
-/* Inputs, select fields */
+
+html.dark .profile-container label,
+html.dark .profile-container .label,
+html.dark .profile-container .field-label {
+    color: #eaeaea !important;
+}
+
+
+html.dark .profile-container p,
+html.dark .profile-container small {
+    color: #cccccc !important;
+}
+
+
+html.dark input::placeholder,
+html.dark textarea::placeholder,
+html.dark select::placeholder {
+    color: #bbbbbb !important;
+}
+
+html.dark .user-details {
+    background: #2a2a2a !important;
+    color: #ffffff !important;
+    border: 1px solid #555 !important;
+}
+
+html.dark .user-details p,
+html.dark .user-details span,
+html.dark .user-details strong,
+html.dark .user-details b {
+    color: #ffffff !important;
+}
+
 html.dark input,
 html.dark select,
 html.dark textarea {
-    background: #333 !important;
-    color: white !important;
-    border-color: #666 !important;
+    background: #2a2a2a !important;
+    color: #ffffff !important;
+    border: 1px solid #555 !important;
 }
 
-/* Links */
+html.dark select option {
+    background: #2a2a2a !important;
+    color: white !important;
+}
+
+
+html.dark table {
+    background: #1c1c1c !important;
+    color: #ffffff !important;
+}
+
+html.dark th {
+    background: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html.dark td {
+    background: #1c1c1c !important;
+    color: #f0f0f0 !important;
+}
+
+html.dark .container,
+html.dark .card,
+html.dark .section,
+html.dark .content,
+html.dark .request-container,
+html.dark .dashboard-container,
+html.dark .profile-container,
+html.dark .box {
+    background: #1d1d1d !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+html.dark button,
+html.dark .btn {
+    background-color: #333 !important;
+    color: #ffffff !important;
+    border-color: #777 !important;
+}
+
+html.dark button:hover,
+html.dark .btn:hover {
+    background-color: #444 !important;
+}
+
 html.dark a {
-    color: #f8d7d7 !important;
+    color: #bbd7ff !important;
 }
 
-/* Headers */
-html.dark h1, 
-html.dark h2, 
-html.dark h3 {
-    color: white !important;
+html.dark p,
+html.dark span,
+html.dark .subtext,
+html.dark small {
+    color: #dcdcdc !important;
 }
 
-/* Toggle fix */
-html.dark input[type="checkbox"] {
-    background: #555 !important;
+
+
+html.dark .change-password-container,
+body.dark .change-password-container {
+    background: #1d1d1d !important;
+    color: #ffffff !important;
+    border: 1px solid #444 !important;
 }
-html.dark input[type="checkbox"]:checked {
-    background: #8B0000 !important;
+
+
+html.dark .change-password-container label,
+html.dark .change-password-container p,
+html.dark .change-password-container span,
+html.dark .change-password-container small {
+    color: #eaeaea !important;
 }
-html.dark input[type="checkbox"]:checked::before {
-    background: white !important;
+
+
+html.dark .change-password-container .requirement,
+html.dark .change-password-container .password-requirement {
+    color: #ff6b6b !important;
+}
+
+
+html.dark .change-password-container a {
+    color: #bbd7ff !important;
+}
+
+
+html.dark .detail-container {
+    background: #1d1d1d !important;      
+    color: #ffffff !important;           
+    border: 1px solid #444 !important;  
+    box-shadow: none !important;         
+}
+
+html.dark .detail-container * {
+    color: #e6e6e6 !important;
+}
+
+html.dark .detail-container .description,
+html.dark .detail-container .description-box,
+html.dark .detail-container .card-body {
+    background: #262626 !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #444 !important;
 }
