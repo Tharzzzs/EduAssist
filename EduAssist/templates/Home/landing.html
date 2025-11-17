@@ -2,38 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduAssist - Guiding Every Student</title>
     {% load static %}
-
-  <link rel="stylesheet" href="{% static 'pos_app/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'pos_app/css/landing.css' %}">
 </head>
 <body>
-    <header>
-        <div class="logo">EduAssist</div>
-        <nav>
-            <a href="#">Help</a>
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'register' %}" class="signup-btn">Sign Up</a>
-        </nav>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-branding">
+                <h1 class="logo">Edu<span class="highlight-logo">Assist</span></h1> 
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-link">Help</a>
+                <a href="{% url 'login' %}" class="nav-link">Login</a>
+                <a href="{% url 'register' %}" class="btn-signup">Sign Up</a>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <section class="left">
-            <h1>Edu<span>Assist</span></h1>
-            <h2>Guiding Every Student, Every Step.</h2>
-            <p>
-                EduAssist makes student support simple and efficient. 
-                Submit and track your queries in real time, stay updated at every step, 
-                and get the assistance you need — fast, clear, and hassle-free.
-            </p>
-            <a href="{% url 'register' %}" class="get-started">Get Started</a>
-        </section>
+    <main class="hero">
+        <div class="hero-layout">
+            <section class="hero-left">
+                <h2 class="hero-subtitle">Guiding Every Student, Every Step.</h2>
+                <p class="hero-description">
+                    EduAssist makes student support simple and efficient. 
+                    Submit and track your queries in real time, stay updated at every step, 
+                    and get the assistance you need — fast, clear, and hassle-free.
+                </p>
+                <a href="{% url 'register' %}" class="btn-primary">Get Started</a>
+            </section>
 
-        <section class="right">
-            <div class="preview-box">
-                
-            </div>
-        </section>
+            <section class="hero-right">
+                <div class="preview-box">
+                    <div class="preview-header">
+                        <div class="preview-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                    </div>
+                    <div class="preview-body">
+                        <div class="preview-line accent-gradient-line long"></div>
+                        <div class="preview-line gray-line long-w"></div>
+                        <div class="preview-line gray-line full-w"></div>
+                        <div class="preview-line gray-line medium-w"></div>
+                        <div class="submit-query-button">Submit Query</div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
+
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon-image icon-1"></div>
+                <h3 class="feature-title">Real-Time Tracking</h3>
+                <p class="feature-text">Monitor your queries instantly with live updates and detailed status information at every step.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon-image icon-2"></div>
+                <h3 class="feature-title">Fast Response</h3>
+                <p class="feature-text">Get quick answers and solutions to your academic concerns without unnecessary delays.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon-image icon-3"></div>
+                <h3 class="feature-title">Centralized Dashboard</h3>
+                <p class="feature-text">Organize and manage all your student support requests in one convenient, easy-to-use platform.</p>
+            </div>
+        </div>
+    </section>
+
 </body>
 </html>

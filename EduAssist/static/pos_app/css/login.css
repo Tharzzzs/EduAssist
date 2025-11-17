@@ -1,82 +1,130 @@
+/* Color Variables based on Landing Page */
+:root {
+    --primary-color: #A30000; 
+    --secondary-accent: #000000;
+    --light-background: #ffffff;
+    --page-background: #f8f9fa; /* Subtle off-white page background */
+    --dark-text: #212529; 
+    --light-text: #6c757d;
+    --white: #ffffff;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--page-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
-.login-container {
-  background-color: #fff;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 350px;
-  text-align: center;
+.auth-container {
+    background-color: var(--light-background);
+    padding: 30px; 
+    border-radius: 8px; 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    width: 380px;
+    text-align: center;
+    border: 1px solid #f0f0f0; 
 }
 
-.login-container h2 {
-  color: #800000;
-  margin-bottom: 5px;
+/* Logo Styling */
+.logo-area {
+    margin-bottom: 15px;
 }
 
-.login-container p.subtitle {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 25px;
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--secondary-accent);
+}
+
+.highlight-logo {
+    color: var(--primary-color);
+}
+
+.title {
+    color: var(--secondary-accent);
+    margin-bottom: 5px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.subtitle {
+    font-size: 15px;
+    color: var(--light-text);
+    margin-bottom: 25px;
+}
+
+/* Form Elements */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
 }
 
 input[type="text"],
-input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    /* THINNER INPUT: Reduced padding from 12px to 10px */
+    padding: 10px; 
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
 }
 
-button {
-  width: 100%;
-  background-color: #800000;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 10px;
+/* Primary Button Styling (from landing page) */
+.btn-primary {
+    width: 100%;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(163, 0, 0, 0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
-  background-color: #a30000;
+.btn-primary:hover {
+    background: #7a0000;
+    box-shadow: 0 6px 15px rgba(163, 0, 0, 0.4);
+    transform: translateY(-2px);
 }
 
+/* Links */
 a {
-  color: #800000;
-  text-decoration: none;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: text-decoration 0.3s ease;
 }
 
 a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 .forgot {
-  text-align: right;
-  display: block;
-  margin-bottom: 10px;
-  font-size: 0.85rem;
+    text-align: right;
+    display: block;
+    margin-bottom: 5px; 
+    font-size: 0.85rem;
+    color: var(--light-text);
 }
 
-.register {
-  margin-top: 15px;
-  font-size: 0.9rem;
+.register-link {
+    margin-top: 20px; 
+    font-size: 0.9rem;
+    color: var(--dark-text);
 }
 
 .message {
-  color: red;
-  font-size: 0.9rem;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    margin-top: 10px;
 }
- 
