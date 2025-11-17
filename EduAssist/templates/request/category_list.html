@@ -1,0 +1,35 @@
+{% extends "request/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Category Management (Admin)</h2>
+    
+    <p><a href="{% url 'request-list' %}">Back to Request List</a></p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr>
+                <td>{{ category.name }}</td>
+                <td>{{ category.slug }}</td>
+                <td>{{ category.description|default:"-" }}</td>
+                <td>
+                    </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No categories defined.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

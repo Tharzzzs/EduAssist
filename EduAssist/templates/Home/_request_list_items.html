@@ -1,0 +1,37 @@
+{% if requests %}
+<table class="requests-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Tags</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for req in requests %}
+        <tr>
+            <td>{{ req.title }}</td>
+            <td>{{ req.status }}</td>
+            <td>{{ req.date }}</td>
+            <td>{{ req.category.name|default:"" }}</td>
+            <td class="tag-cell">
+                {% for tag in req.tags.all %}
+                    <span class="tag-chip" data-tag="{{ tag.name }}">{{ tag.name }}</span>
+                {% endfor %}
+            </td>
+            <td>
+                <a href="{% url 'request_detail' req.id %}" class="btn btn-info btn-sm">View</a>
+                {% if user == req.user or user.is_staff %}
+                    <a href="{% url 'edit_request' req.id %}" class="btn btn-primary btn-sm">Edit</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No requests found.</p>
+{% endif %}
