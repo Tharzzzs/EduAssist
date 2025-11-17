@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 
     'eduassist_app',
     'accounts',
-    'request',
+    'request_app',
     
 ]
 
