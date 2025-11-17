@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'eduassist_app',
     'accounts',
     'request',
-    
+    'settings',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'settings.middleware.ThemeMiddleware',
+
 ]
 
 ROOT_URLCONF = 'eduassist_app.urls'
@@ -71,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'settings.context_processors.theme_settings',
             ],
         },
     },
@@ -142,4 +145,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 SUPABASE_URL = os.environ.get('SUPABASE_URL')
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
-DEFAULT_FILE_STORAGE = "Home.storages_backends.SupabaseStorage"
+# DEFAULT_FILE_STORAGE = "Home.storages_backends.SupabaseStorage"
+DEFAULT_FILE_STORAGE = "eduassist_app.storages_backend.SupabaseStorage"
