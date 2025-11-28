@@ -219,3 +219,18 @@ nav a:hover {
   text-align: right;
   margin-top: 20px;
 }
+body.dark header#main-header {
+    background-color: #1a1a1a !important;
+    color: white !important;
+}
+
+body.dark header#main-header .logo,
+body.dark header#main-header nav a,
+body.dark header#main-header .user-icon {
+    color: white !important;
+}
+html.dark header .logo,
+html.dark header nav a,
+html.dark header .user-icon {
+    color: white !important;
+}

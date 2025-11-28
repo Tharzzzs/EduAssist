@@ -1,4 +1,3 @@
-
 (function () {
     function getCookie(name) {
         const value = "; " + document.cookie;
@@ -8,20 +7,32 @@
     }
 
     function applyThemeFromCookie() {
-        const v = getCookie("dark_mode");
-        const isDark = v === "1";
-        if (isDark) {
-            document.documentElement.classList.add("dark");
-            document.body.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-            document.body.classList.remove("dark");
-        }
+    const isDark = getCookie("dark_mode") === "1";
+
+    const html = document.documentElement;
+    const body = document.body;
+    const logo = document.querySelector(".logo");
+
+    if (isDark) {
+        html.classList.add("dark");
+        body.classList.add("dark");
+
+        if (logo) logo.style.setProperty("color", "white", "important");
+
+    } else {
+        html.classList.remove("dark");
+        body.classList.remove("dark");
+
+        if (logo) logo.style.setProperty("color", "black", "important");
     }
+}
+
 
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", applyThemeFromCookie);
     } else {
         applyThemeFromCookie();
     }
+
+    document.addEventListener("click", applyThemeFromCookie);
 })();
