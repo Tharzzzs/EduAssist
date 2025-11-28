@@ -51,4 +51,8 @@ def settings_view(request):
 
         return redirect("settings")
 
-    return render(request, "settings/settings.html", {"settings": settings})
+    return render(request, "settings/settings.html", {
+    "settings": settings,
+    "user": request.user
+})
+
