@@ -1,6 +1,6 @@
 from django import forms
 from accounts.models import Profile
-from .models import Request, Tag, CATEGORY_CHOICES  # import your static choices
+from .models import Request, Tag, Category  # Import Category model
 
 class SearchForm(forms.Form):
     search = forms.CharField(
@@ -21,10 +21,11 @@ class RequestForm(forms.ModelForm):
         help_text="Select one or more tags. (Note: Auto-suggest requires JS widget.)"
     )
 
-    # Override category to use ChoiceField since it's now a CharField
-    category = forms.ChoiceField(
-        choices=CATEGORY_CHOICES,
+    # Category field now comes from the database
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
         required=False,  # optional
+        empty_label="Select a category",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
 
