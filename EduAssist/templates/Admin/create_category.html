@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Category</title>
+</head>
+<body>
+
+<h2>Create Category</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Description (optional):</label><br>
+    <textarea name="description"></textarea><br><br>
+
+    <button type="submit">Create</button>
+</form>
+
+</body>
+</html>

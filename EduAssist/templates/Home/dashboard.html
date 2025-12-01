@@ -17,6 +17,7 @@
       <a href="{% url 'dashboard' %}">Request</a>
       {% if user.is_staff %}
       <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+      <a href="{% url 'create_category' %}">Create Category</a>
       {% endif %}
       <a href="{% url 'add_request' %}">New Request</a>
       <a href="{% url 'logout' %}">Logout</a>
@@ -32,15 +33,18 @@
 
   <div class="container">
     <div class="top-actions">
-      <a href="{% url 'add_request' %}">Add New Request</a>
-      <input type="text" id="search" placeholder="Search requests..." onkeyup="filterTable()">
-      <select class="filter-select" onchange="applyFilter(this.value)">
+    <!-- Add New Request button -->
+    <a href="{% url 'add_request' %}" class="btn btn-primary">Add New Request</a>
+
+    <!-- Search and Filter -->
+    <input type="text" id="search" placeholder="Search requests..." onkeyup="filterTable()">
+    <select class="filter-select" onchange="applyFilter(this.value)">
         <option value="all">All</option>
         <option value="pending">Pending</option>
         <option value="approved">Approved</option>
         <option value="cancelled">Cancelled</option>
-      </select>
-    </div>
+    </select>
+</div>
 
     {% if user.is_staff %}
       <h2>All Requests (Admin View)</h2>

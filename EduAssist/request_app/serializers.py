@@ -1,6 +1,5 @@
-# request/serializers.py
 from rest_framework import serializers
-from .models import Tag, Request, CATEGORY_CHOICES
+from .models import Tag, Request, Category
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,9 +8,13 @@ class TagSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_at', 'updated_at']
 
 class RequestSerializer(serializers.ModelSerializer):
-    # category is now a CharField with static choices
-    category = serializers.ChoiceField(choices=[c[0] for c in CATEGORY_CHOICES], required=False, allow_null=True)
-    
+    # Use Category model dynamically instead of static choices
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        required=False,
+        allow_null=True
+    )
+
     tags = serializers.SlugRelatedField(
         many=True,
         queryset=Tag.objects.all(),
@@ -23,6 +26,6 @@ class RequestSerializer(serializers.ModelSerializer):
         model = Request
         fields = [
             'id', 'title', 'description', 'status', 'priority', 
-            'category', 'category_choice', 'tags', 'attachment', 'date', 'updated_at'
+            'category', 'tags', 'attachment', 'date', 'updated_at'
         ]
         read_only_fields = ['date', 'updated_at', 'user']

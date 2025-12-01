@@ -1,31 +1,33 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
+from django.utils.text import slugify
 
 User = get_user_model()
 
 # ------------------------
-# Static Categories
+# Category Model
 # ------------------------
-CATEGORY_CHOICES = [
-    ('Academic', 'Academic'),
-    ('Course Material', 'Course Material'),
-    ('Grades', 'Grades'),
-    ('Assignments', 'Assignments'),
-    ('Exam Schedule', 'Exam Schedule'),
-    ('Finance', 'Finance'),
-    ('Tuition Fee', 'Tuition Fee'),
-    ('Scholarship', 'Scholarship'),
-    ('Refund', 'Refund'),
-    ('Technical', 'Technical'),
-    ('Login Issue', 'Login Issue'),
-    ('Software Installation', 'Software Installation'),
-    ('Wi-Fi / Network Issue', 'Wi-Fi / Network Issue'),
-    ('Administrative', 'Administrative'),
-    ('ID Card', 'ID Card'),
-    ('Room Allocation', 'Room Allocation'),
-    ('Library Access', 'Library Access'),
-]
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+# ------------------------
+# CategoryChoice / Query Type Model
+# ------------------------
+class CategoryChoice(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='choices')
+    value = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.category.name} - {self.value}"
 
 # ------------------------
 # Tag Model
@@ -49,7 +51,6 @@ class Tag(models.Model):
     def save(self, *args, **kwargs):
         self.name = self.name.lower()
         if not self.slug:
-            from django.utils.text import slugify
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
@@ -68,16 +69,8 @@ class Request(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     description = models.TextField()
     attachment = models.FileField(upload_to='request_attachments/%Y/%m/%d/', blank=True, null=True)
-
-    # Fixed category field
-    category = models.CharField(
-        max_length=50,
-        choices=CATEGORY_CHOICES,
-        default='Academic',
-        blank=False,
-        null=False
-    )
-
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
+    category_choice = models.ForeignKey(CategoryChoice, on_delete=models.SET_NULL, null=True, blank=True)
     tags = models.ManyToManyField(Tag, related_name='requests', blank=True)
 
     class Meta:

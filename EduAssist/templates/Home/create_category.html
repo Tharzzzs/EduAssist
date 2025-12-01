@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Category & Query Type</title>
+  <link rel="stylesheet" href="{% static 'pos_app/css/create_category.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<header>
+    <div class="logo">EduAssist</div>
+    <nav>
+      <a href="{% url 'dashboard' %}">Request</a>
+      {% if user.is_staff %}
+      <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+      <a href="{% url 'create_category' %}">Create Category</a>
+      {% endif %}
+      <a href="{% url 'add_request' %}">New Request</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+    <nav>
+    <a class="user-icon" href="{% url 'profile' %}">Profile</a>
+    <a href="{% url 'settings' %}">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+      </nav>
+  </header>
+<div class="card">
+  <h2>Create Category</h2>
+  <form method="POST">
+      {% csrf_token %}
+      <label>Category Name</label>
+      <input type="text" name="category_name" required>
+      <button type="submit">Create Category</button>
+  </form>
+
+  <h2>Create Query Type</h2>
+  <form method="POST">
+      {% csrf_token %}
+      <label>Query Type Name</label>
+      <input type="text" name="query_name" required>
+
+      <label>Category</label>
+      <select name="category_for_query" required>
+          <option value="">Select Category</option>
+          {% for cat in categories %}
+              <option value="{{ cat.id }}">{{ cat.name }}</option>
+          {% endfor %}
+      </select>
+
+      <button type="submit">Create Query Type</button>
+  </form>
+
+  <h3>Existing Categories</h3>
+  <ul>
+      {% for cat in categories %}
+          <li>{{ cat.name }}</li>
+      {% endfor %}
+  </ul>
+
+  <h3>Existing Query Types</h3>
+  <ul>
+      {% for choice in choices %}
+          <li>{{ choice.category.name }} - {{ choice.value }}</li>
+      {% endfor %}
+  </ul>
+
+  <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+</div>
+</body>
+</html>
