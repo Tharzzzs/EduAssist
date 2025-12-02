@@ -11,6 +11,24 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+  <!-- request approval pop up  -->
+{% if request.user.is_staff %}
+<div id="approveModal" class="eduassist-approve-modal" style="display:none;">
+    <div class="eduassist-approve-modal-content">
+        <h2>Approve Request</h2>
+        <form method="POST" action="{% url 'approve_request' req.id %}">
+            {% csrf_token %}
+            <label>Message to user (optional):</label>
+            <textarea name="admin_message" rows="4" placeholder="Write a message..."></textarea>
+
+            <div class="modal-actions">
+                <button type="submit" class="approve-confirm">Approve</button>
+                <button type="button" class="approve-cancel" onclick="closeApproveModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
 
   <!-- ===== Navbar ===== -->
   <header>
@@ -99,8 +117,29 @@
       </a>
       {% endif %}
       <a href="{% url 'dashboard' %}" class="btn-secondary">Back</a>
+
+      {% if request.user.is_staff and req.status != "approved" %}
+      <button class="btn-approve" onclick="openApproveModal()">Approve</button>
+      {% endif %}
+
+
     </div>
   </div>
+
+  
+
+  <!-- Modal for approve button-->
+  <script>
+function openApproveModal() {
+    console.log("OPEN MODAL");
+    document.getElementById("approveModal").style.display = "flex";
+}
+
+function closeApproveModal() {
+    document.getElementById("approveModal").style.display = "none";
+}
+</script>
+
 
 </body>
 </html>

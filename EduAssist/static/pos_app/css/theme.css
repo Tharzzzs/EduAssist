@@ -204,3 +204,14 @@ html.dark .detail-container .card-body {
     color: #f0f0f0 !important;
     border: 1px solid #444 !important;
 }
+
+html.dark .btn-approve,
+body.dark .btn-approve {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+}
+
+html.dark .btn-approve:hover,
+body.dark .btn-approve:hover {
+    background: #3e9143 !important;
+}

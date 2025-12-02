@@ -1,0 +1,12 @@
+<p>Hi {{ name }},</p>
+
+<p>We’re pleased to inform you that your request <strong>{{ title }}</strong> has been approved.</p>
+
+{% if admin_message %}
+    <p><strong>Message from the admin:</strong></p>
+    <p>{{ admin_message }}</p>
+{% endif %}
+
+<p>If you need anything else or have additional questions, feel free to reach out.</p>
+
+<p>Best regards,<br>EduAssist Team</p>
