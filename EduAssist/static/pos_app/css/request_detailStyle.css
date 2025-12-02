@@ -223,3 +223,125 @@ nav a:hover {
     align-items: stretch;
   }
 }
+
+/*for approve button modal/popup*/
+#approveModal {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0,0,0,0.7);
+
+    display: none; /* default hidden */
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999999;
+}
+
+#approveModal.show {
+    display: flex !important;
+}
+
+.eduassist-approve-modal-content {
+    background: #2b2b2b;
+    padding: 25px 28px;
+    width: 440px;
+    border-radius: 14px;
+    color: #fff;
+
+    border: 1px solid #3a3a3a;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+}
+
+.eduassist-approve-modal-content h2 {
+    margin: 0 0 18px 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.eduassist-approve-modal-content label {
+    font-size: 0.9rem;
+    color: #cccccc;
+}
+
+.eduassist-approve-modal-content textarea {
+    width: 100%;
+    padding: 1px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+
+    background: #1a1a1a;
+    color: white;
+
+    border: 1px solid #3a3a3a;
+    border-radius: 10px;
+
+    outline: none;
+    resize: none;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.approve-confirm {
+    background: #4CAF50;
+    border: none;
+    padding: 9px 18px;
+    font-weight: 600;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.approve-confirm:hover {
+    background: #3fa64c;
+}
+
+.approve-cancel {
+    background: #555;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #eee;
+}
+
+.approve-cancel:hover {
+    background: #444;
+}
+
+.btn-approve {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+body.dark .btn-approve {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+}
+
+body.dark .btn-approve:hover {
+    background: #3e9143 !important;
+}
+
+body.dark .btn-danger {
+    background: #8b1e1e !important;
+    color: #ffffff !important;
+}
+
+body.dark .btn-danger:hover {
+    background: #a82424 !important;
+    color: #ffffff !important;
+}

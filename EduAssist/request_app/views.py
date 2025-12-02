@@ -15,6 +15,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import RequestSerializer, TagSerializer
 from django.contrib.auth.decorators import login_required, user_passes_test
+from eduassist_app.email_service import send_notification_email
+
 # ------------------------
 # Dashboard
 # ------------------------
@@ -223,3 +225,34 @@ def create_category(request):
     choices = CategoryChoice.objects.all()
     return render(request, "Home/create_category.html", {"categories": categories, "choices": choices})
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def approve_request(request, id):
+    req = get_object_or_404(Request, id=id)
+
+    # ⚠️ BLOCK double-approval
+    if req.status == "approved":
+        messages.error(request, "This request is already approved.")
+        return redirect('request_detail', id=id)
+
+    if request.method == "POST":
+        admin_message = request.POST.get("admin_message", "")
+
+        req.status = "approved"
+        req.save()
+
+        send_notification_email(
+            to_email=req.user.email,
+            type="request_approved",
+            template_name="request_approved",
+            context_data={
+                "name": req.user.first_name,
+                "title": req.title,
+                "admin_message": admin_message
+            }
+        )
+
+        messages.success(request, "Request approved and user notified.")
+        return redirect('request_detail', id=id)
+
+    return HttpResponseForbidden()
