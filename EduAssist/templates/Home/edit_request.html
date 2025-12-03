@@ -15,14 +15,18 @@
   <header>
     <div class="logo">EduAssist</div>
     <nav>
-      <a href="{% url 'dashboard' %}">Request</a>
       {% if user.is_staff %}
-      <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
-      <a href="{% url 'create_category' %}">Create Category</a>
+          <a href="{% url 'dashboard' %}">All Requests</a>
+          <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+          <a href="{% url 'create_category' %}">Create Category</a>
+      {% else %}
+          <a href="{% url 'dashboard' %}">My Requests</a>
+          <a href="{% url 'add_request' %}">New Request</a>
       {% endif %}
-      <a href="{% url 'add_request' %}">New Request</a>
+
+      
       <a href="{% url 'logout' %}">Logout</a>
-    </nav>
+  </nav>
     <nav>
     <a class="user-icon" href="{% url 'profile' %}">Profile</a>
     <a href="{% url 'settings' %}">
