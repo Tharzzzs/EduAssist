@@ -22,16 +22,14 @@
           <a href="{% url 'dashboard' %}">My Requests</a>
           <a href="{% url 'add_request' %}">New Request</a>
       {% endif %}
-
-      
       <a href="{% url 'logout' %}">Logout</a>
-  </nav>
+    </nav>
     <nav>
-    <a class="user-icon" href="{% url 'profile' %}">Profile</a>
-    <a href="{% url 'settings' %}">
+      <a class="user-icon" href="{% url 'profile' %}">Profile</a>
+      <a href="{% url 'settings' %}">
         <i class="fa-solid fa-gear"></i> Settings
       </a>
-      </nav>
+    </nav>
   </header>
 
   <main>
@@ -62,10 +60,19 @@
       </div>
 
       <div class="extra-actions">
+        <!-- Change Password Button -->
         <form method="get" action="{% url 'change_password' %}">
           <button type="submit" class="btn-secondary">Change Password</button>
         </form>
+
+        {% if not user.is_staff %}
+        <!-- My Feedback Button (only for non-admin users) -->
+        <form method="get" action="{% url 'my_feedback' %}">
+          <button type="submit" class="btn-primary">My Feedback</button>
+        </form>
+        {% endif %}
       </div>
+
     </div>
   </main>
 
@@ -107,6 +114,6 @@
       saveBtn.disabled = !isEditing;
     });
   });
-</script>
+  </script>
 </body>
 </html>

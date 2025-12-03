@@ -11,7 +11,7 @@ from django.db.models import Q
 from .models import Profile
 from .forms import ProfileForm, SearchForm
 from django.http import HttpResponseForbidden
-
+from feedback.models import Feedback
 
 def login_view(request):
     

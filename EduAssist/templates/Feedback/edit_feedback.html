@@ -1,0 +1,13 @@
+{% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'pos_app/css/feedback.css' %}">
+
+</head>
+
+<h2>Edit Feedback</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save Changes</button>
+  <a href="{% url 'my_feedback' %}">Back</a>
+</form>
