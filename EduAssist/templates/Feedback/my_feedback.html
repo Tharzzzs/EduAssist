@@ -1,53 +1,56 @@
 {% load static %}
-
 <head>
+    <title>My Feedback</title>
     <link rel="stylesheet" href="{% static 'pos_app/css/feedback.css' %}">
-
 </head>
 
+<div class="container">
+    <h2>My Feedback</h2>
+    <ul>
+        {% for f in feedbacks %}
+            <li>
+                <div class="feedback-content">
+                    <strong>{{ f.rating }} Stars</strong> - {{ f.comment }}
+                </div>
+                <div class="actions">
+                    <a href="{% url 'edit_feedback' f.id %}">Edit</a>
+                    <button class="deleteBtn" data-id="{{ f.id }}">Delete</button>
+                </div>
+            </li>
+        {% empty %}
+            <li>No feedback submitted yet.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'profile' %}">Back to Profile</a>
+</div>
 
-<h2>My Feedback</h2>
-<ul>
-  {% for f in feedbacks %}
-    <li>
-      {{ f.rating }} Stars - {{ f.comment }}
-      <a href="{% url 'edit_feedback' f.id %}">Edit</a>
-      <button class="deleteBtn" data-id="{{ f.id }}">Delete</button>
-      
-    </li>
-  {% empty %}
-    <li>No feedback submitted yet.</li>
-  {% endfor %}
-  <a class="user-icon" href="{% url 'profile' %}">Back to Profile</a>
-</ul>
-
-<!-- Delete Modal -->
-<div id="deleteModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.5); justify-content:center; align-items:center;">
-  <div style="background:#fff; padding:20px; border-radius:8px; width:300px; text-align:center;">
-    <p>Are you sure you want to delete this feedback?</p>
-    <form id="deleteForm" method="post">
-      {% csrf_token %}
-      <button type="submit">Yes, Delete</button>
-      <button type="button" id="cancelDelete">Cancel</button>
-    </form>
-  </div>
+<div id="deleteModal">
+    <div class="modal-content">
+        <p>Are you sure you want to delete this feedback?</p>
+        <form id="deleteForm" method="post">
+            {% csrf_token %}
+            <button type="submit">Yes, Delete</button>
+            <button type="button" id="cancelDelete">Cancel</button>
+        </form>
+    </div>
 </div>
 
 <script>
-const modal = document.getElementById('deleteModal');
-const deleteForm = document.getElementById('deleteForm');
-const cancelBtn = document.getElementById('cancelDelete');
+    const modal = document.getElementById('deleteModal');
+    const deleteForm = document.getElementById('deleteForm');
+    const cancelBtn = document.getElementById('cancelDelete');
 
-document.querySelectorAll('.deleteBtn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const feedbackId = this.dataset.id;
-        deleteForm.action = `/feedback/delete/${feedbackId}/`;
-        modal.style.display = 'flex';
+    document.querySelectorAll('.deleteBtn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const feedbackId = this.dataset.id;
+            // The action attribute must point to the delete URL
+            deleteForm.action = `/feedback/delete/${feedbackId}/`; 
+            // modal is set to display: flex in the CSS when visible
+            modal.style.display = 'flex'; 
+        });
     });
-});
 
-cancelBtn.addEventListener('click', function() {
-    modal.style.display = 'none';
-});
+    cancelBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
 </script>
