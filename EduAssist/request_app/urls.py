@@ -12,6 +12,7 @@ urlpatterns = [
     path('requests/<int:id>/delete/', views.delete_request, name='delete_request'),
     path('add/', views.add_request, name='add_request'),
     path('create-category/', views.create_category, name='create_category'),
+    path('requests/<int:id>/approve/', views.approve_request, name='approve_request'),
 
     # # Categories and Tags (if you have function-based views for them)
     # path('categories/', views.category_list, name='category-list'),

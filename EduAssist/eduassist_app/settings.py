@@ -147,3 +147,14 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 # DEFAULT_FILE_STORAGE = "Home.storages_backends.SupabaseStorage"
 DEFAULT_FILE_STORAGE = "eduassist_app.storages_backend.SupabaseStorage"
+
+# for sending emails for notifications
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = "eduassist.noreply@gmail.com"
+EMAIL_HOST_PASSWORD = "iqwg hsui hvva iqku"
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
