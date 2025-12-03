@@ -56,8 +56,10 @@
 
     <div class="detail-actions">
       {% if request.user == req.user or request.user.is_staff %}
+      
       <a href="{% url 'edit_request' req.id %}" class="btn-primary">Edit</a>
       <a href="{% url 'delete_request' req.id %}" class="btn-danger">Delete</a>
       {% endif %}
     </div>
 </div>
+

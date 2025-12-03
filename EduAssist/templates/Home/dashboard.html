@@ -42,6 +42,8 @@
   <div class="top-actions">
     {% if not user.is_staff %}
       <a href="{% url 'add_request' %}" class="btn btn-primary">Add New Request</a>
+      <!-- Give Feedback button navigates to full page -->
+      <a href="{% url 'submit_feedback' %}" class="btn btn-primary">Give Feedback</a>
     {% endif %}
 
     <input type="text" id="search" placeholder="Search requests..." onkeyup="filterTable()">
@@ -78,7 +80,6 @@
           <td>{{ req.date }}</td>
           <td>
             <button class="view-btn" onclick="openRequestModal(parseInt('{{ req.id }}'))">View</button>
-
           </td>
         </tr>
         {% endfor %}
@@ -95,13 +96,10 @@
 <!-- ===================== MODAL ===================== -->
 <div id="requestModal" class="modal">
   <div class="modal-content">
-
     <span class="close" onclick="closeModal()">&times;</span>
-
     <div id="modal-body">
       <p>Loading...</p>
     </div>
-
   </div>
 </div>
 
@@ -129,7 +127,50 @@ function closeModal() {
   document.getElementById("requestModal").style.display = "none";
 }
 
-// Search + Filter (same as before)
+// ===================== SEARCH & FILTER FUNCTIONS =====================
+function filterTable() {
+    const input = document.getElementById("search");
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById("requestsTable");
+    const tr = table.getElementsByTagName("tr");
+
+    let visibleCount = 0;
+    for (let i = 1; i < tr.length; i++) { // skip header
+        const td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            const txtValue = td.textContent || td.innerText;
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+                visibleCount++;
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+    document.getElementById("noResultsMessage").innerText = visibleCount === 0 ? "No matching requests found." : "";
+}
+
+function applyFilter(status) {
+    const table = document.getElementById("requestsTable");
+    const tr = table.getElementsByTagName("tr");
+
+    let visibleCount = 0;
+    for (let i = 1; i < tr.length; i++) {
+        const td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            const txtValue = td.textContent || td.innerText;
+            if (status === "all" || txtValue.toLowerCase() === status.toLowerCase()) {
+                tr[i].style.display = "";
+                visibleCount++;
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+    document.getElementById("noResultsMessage").innerText = visibleCount === 0 ? "No matching requests found." : "";
+}
 </script>
 
 </body>
