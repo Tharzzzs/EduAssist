@@ -1,14 +1,17 @@
 {% load static %}
-
 <head>
+    <title>Submit Feedback</title>
     <link rel="stylesheet" href="{% static 'pos_app/css/feedback.css' %}">
-
 </head>
 
-<h2>Submit Feedback</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Submit</button>
-  <a href="{% url 'dashboard' %}">Back to Requests</a>
-</form>
+<div class="container">
+    <h2>Submit Feedback</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-fields">
+            {{ form.as_p }}
+        </div>
+        <button type="submit">Submit</button>
+        <a href="{% url 'dashboard' %}">Back to Requests</a>
+    </form>
+</div>

@@ -1,103 +1,146 @@
-/* feedback.css */
+/* feedback.css - Red and White Design */
 
-/* General body styling */
+/* --- Variables --- */
+:root {
+    --primary-red: #dc3545; /* Deep, bold red for buttons/accents (e.g., Bootstrap danger) */
+    --hover-red: #c82333; /* Slightly darker red on hover */
+    --background-color: #f8f9fa; /* Very light gray page background */
+    --container-bg: #ffffff; /* Pure white container */
+    --border-color: #f1f1f1; /* Subtle light gray border */
+    --shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.05); /* Soft shadow */
+    --text-color: #343a40; /* Dark text for readability */
+}
+
+/* --- General Body Styling --- */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f6fa;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--background-color);
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
+    padding-bottom: 50px; 
 }
 
-/* Container for the forms and lists */
+/* --- Container (The Box) --- */
 .container {
-    background: #fff;
+    background: var(--container-bg);
     width: 90%;
-    max-width: 700px;
+    max-width: 650px;
     margin-top: 50px;
-    padding: 30px;
+    padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    /* Soft shadow provides the "box" effect */
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border-color); /* Extra subtle border */
 }
 
-/* Headings */
+/* --- Headings --- */
 h2 {
     text-align: center;
-    margin-bottom: 20px;
-    color: #333;
+    margin-bottom: 30px;
+    color: var(--text-color);
+    font-size: 1.8rem;
+    font-weight: 600; 
 }
 
-/* Forms styling */
+/* --- Forms Styling --- */
 form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px; 
 }
 
 form input, 
 form textarea, 
 form select {
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    padding: 12px 15px; 
+    border-radius: 8px; 
+    border: 1px solid #ced4da; /* Slightly defined gray border */
     font-size: 1rem;
+    color: var(--text-color);
     width: 100%;
     box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Red focus state */
+form input:focus, 
+form textarea:focus, 
+form select:focus {
+    border-color: var(--primary-red);
+    outline: none;
+    /* Subtle red glow */
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25); 
+}
+
+/* Button styling (Primary Red) */
 form button {
-    background-color: #3498db;
+    background-color: var(--primary-red);
     color: white;
     border: none;
-    padding: 12px;
-    border-radius: 6px;
-    font-size: 1rem;
+    padding: 14px; 
+    border-radius: 8px;
+    font-size: 1.05rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-weight: 500;
 }
 
 form button:hover {
-    background-color: #2980b9;
+    background-color: var(--hover-red); 
 }
 
-/* Links styled as buttons */
+form button:active {
+    transform: translateY(1px);
+}
+
+/* --- Links (Accent Red) --- */
 a {
     display: inline-block;
-    margin-top: 10px;
     text-decoration: none;
-    color: #3498db;
-    font-weight: bold;
+    color: var(--primary-red);
+    font-weight: 500;
     transition: color 0.3s ease;
 }
 
 a:hover {
-    color: #2980b9;
+    color: var(--hover-red);
 }
 
-/* Feedback list */
+/* --- Feedback List --- */
 ul {
     list-style-type: none;
     padding: 0;
+    margin-top: 30px;
 }
 
 ul li {
-    background: #f0f4f8;
-    padding: 12px 15px;
+    background: var(--container-bg); /* White background */
+    padding: 15px 20px;
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: box-shadow 0.3s ease;
 }
 
-ul li a, ul li button {
-    margin-left: 10px;
+ul li:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Delete modal */
+ul li .actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* --- Delete Modal --- */
 #deleteModal {
     display: none;
     position: fixed;
@@ -105,56 +148,78 @@ ul li a, ul li button {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.6); 
     justify-content: center;
     align-items: center;
+    z-index: 1000; 
 }
 
 #deleteModal .modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
+    background: var(--container-bg);
+    padding: 30px;
+    border-radius: 10px;
     width: 90%;
     max-width: 400px;
     text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+#deleteModal p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-color);
 }
 
 #deleteModal button {
-    margin: 10px 5px 0;
+    margin: 10px 8px 0;
     padding: 10px 20px;
     border-radius: 6px;
     border: none;
     cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
 }
 
+/* Confirm Delete Button (Primary Red) */
 #deleteModal button:first-child {
-    background-color: #e74c3c;
+    background-color: var(--primary-red);
     color: white;
 }
 
+#deleteModal button:first-child:hover {
+    background-color: var(--hover-red);
+}
+
+/* Cancel Button (Neutral Gray/White) */
 #deleteModal button:last-child {
-    background-color: #95a5a6;
+    background-color: #adb5bd; /* Muted gray for a neutral choice */
     color: white;
 }
 
-/* Textarea styling for feedback */
+#deleteModal button:last-child:hover {
+    background-color: #6c757d;
+}
+
+/* --- Textarea Styling --- */
 textarea {
     resize: vertical;
+    min-height: 100px; 
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
+/* --- Responsive Adjustments --- */
+@media (max-width: 500px) {
     .container {
-        padding: 20px;
+        padding: 25px;
+        margin-top: 30px;
     }
-
+    
     ul li {
         flex-direction: column;
         align-items: flex-start;
+        padding: 15px;
     }
-
-    ul li a, ul li button {
-        margin: 5px 0 0 0;
+    
+    ul li .actions {
+        margin-top: 10px;
     }
 }
