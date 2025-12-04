@@ -35,29 +35,23 @@
         </button>
 
         <div class="dropdown-menu" id="userDropdown">
+            
             <a href="{% url 'profile' %}">
                 <i class="fa-solid fa-user-circle"></i> Profile
             </a>
+            
             <a href="{% url 'settings' %}">
                 <i class="fa-solid fa-gear"></i> Settings
             </a>
+            
             <a href="{% url 'logout' %}" class="logout-link">
                 <i class="fa-solid fa-sign-out-alt"></i> Logout
             </a>
-            
-            {# --- MODIFIED FEEDBACK LINK SECTION START --- #}
-            {% if user.is_staff %}
-                {# Admin sees 'All Feedback' (assuming 'all_feedback' is the correct URL name) #}
-                <a href="{% url 'all_feedback' %}" class="btn btn-primary">
-                    <i class="fa-solid fa-comment-dots"></i> All Feedback
-                </a>
-            {% else %}
-                {# Standard user sees 'Give Feedback' #}
-                <a href="{% url 'submit_feedback' %}" class="btn btn-primary">
-                    <i class="fa-solid fa-comment-medical"></i> Give Feedback
-                </a>
-            {% endif %}
-            {# --- MODIFIED FEEDBACK LINK SECTION END --- #}
+
+            <a href="{% url 'submit_feedback' %}" >
+            <i class="fa-solid fa-comment"></i> Give Feedback
+        </a>
+        
         </div>
     </div>
 </header>
