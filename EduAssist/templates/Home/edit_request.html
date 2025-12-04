@@ -1,129 +1,122 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Edit Request</title>
-  <link rel="stylesheet" href="{% static 'pos_app/css/edit_requestStyle.css' %}">
-  <link rel="stylesheet" href="{% static 'pos_app/css/theme.css' %}">
-  <script src="{% static 'pos_app/js/theme-cookie.js' %}" defer></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
+<!-- Trigger Button somewhere on your page -->
+ <link rel="stylesheet" href="{% static 'pos_app/css/edit_requestStyle.css' %}">
+<link rel="stylesheet" href="{% static 'pos_app/css/theme.css' %}">
+<link rel="stylesheet" href="{% static 'pos_app/css/modal.css' %}">
 
-  <!-- ===== NAVBAR ===== -->
-  <header>
-    <div class="logo">EduAssist</div>
-    <nav>
-      {% if user.is_staff %}
-          <a href="{% url 'dashboard' %}">All Requests</a>
-          <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
-          <a href="{% url 'create_category' %}">Create Category</a>
-      {% else %}
-          <a href="{% url 'dashboard' %}">My Requests</a>
-          <a href="{% url 'add_request' %}">New Request</a>
-      {% endif %}
+<button id="openEditModal" class="button edit">Edit Request</button>
 
+<!-- ===== Modal ===== -->
+<div id="editRequestModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeEditModal">&times;</span>
+
+    <h2>Edit Request</h2>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
       
-      <a href="{% url 'logout' %}">Logout</a>
-  </nav>
-    <nav>
-    <a class="user-icon" href="{% url 'profile' %}">Profile</a>
-    <a href="{% url 'settings' %}">
-        <i class="fa-solid fa-gear"></i> Settings
-      </a>
-      </nav>
-  </header>
+      <!-- Title -->
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required value="{{ request_obj.title }}">
 
-  <!-- ===== MAIN CONTENT ===== -->
-  <main>
-    <div class="card">
-      <h1>Edit Request</h1>
-
-      {% if messages %}
-        <ul class="messages">
-          {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-
-      <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <!-- Title -->
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required value="{{ request_obj.title }}">
-
-        <!-- Status -->
-        <div class="form-group">
-          <label for="status">Status:</label>
-          <select id="status" name="status" required>
-            <option value="pending" {% if request.POST.status == "pending" %}selected{% endif %}>Pending</option>
-            <option value="approved" {% if request.POST.status == "approved" %}selected{% endif %}>Approved</option>
-            <option value="cancelled" {% if request.POST.status == "cancelled" %}selected{% endif %}>Cancelled</option>
-          </select>
-        </div>
-
-        <!-- Priority -->
-        <label for="priority">Priority:</label>
-        <select id="priority" name="priority" required>
-          <option value="low" {% if request_obj.priority == "low" %}selected{% endif %}>Low</option>
-          <option value="medium" {% if request_obj.priority == "medium" %}selected{% endif %}>Medium</option>
-          <option value="high" {% if request_obj.priority == "high" %}selected{% endif %}>High</option>
-          <option value="critical" {% if request_obj.priority == "critical" %}selected{% endif %}>Critical</option>
+      <!-- Status -->
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+          <option value="pending" {% if request.POST.status == "pending" %}selected{% endif %}>Pending</option>
+          <option value="approved" {% if request.POST.status == "approved" %}selected{% endif %}>Approved</option>
+          <option value="cancelled" {% if request.POST.status == "cancelled" %}selected{% endif %}>Cancelled</option>
         </select>
+      </div>
 
-        <!-- Category -->
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
-          <option value="">Please select a category</option>
-          {% for category in categories %}
-            <option value="{{ category.id }}" {% if request_obj.category and request_obj.category.id == category.id %}selected{% endif %}>
-              {{ category.name }}
-            </option>
-          {% endfor %}
-        </select>
+      <!-- Priority -->
+      <label for="priority">Priority:</label>
+      <select id="priority" name="priority" required>
+        <option value="low" {% if request_obj.priority == "low" %}selected{% endif %}>Low</option>
+        <option value="medium" {% if request_obj.priority == "medium" %}selected{% endif %}>Medium</option>
+        <option value="high" {% if request_obj.priority == "high" %}selected{% endif %}>High</option>
+        <option value="critical" {% if request_obj.priority == "critical" %}selected{% endif %}>Critical</option>
+      </select>
 
-        <!-- Tags -->
-        <label for="tags">Tags (comma-separated):</label>
-        <input 
-          type="text" 
-          id="tags" 
-          name="tags" 
-          placeholder="e.g., urgent, finance, bug"
-          value="{{ current_tags_str }}">
+      <!-- Category -->
+      <label for="category">Category:</label>
+      <select id="category" name="category" required>
+        <option value="">Please select a category</option>
+        {% for category in categories %}
+          <option value="{{ category.id }}" {% if request_obj.category and request_obj.category.id == category.id %}selected{% endif %}>
+            {{ category.name }}
+          </option>
+        {% endfor %}
+      </select>
 
-        <!-- Date -->
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" required value="{{ request_obj.date|date:'Y-m-d' }}">
+      <!-- Tags -->
+      <label for="tags">Tags (comma-separated):</label>
+      <input type="text" id="tags" name="tags" placeholder="e.g., urgent, finance, bug" value="{{ current_tags_str }}">
 
-        <!-- Description -->
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" rows="4" required>{{ request_obj.description }}</textarea>
+      <!-- Date -->
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" required value="{{ request_obj.date|date:'Y-m-d' }}">
 
-        <!-- Attachment -->
-        <div class="form-group">
-          <label for="attachment">Attachment (optional):</label>
-          {% if request_obj.attachment %}
-            <p>Current file:
-              <a href="{{ request_obj.attachment.url }}" target="_blank">
-                {{ request_obj.attachment.name|cut:"/" }}
-              </a>
-            </p>
-          {% else %}
-            <p>No attachment uploaded.</p>
-          {% endif %}
-          <input type="file" id="attachment" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-        </div>
+      <!-- Description -->
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" rows="4" required>{{ request_obj.description }}</textarea>
 
-        <hr>
-        <div class="btn-group">
-          <button type="submit" class="button edit">Save Changes</button>
-          <a href="{% url 'dashboard' %}" class="button cancel">Cancel</a>
-        </div>
-      </form>
-    </div>
-  </main>
-</body>
-</html>
+      <!-- Attachment -->
+      <div class="form-group">
+        <label for="attachment">Attachment (optional):</label>
+        {% if request_obj.attachment %}
+          <p>Current file:
+            <a href="{{ request_obj.attachment.url }}" target="_blank">{{ request_obj.attachment.name|cut:"/" }}</a>
+          </p>
+        {% else %}
+          <p>No attachment uploaded.</p>
+        {% endif %}
+        <input type="file" id="attachment" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+      </div>
+
+      <hr>
+      <div class="btn-group">
+        <button type="submit" class="button edit">Save Changes</button>
+        <button type="button" class="button cancel" id="cancelEditModal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== Modal JS ===== -->
+<script>
+  const modal = document.getElementById('editRequestModal');
+  const openBtn = document.getElementById('openEditModal');
+  const closeBtn = document.getElementById('closeEditModal');
+  const cancelBtn = document.getElementById('cancelEditModal');
+
+  // Open modal
+  openBtn.onclick = () => {
+    modal.style.display = 'flex';
+  }
+
+  // Close modal
+  closeBtn.onclick = () => {
+    modal.style.display = 'none';
+  }
+
+  cancelBtn.onclick = () => {
+    modal.style.display = 'none';
+  }
+
+  // Close modal when clicking outside content
+  window.onclick = (e) => {
+    if (e.target == modal) {
+      modal.style.display = 'none';
+    }
+  }
+</script>

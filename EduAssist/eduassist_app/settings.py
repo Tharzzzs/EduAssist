@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'accounts',
     'request_app',
     'settings',
+    'feedback',
 ]
 
 MIDDLEWARE = [

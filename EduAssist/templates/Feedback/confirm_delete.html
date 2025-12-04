@@ -1,0 +1,15 @@
+{% load static %}
+<head>
+    <title>Confirm Delete</title>
+    <link rel="stylesheet" href="{% static 'pos_app/css/feedback.css' %}">
+</head>
+
+<div class="container">
+    <h2>Are you sure you want to delete this feedback?</h2>
+    <p>{{ feedback.comment }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+        <a href="{% url 'my_feedback' %}">Cancel</a>
+    </form>
+</div>

@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
-from django.http import HttpResponseForbidden
+from django.http import JsonResponse, HttpResponseForbidden
 from django.db.models import Q, Count
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.template.loader import render_to_string
 
 from .models import Request, Category, CategoryChoice, Tag
 from .forms import SearchForm, RequestForm
@@ -41,7 +42,12 @@ def dashboard_view(request):
 @login_required
 def request_detail(request, id):
     req = get_object_or_404(Request, id=id)
-    return render(request, 'Home/request_detail.html', {'req': req})
+    categories = Category.objects.all()
+    return render(request, 'Home/request_detail.html', {
+        'req': req,
+        'request_obj': req,  # required for modal pre-fill
+        'categories': categories
+    })
 
 # ------------------------
 # Add Request
@@ -99,43 +105,37 @@ def edit_request(request, id):
         return HttpResponseForbidden()
 
     categories = Category.objects.all()
-    category_choices = CategoryChoice.objects.all()
     current_tags_str = ", ".join([t.name for t in req.tags.all()])
 
     if request.method == 'POST':
         req.title = request.POST.get('title')
         req.status = request.POST.get('status')
         req.priority = request.POST.get('priority')
+        req.category_id = request.POST.get('category')
+        req.date = request.POST.get('date')
         req.description = request.POST.get('description')
 
-        category_id = request.POST.get('category')
-        category_choice_id = request.POST.get('category_choice')
-
-        req.category = Category.objects.get(id=category_id) if category_id else None
-        req.category_choice = CategoryChoice.objects.get(id=category_choice_id) if category_choice_id else None
-
-        attachment = request.FILES.get('attachment')
-        if attachment:
-            req.attachment = attachment
-
-        req.tags.clear()
-        tags_str = request.POST.get('tags', '')
-        tag_names = [name.strip().lower() for name in tags_str.split(',') if name.strip()]
-        for name in tag_names:
-            tag, _ = Tag.objects.get_or_create(name=name)
-            req.tags.add(tag)
+        if 'attachment' in request.FILES:
+            req.attachment = request.FILES['attachment']
 
         req.save()
-        
+
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': True})
+
         return redirect('request_detail', id=req.id)
 
-    return render(request, 'Home/edit_request.html', {
+    context = {
         'request_obj': req,
         'categories': categories,
-        'category_choices': category_choices,
         'current_tags_str': current_tags_str
-    })
+    }
 
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        html = render_to_string('pos_app/edit_request.html', context, request=request)
+        return JsonResponse({'form_html': html})
+
+    return render(request, 'pos_app/edit_request.html', context)
 # ------------------------
 # Delete Request
 # ------------------------

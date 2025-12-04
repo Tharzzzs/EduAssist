@@ -71,10 +71,19 @@
       </div>
 
       <div class="extra-actions">
+        <!-- Change Password Button -->
         <form method="get" action="{% url 'change_password' %}">
           <button type="submit" class="btn-secondary">Change Password</button>
         </form>
+
+        {% if not user.is_staff %}
+        <!-- My Feedback Button (only for non-admin users) -->
+        <form method="get" action="{% url 'my_feedback' %}">
+          <button type="submit" class="btn-primary">My Feedback</button>
+        </form>
+        {% endif %}
       </div>
+
     </div>
   </main>
 
