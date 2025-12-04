@@ -19,38 +19,39 @@
 <header>
     <div class="logo">EduAssist</div>
 
-    <!-- Main Navigation (Simplified) -->
     <nav class="main-nav">
         {% if user.is_staff %}
             <a href="{% url 'dashboard' %}">All Requests</a>
             <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
             <a href="{% url 'create_category' %}">Create Category</a>
         {% else %}
-            <!-- Only My Requests remains for non-staff -->
             <a href="{% url 'dashboard' %}">My Requests</a>
         {% endif %}
     </nav>
     
-    <!-- User Dropdown / Hamburger Menu -->
     <div class="user-menu-container">
         <button class="menu-toggle-btn" onclick="toggleMenu()">
             <i class="fa-solid fa-bars"></i>
         </button>
 
         <div class="dropdown-menu" id="userDropdown">
-            <!-- Profile -->
+            
             <a href="{% url 'profile' %}">
                 <i class="fa-solid fa-user-circle"></i> Profile
             </a>
-            <!-- Settings -->
+            
             <a href="{% url 'settings' %}">
                 <i class="fa-solid fa-gear"></i> Settings
             </a>
-            <!-- Logout -->
+            
             <a href="{% url 'logout' %}" class="logout-link">
                 <i class="fa-solid fa-sign-out-alt"></i> Logout
             </a>
-            <a href="{% url 'submit_feedback' %}" class="btn btn-primary">Give Feedback</a>
+
+            <a href="{% url 'submit_feedback' %}" >
+            <i class="fa-solid fa-comment"></i> Give Feedback
+        </a>
+        
         </div>
     </div>
 </header>
@@ -58,12 +59,7 @@
 
 <div class="container">
 
-    <!-- The user requested removing the 'New Request' action from the header. 
-         It looks like it was already moved to a button inside the container, 
-         but for consistency, let's look at the top actions block. -->
-
     <div class="top-actions">
-        <!-- If the Add New Request button is still desired in the body, it goes here -->
         {% if not user.is_staff %}
             <a href="{% url 'add_request' %}" class="btn btn-primary">Add New Request</a>
         {% endif %}
@@ -116,7 +112,6 @@
 
 </div>
 
-<!-- ===================== MODAL ===================== -->
 <div id="requestModal" class="modal">
     <div class="modal-content">
 
@@ -129,7 +124,6 @@
     </div>
 </div>
 
-<!-- ===================== JS ===================== -->
 <script>
 function toggleMenu() {
     const dropdown = document.getElementById('userDropdown');

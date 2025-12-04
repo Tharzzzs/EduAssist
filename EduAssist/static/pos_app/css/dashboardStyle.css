@@ -372,12 +372,9 @@ p.empty {
     font-weight: bold;
     text-align: center;
     margin-top: 10px;
-}
-      color: red;
-      font-weight: bold;
-      text-align: center;
-      margin-top: 10px;
     }
+
+    
     .filter-select {
       margin-left: 10px;
       padding: 5px;
