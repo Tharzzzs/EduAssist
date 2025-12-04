@@ -2,134 +2,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
 
-  <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
-  <link rel="stylesheet" href="{% static 'pos_app/css/theme.css' %}">
-  <link rel="stylesheet" href="{% static 'pos_app/css/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
+    <link rel="stylesheet" href="{% static 'pos_app/css/theme.css' %}">
+    <link rel="stylesheet" href="{% static 'pos_app/css/modal.css' %}">
 
-  <script src="{% static 'pos_app/js/theme-cookie.js' %}" defer></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="{% static 'pos_app/js/theme-cookie.js' %}" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
 
 <header>
-  <div class="logo">EduAssist</div>
+    <div class="logo">EduAssist</div>
 
-  <nav>
-    {% if user.is_staff %}
-      <a href="{% url 'dashboard' %}">All Requests</a>
-      <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
-      <a href="{% url 'create_category' %}">Create Category</a>
-    {% else %}
-      <a href="{% url 'dashboard' %}">My Requests</a>
-      <a href="{% url 'add_request' %}">New Request</a>
-    {% endif %}
-    <a href="{% url 'logout' %}">Logout</a>
-  </nav>
+    <!-- Main Navigation (Simplified) -->
+    <nav class="main-nav">
+        {% if user.is_staff %}
+            <a href="{% url 'dashboard' %}">All Requests</a>
+            <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+            <a href="{% url 'create_category' %}">Create Category</a>
+        {% else %}
+            <!-- Only My Requests remains for non-staff -->
+            <a href="{% url 'dashboard' %}">My Requests</a>
+        {% endif %}
+    </nav>
+    
+    <!-- User Dropdown / Hamburger Menu -->
+    <div class="user-menu-container">
+        <button class="menu-toggle-btn" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
 
-  <nav>
-    <a class="user-icon" href="{% url 'profile' %}">Profile</a>
-    <a href="{% url 'settings' %}"><i class="fa-solid fa-gear"></i> Settings</a>
-  </nav>
+        <div class="dropdown-menu" id="userDropdown">
+            <!-- Profile -->
+            <a href="{% url 'profile' %}">
+                <i class="fa-solid fa-user-circle"></i> Profile
+            </a>
+            <!-- Settings -->
+            <a href="{% url 'settings' %}">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+            <!-- Logout -->
+            <a href="{% url 'logout' %}" class="logout-link">
+                <i class="fa-solid fa-sign-out-alt"></i> Logout
+            </a>
+            <a href="{% url 'submit_feedback' %}" class="btn btn-primary">Give Feedback</a>
+        </div>
+    </div>
 </header>
 
 
 <div class="container">
 
-  <div class="top-actions">
-    {% if not user.is_staff %}
-      <a href="{% url 'add_request' %}" class="btn btn-primary">Add New Request</a>
+    <!-- The user requested removing the 'New Request' action from the header. 
+         It looks like it was already moved to a button inside the container, 
+         but for consistency, let's look at the top actions block. -->
+
+    <div class="top-actions">
+        <!-- If the Add New Request button is still desired in the body, it goes here -->
+        {% if not user.is_staff %}
+            <a href="{% url 'add_request' %}" class="btn btn-primary">Add New Request</a>
+        {% endif %}
+
+        <input type="text" id="search" placeholder="Search requests..." onkeyup="filterTable()">
+        <select class="filter-select" onchange="applyFilter(this.value)">
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="cancelled">Cancelled</option>
+        </select>
+    </div>
+
+    {% if user.is_staff %}
+        <h2>All Requests (Admin View)</h2>
+    {% else %}
+        <h2>My Requests</h2>
     {% endif %}
 
-    <input type="text" id="search" placeholder="Search requests..." onkeyup="filterTable()">
-    <select class="filter-select" onchange="applyFilter(this.value)">
-        <option value="all">All</option>
-        <option value="pending">Pending</option>
-        <option value="approved">Approved</option>
-        <option value="cancelled">Cancelled</option>
-    </select>
-  </div>
+    {% if requests %}
+        <table id="requestsTable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
 
-  {% if user.is_staff %}
-    <h2>All Requests (Admin View)</h2>
-  {% else %}
-    <h2>My Requests</h2>
-  {% endif %}
+            <tbody>
+                {% for req in requests %}
+                <tr>
+                    <td>{{ req.title }}</td>
+                    <td><span class="status {{ req.status|lower }}">{{ req.status }}</span></td>
+                    <td>{{ req.date }}</td>
+                    <td>
+                        <button class="view-btn" onclick="openRequestModal(parseInt('{{ req.id }}'))">View</button>
 
-  {% if requests %}
-    <table id="requestsTable">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-      <tbody>
-        {% for req in requests %}
-        <tr>
-          <td>{{ req.title }}</td>
-          <td><span class="status {{ req.status|lower }}">{{ req.status }}</span></td>
-          <td>{{ req.date }}</td>
-          <td>
-            <button class="view-btn" onclick="openRequestModal(parseInt('{{ req.id }}'))">View</button>
-
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    <p id="noResultsMessage"></p>
-  {% else %}
-    <p class="empty">No requests available.</p>
-  {% endif %}
+        <p id="noResultsMessage"></p>
+    {% else %}
+        <p class="empty">No requests available.</p>
+    {% endif %}
 
 </div>
 
 <!-- ===================== MODAL ===================== -->
 <div id="requestModal" class="modal">
-  <div class="modal-content">
+    <div class="modal-content">
 
-    <span class="close" onclick="closeModal()">&times;</span>
+        <span class="close" onclick="closeModal()">&times;</span>
 
-    <div id="modal-body">
-      <p>Loading...</p>
+        <div id="modal-body">
+            <p>Loading...</p>
+        </div>
+
     </div>
-
-  </div>
 </div>
 
 <!-- ===================== JS ===================== -->
 <script>
+function toggleMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('show');
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+    if (!event.target.matches('.menu-toggle-btn') && !event.target.matches('.menu-toggle-btn i')) {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+}
+
 function openRequestModal(requestId) {
-  const modal = document.getElementById("requestModal");
-  const modalBody = document.getElementById("modal-body");
+    const modal = document.getElementById("requestModal");
+    const modalBody = document.getElementById("modal-body");
 
-  modal.style.display = "flex";
-  modalBody.innerHTML = "<p>Loading...</p>";
+    modal.style.display = "flex";
+    modalBody.innerHTML = "<p>Loading...</p>";
 
-  fetch(`/requests/${requestId}/`)
-    .then(response => response.text())
-    .then(html => {
-      modalBody.innerHTML = html;
-    })
-    .catch(err => {
-      modalBody.innerHTML = "<p>Error loading details.</p>";
-      console.error(err);
-    });
+    fetch(`/requests/${requestId}/`)
+        .then(response => response.text())
+        .then(html => {
+            modalBody.innerHTML = html;
+        })
+        .catch(err => {
+            modalBody.innerHTML = "<p>Error loading details.</p>";
+            console.error(err);
+        });
 }
 
 function closeModal() {
-  document.getElementById("requestModal").style.display = "none";
+    document.getElementById("requestModal").style.display = "none";
 }
 
 // Search + Filter (same as before)
+function filterTable() {
+    const searchInput = document.getElementById("search").value.toLowerCase();
+    const filterSelect = document.querySelector(".filter-select").value.toLowerCase();
+    const table = document.getElementById("requestsTable");
+    const tbody = table ? table.querySelector("tbody") : null;
+    const rows = tbody ? tbody.getElementsByTagName("tr") : [];
+    let visibleRowCount = 0;
+
+    if (!tbody) return;
+
+    for (let i = 0; i < rows.length; i++) {
+        const titleCell = rows[i].querySelector('td:nth-child(1)'); // Assuming Title is the first column
+        const statusElement = rows[i].querySelector(".status"); 
+        
+        if (!titleCell || !statusElement) continue;
+
+        const titleText = titleCell.textContent.toLowerCase();
+        const statusText = statusElement.textContent.toLowerCase();
+
+        const titleMatch = titleText.includes(searchInput);
+        const statusMatch = (filterSelect === 'all' || statusText.includes(filterSelect));
+
+        if (titleMatch && statusMatch) {
+            rows[i].style.display = "";
+            visibleRowCount++;
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+
+    const noResults = document.getElementById("noResultsMessage");
+    if (noResults) {
+        // Only show no results if the table has rows but none are visible
+        noResults.textContent = (visibleRowCount === 0 && rows.length > 0) ? "No requests match your search or filter criteria." : "";
+    }
+}
+
+function applyFilter(value) {
+    filterTable();
+}
+
 </script>
 
 </body>

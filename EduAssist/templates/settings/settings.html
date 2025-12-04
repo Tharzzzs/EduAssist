@@ -13,24 +13,40 @@
 </head>
 
 <body>
-  <header id="main-header">
+  <header>
     <div class="logo">EduAssist</div>
-    <nav>
-      <a href="{% url 'dashboard' %}">Request</a>
-      {% if user.is_staff %}
-      <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
-      <a href="{% url 'create_category' %}">Create Category</a>
-      {% endif %}
-      <a href="{% url 'add_request' %}">New Request</a>
-      <a href="{% url 'logout' %}">Logout</a>
+
+    <!-- Main Navigation (same as dashboard) -->
+    <nav class="main-nav">
+        {% if user.is_staff %}
+            <a href="{% url 'dashboard' %}">All Requests</a>
+            <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+            <a href="{% url 'create_category' %}">Create Category</a>
+        {% else %}
+            <a href="{% url 'dashboard' %}">My Requests</a>
+        {% endif %}
     </nav>
-    <nav>
-    <a class="user-icon" href="{% url 'profile' %}">Profile</a>
-    <a href="{% url 'settings' %}">
-        <i class="fa-solid fa-gear"></i> Settings
-      </a>
-      </nav>
-  </header>
+
+    <!-- User Dropdown Menu -->
+    <div class="user-menu-container">
+        <button class="menu-toggle-btn" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="dropdown-menu" id="userDropdown">
+            <a href="{% url 'profile' %}">
+                <i class="fa-solid fa-user-circle"></i> Profile
+            </a>
+            <a href="{% url 'settings' %}">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+            <a href="{% url 'logout' %}" class="logout-link">
+                <i class="fa-solid fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+</header>
+
 <div class="settings-container">
 
     <h1>User Settings</h1>
@@ -117,6 +133,20 @@
             }
         });
     });
+
+      function toggleMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('show');
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('.menu-toggle-btn') && !event.target.matches('.menu-toggle-btn i')) {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+}
 </script>
 
 </body>
