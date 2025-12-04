@@ -1,17 +1,56 @@
 {% load static %}
 <head>
     <title>Submit Feedback</title>
-    <link rel="stylesheet" href="{% static 'pos_app/css/feedback.css' %}">
+    <link rel="stylesheet" href="{% static 'pos_app/css/submit_feedback.css' %}">
 </head>
 
-<div class="container">
-    <h2>Submit Feedback</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-fields">
-            {{ form.as_p }}
-        </div>
-        <button type="submit">Submit</button>
-        <a href="{% url 'dashboard' %}">Back to Requests</a>
-    </form>
-</div>
+<body>
+    <div class="container">
+        <h2>
+            <span class="header-icon"></span>
+            Submit Your Feedback
+        </h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-fields">
+                
+                <div>
+                    <label for="id_rating_1">{{ form.rating.label }}</label>
+                    
+                    <div class="rating-input data-rating">
+                        {% for radio in form.rating %} 
+                            {{ radio.tag }}
+                            <label for="{{ radio.id_for_label }}">
+                                {{ radio.choice_label }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    {% if form.rating.errors %}
+                        <div class="errorlist">{{ form.rating.errors }}</div>
+                    {% endif %}
+                </div>
+                {% for field in form %}
+                    {% if field.name != 'rating' %}
+                        <p>
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                        </p>
+                    {% endif %}
+                {% endfor %}
+                
+            </div>
+            
+            <div class="action-buttons">
+                <button type="submit" class="btn-primary">
+                    <span class="send-icon"></span> Send Feedback
+                </button>
+                <a href="{% url 'dashboard' %}" class="btn-secondary">
+                    <span class="back-icon"></span> Back to Requests
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
