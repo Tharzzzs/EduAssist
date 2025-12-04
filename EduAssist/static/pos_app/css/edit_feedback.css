@@ -1,0 +1,212 @@
+:root {
+    --primary-red: #B30000;
+    --accent-red: #D62C2C;
+    --background-light: #ffffff;
+    --border-color: #eeeeee;
+    --text-color-dark: #333333;
+    --error-red: #dc3545;
+    --rating-default-bg: #f7f7f7;
+    --rating-default-border: #cccccc;
+    --star-unselected-color: #AAAAAA;
+}
+
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    color: var(--text-color-dark);
+}
+
+.container {
+    background-color: var(--background-light);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin: 40px auto;
+    max-width: 600px;
+}
+
+.container h2 {
+    color: var(--primary-red);
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    font-size: 1.6rem;
+}
+
+.form-fields label {
+    display: block;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 5px; /* Added margin-bottom to labels for general fields */
+    color: var(--text-color-dark);
+}
+
+/* Ensure the label for the rating field has no top margin if it's the first element in its container */
+.form-fields > div:has(.rating-input) label {
+    margin-top: 0;
+}
+
+.form-fields input:not([type="radio"]),
+.form-fields textarea,
+.form-fields select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 5px; /* Aligned with submit CSS */
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-fields input:focus:not([type="radio"]),
+.form-fields textarea:focus,
+.form-fields select:focus {
+    border-color: var(--primary-red);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.1);
+}
+
+.form-fields .errorlist {
+    color: var(--error-red);
+    font-size: 0.9rem;
+    list-style: none;
+    padding: 0;
+    margin-top: -10px; /* Aligned with submit CSS */
+    margin-bottom: 10px;
+}
+
+.form-fields > div:has(.rating-input) {
+    margin-bottom: 25px;
+}
+
+/* --- Star Icon Inside Box Rating Layout (Submit-style) --- */
+
+.rating-input input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.rating-input.data-rating {
+    display: flex;
+    flex-direction: row; 
+    gap: 0;
+    margin-top: 10px;
+    overflow: hidden;
+    border: 1px solid var(--rating-default-border);
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.rating-input.data-rating label {
+    font-size: 1.4rem;
+    color: var(--star-unselected-color); 
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin: 0 !important;
+    padding: 5px 0;
+    font-weight: normal;
+    width: 40px; 
+    height: 40px; 
+    text-align: center;
+    line-height: 30px; 
+    background-color: var(--rating-default-bg);
+    border-right: 1px solid var(--rating-default-border);
+    display: block;
+    box-sizing: border-box;
+}
+
+.rating-input.data-rating label:last-child {
+    border-right: none;
+}
+
+/* Star Icon Content */
+.rating-input.data-rating label::before {
+    content: "\2605";
+}
+
+/* Hover effect: makes star red and box lighter */
+.rating-input.data-rating label:hover {
+    background-color: #fcebeb;
+    color: var(--accent-red);
+    transform: none;
+}
+
+/* Selected state (Box) - Primary Red Background, White Star */
+.rating-input.data-rating input[type="radio"]:checked + label {
+    background-color: var(--primary-red); 
+    color: white; 
+    border-color: var(--primary-red);
+    transform: none;
+    position: relative;
+    z-index: 1;
+}
+
+/* Ensure selected box stays red and white on hover */
+.rating-input.data-rating input[type="radio"]:checked + label:hover {
+    background-color: var(--primary-red);
+    color: white;
+}
+
+/* Focus style */
+.rating-input.data-rating input[type="radio"]:focus + label {
+    box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.5);
+}
+
+
+/* --- Action Buttons (Consolidated) --- */
+
+.action-buttons {
+    margin-top: 30px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+}
+
+.btn-primary,
+button[type="submit"] {
+    background-color: var(--primary-red);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1.0rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary:hover,
+button[type="submit"]:hover {
+    background-color: var(--accent-red);
+    box-shadow: 0 4px 8px rgba(179, 0, 0, 0.2);
+}
+
+.btn-secondary,
+a.btn-secondary {
+    background-color: #f0f0f0;
+    color: var(--text-color-dark);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 15px;
+}
+
+.btn-secondary:hover,
+a.btn-secondary:hover {
+    background-color: var(--border-color);
+    color: var(--primary-red);
+    border-color: #ddd;
+}

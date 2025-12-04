@@ -6,4 +6,6 @@ urlpatterns = [
     path('my-feedback/', views.my_feedback, name='my_feedback'),
     path('edit/<int:feedback_id>/', views.edit_feedback, name='edit_feedback'),
     path('delete/<int:feedback_id>/', views.delete_feedback, name='delete_feedback'),
+
+    path('admin/all/', views.all_feedback, name='all_feedback'),
 ]

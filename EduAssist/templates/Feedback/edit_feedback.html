@@ -1,7 +1,7 @@
 {% load static %}
 <head>
     <title>Edit Feedback</title>
-    <link rel="stylesheet" href="{% static 'pos_app/css/feedback.css' %}">
+    <link rel="stylesheet" href="{% static 'pos_app/css/edit_feedback.css' %}">
 </head>
 
 <div class="container">
@@ -9,9 +9,45 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-fields">
-            {{ form.as_p }}
+            
+            {# 1. CUSTOM RATING FIELD STRUCTURE #}
+            <div>
+                <label for="id_rating_1">{{ form.rating.label }}</label>
+                
+                <div class="rating-input data-rating">
+                    {% for radio in form.rating %} 
+                        {{ radio.tag }}
+                        <label for="{{ radio.id_for_label }}">
+                            {{ radio.choice_label }}
+                        </label>
+                    {% endfor %}
+                </div>
+                {% if form.rating.errors %}
+                    <div class="errorlist">{{ form.rating.errors }}</div>
+                {% endif %}
+            </div>
+            
+            {# 2. LOOP THROUGH REMAINING FIELDS (e.g., comment, non-rating fields) #}
+            {% for field in form %}
+                {% if field.name != 'rating' %}
+                    <p>
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {{ field.errors }}
+                    </p>
+                {% endif %}
+            {% endfor %}
+            
         </div>
-        <button type="submit">Save Changes</button>
-        <a href="{% url 'my_feedback' %}">Back</a>
+        
+        {# 3. ACTION BUTTONS #}
+        <div class="action-buttons">
+            <button type="submit" class="btn-primary">
+                Save Changes
+            </button>
+            <a href="{% url 'my_feedback' %}" class="btn-secondary">
+                Back
+            </a>
+        </div>
     </form>
 </div>
