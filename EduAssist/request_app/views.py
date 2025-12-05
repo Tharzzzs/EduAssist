@@ -135,7 +135,7 @@ def edit_request(request, id):
         html = render_to_string('pos_app/edit_request.html', context, request=request)
         return JsonResponse({'form_html': html})
 
-    return render(request, 'pos_app/edit_request.html', context)
+    return render(request, 'Home/edit_request.html', context)
 # ------------------------
 # Delete Request
 # ------------------------

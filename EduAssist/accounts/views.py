@@ -46,7 +46,11 @@ def register_view(request):
         email = request.POST['email']
         password = request.POST['password']
         password2 = request.POST['password2']
-
+        
+        allowed_email = "example@citu.edu"
+        
+        if email != allowed_email:
+            messages.error(request, "Please use your educational email.")
         if password != password2:
             messages.error(request, "Passwords do not match.")
         elif User.objects.filter(username=username).exists():

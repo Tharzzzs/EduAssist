@@ -30,16 +30,40 @@
         </button>
 
         <div class="dropdown-menu" id="userDropdown">
+            {% if user.is_staff %}
             <a href="{% url 'profile' %}">
                 <i class="fa-solid fa-user-circle"></i> Profile
             </a>
+            
             <a href="{% url 'settings' %}">
                 <i class="fa-solid fa-gear"></i> Settings
             </a>
+            
             <a href="{% url 'logout' %}" class="logout-link">
                 <i class="fa-solid fa-sign-out-alt"></i> Logout
             </a>
-        </div>
+
+            <a href="{% url 'all_feedback' %}" >
+            <i class="fa-solid fa-comment"></i> All Feedback
+            </a>
+            {% else %}
+
+            <a href="{% url 'profile' %}">
+                <i class="fa-solid fa-user-circle"></i> Profile
+            </a>
+            
+            <a href="{% url 'settings' %}">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+            
+            <a href="{% url 'logout' %}" class="logout-link">
+                <i class="fa-solid fa-sign-out-alt"></i> Logout
+            </a>
+
+            <a href="{% url 'submit_feedback' %}" >
+            <i class="fa-solid fa-comment"></i> Give Feedback
+            </a>
+            {% endif %}
     </div>
 </header>
 
