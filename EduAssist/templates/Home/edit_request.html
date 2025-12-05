@@ -4,15 +4,16 @@
 {% block title %}Edit Request: {{ request_obj.title }}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'pos_app/css/edit_requestStyle.css' %}">
-<link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
+{# Reusing the Add Request CSS file for consistent styling #}
+<link rel="stylesheet" href="{% static 'pos_app/css/add_requestStyle.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="card edit-form-card">
-        <h2>Edit Request</h2>
-
+<main class="main-content-area">
+    <div class="card add-request-card">
+        <h1>Edit Request</h1>
+        <p class="subtitle">Modify the details below and save changes</p>
+        
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -21,85 +22,138 @@
         </ul>
         {% endif %}
 
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" class="request-form">
             {% csrf_token %}
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" id="title" name="title" required value="{{ request_obj.title }}">
-                </div>
 
+            <div class="form-grid">
+                
+                {# Row 1: Title #}
+                <div class="form-group form-group-full">
+                    <label for="id_title">Title</label>
+                    <input type="text" id="id_title" name="title" required value="{{ request_obj.title }}">
+                </div>
+                
+                {# Row 2: Status & Priority #}
                 <div class="form-group">
-                    <label for="status">Status:</label>
-                    <select id="status" name="status" required>
+                    <label for="id_status">Status</label>
+                    <select id="id_status" name="status" required>
                         <option value="pending" {% if request_obj.status == "pending" %}selected{% endif %}>Pending</option>
                         <option value="approved" {% if request_obj.status == "approved" %}selected{% endif %}>Approved</option>
                         <option value="cancelled" {% if request_obj.status == "cancelled" %}selected{% endif %}>Cancelled</option>
                     </select>
                 </div>
-            </div>
 
-            <div class="form-grid">
                 <div class="form-group">
-                    <label for="priority">Priority:</label>
-                    <select id="priority" name="priority" required>
+                    <label for="id_priority">Priority</label>
+                    <select id="id_priority" name="priority">
                         <option value="low" {% if request_obj.priority == "low" %}selected{% endif %}>Low</option>
                         <option value="medium" {% if request_obj.priority == "medium" %}selected{% endif %}>Medium</option>
                         <option value="high" {% if request_obj.priority == "high" %}selected{% endif %}>High</option>
                         <option value="critical" {% if request_obj.priority == "critical" %}selected{% endif %}>Critical</option>
                     </select>
                 </div>
-            
+
+                {# Row 3: Category & Query Type (Assumes `categories` and `category_choices` are passed to context) #}
                 <div class="form-group">
-                    <label for="category">Category:</label>
-                    <select id="category" name="category" required>
-                        <option value="">Please select a category</option>
+                    <label for="id_category">Category</label>
+                    <select id="id_category" name="category" required>
+                        <option value="">Select Category</option>
                         {% for category in categories %}
-                        <option value="{{ category.id }}" {% if request_obj.category and request_obj.category.id == category.id %}selected{% endif %}>
-                            {{ category.name }}
-                        </option>
+                            <option value="{{ category.id }}" 
+                                {% if request_obj.category and request_obj.category.id == category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="id_query_type">Query Type</label>
+                    <select name="category_choice" id="id_query_type" required>
+                        <option value="">Select Query Type</option>
+                        {% for choice in category_choices %}
+                            <option value="{{ choice.id }}" data-category="{{ choice.category.id }}"
+                                {% if request_obj.category_choice and request_obj.category_choice.id == choice.id %}selected{% endif %}>
+                                {{ choice.value }} ({{ choice.category.name }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                {# Row 4: Tags #}
+                <div class="form-group form-group-full">
+                    <label for="id_tags">Tags (comma separated)</label>
+                    <input type="text" id="id_tags" name="tags" placeholder="e.g., urgent, finance, bug" value="{{ current_tags_str }}">
+                </div>
+                
+                {# Row 5: Description (Full Width) #}
+                <div class="form-group form-group-full">
+                    <label for="id_description">Description</label>
+                    <textarea id="id_description" name="description" required rows="6" placeholder="Provide full details, steps to reproduce, or required outcomes.">{{ request_obj.description }}</textarea>
+                </div>
+
+                {# Row 6: Attachment (Full Width) #}
+                <div class="form-group form-group-full file-upload-group">
+                    <label for="id_attachment">Attachment (Optional)</label>
+                    {% if request_obj.attachment %}
+                    <p class="current-file">Current file:
+                        <a href="{{ request_obj.attachment.url }}" target="_blank">{{ request_obj.attachment.name|cut:"/" }}</a>
+                    </p>
+                    {% else %}
+                    <p class="current-file">No attachment uploaded.</p>
+                    {% endif %}
+                    <input type="file" id="id_attachment" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                </div>
+
             </div>
 
-            <div class="form-group full-width">
-                <label for="tags">Tags (comma-separated):</label>
-                <input type="text" id="tags" name="tags" placeholder="e.g., urgent, finance, bug" value="{{ current_tags_str }}">
-            </div>
-
-            <div class="form-group full-width">
-                <label for="date">Date:</label>
-                <input type="date" id="date" name="date" required value="{{ request_obj.date|date:'Y-m-d' }}">
-            </div>
-
-            <div class="form-group full-width">
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" rows="4" required>{{ request_obj.description }}</textarea>
-            </div>
-
-            <div class="form-group full-width attachment-section">
-                <label for="attachment">Attachment (optional):</label>
-                {% if request_obj.attachment %}
-                <p class="current-file">Current file:
-                    <a href="{{ request_obj.attachment.url }}" target="_blank">{{ request_obj.attachment.name|cut:"/" }}</a>
-                </p>
-                {% else %}
-                <p class="current-file">No attachment uploaded.</p>
-                {% endif %}
-                <input type="file" id="attachment" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-            </div>
-
-            <hr>
-            <div class="btn-group full-width">
-                <button type="submit" class="button edit">Save Changes</button>
-                <a href="{% url 'dashboard' %}" class="button cancel">Cancel</a> 
+            <div class="btn-group">
+                <button type="submit" class="button button-save">Save Changes</button>
+                <a href="{% url 'dashboard' %}" class="button button-cancel">Cancel</a>
             </div>
         </form>
     </div>
-</div>
+</main>
 {% endblock content %}
 
+
 {% block extra_js %}
+<script>
+    const categorySelect = document.getElementById('id_category');
+    const choiceSelect = document.getElementById('id_query_type');
+
+    /** Filters Query Type options based on selected Category ID and preserves current selection. */
+    function filterQueryTypes() {
+        const selectedCategory = categorySelect.value;
+        const currentChoiceId = choiceSelect.value;
+        let categoryHasMatch = false;
+
+        // 1. Hide/Show options
+        for (const option of choiceSelect.options) {
+            if (!option.value) continue; // Skip the "Select Query Type" option
+
+            const matchesCategory = option.dataset.category === selectedCategory;
+            option.style.display = matchesCategory ? 'block' : 'none';
+
+            if (matchesCategory) {
+                categoryHasMatch = true;
+            }
+        }
+
+        // 2. Adjust selection (Important for Edit View)
+        // If the current selection doesn't belong to the newly selected category, clear it.
+        const selectedOption = choiceSelect.querySelector(`option[value="${currentChoiceId}"]`);
+        if (currentChoiceId && selectedOption && selectedOption.dataset.category !== selectedCategory) {
+            choiceSelect.value = '';
+        } else if (!categoryHasMatch) {
+             // If the category has no options, ensure the field is clear
+            choiceSelect.value = '';
+        }
+    }
+
+    categorySelect.addEventListener('change', filterQueryTypes);
+
+    // Run on page load to initialize the filter and set the current value correctly
+    document.addEventListener('DOMContentLoaded', filterQueryTypes);
+</script>
 {% endblock %}

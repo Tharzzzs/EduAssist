@@ -4,7 +4,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
+<link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -35,7 +35,7 @@
             
             <div class="top-actions">
                 {% if not user.is_staff %}
-                    <a href="{% url 'add_request' %}" class="btn btn-primary">Add New Request</a>
+                    <a href="{% url 'add_request' %}" class="btn btn-primary">Add Request</a>
                 {% endif %}
 
                 <div class="search-and-filter">

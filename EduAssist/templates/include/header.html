@@ -13,6 +13,9 @@
         {% else %}
             <a href="{% url 'dashboard' %}">My Requests</a>
         {% endif %}
+        {% if not user.is_staff %}
+                    <a href="{% url 'add_request' %}" class="btn btn-primary">Add Request</a>
+                {% endif %}
     </nav>
     
     <div class="user-menu-container">

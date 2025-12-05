@@ -69,10 +69,13 @@ header {
 =========================== */
 .main-nav a {
     color: white;
-    margin-left: 18px;
+    /* INCREASED SPACE: Increased margin-left for more separation */
+    margin-left: 30px; 
+    /* Added padding-right for slight balance/breathing room */
+    padding-right: 5px; 
     text-decoration: none;
     font-weight: 500;
-    font-size: 16px;         /* larger nav text */
+    font-size: 16px;
     opacity: 0.9;
     transition: var(--hover-transition);
 }

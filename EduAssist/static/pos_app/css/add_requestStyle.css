@@ -1,232 +1,213 @@
-/* Add Request Page - Matches Modern Minimal Design */
+/* =========================================
+    add_requestStyle.css
+    Styles for the Create/Edit Request Form
+========================================= */
 
-/* ===== Reset ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Use variables from the global style for consistency */
+:root {
+    --primary-maroon: #7c2d30; 
+    --secondary-dark: #293241; 
+    --light-bg: #f7f7f7;     
+    --text-color: #4a4e69; 
+    --danger-color: #dc3545;
+    --success-color: #28a745;
+    --border-color: #e9ecef;
+    --input-border: #ced4da;
+    --focus-ring: #b73e4466; /* Maroon transparent focus ring */
+    --box-shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.08);
 }
 
-/* ===== Base ===== */
-body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f7f6f3;
-  color: #000;
-  line-height: 1.6;
-  min-height: 100vh;
+/* ===========================
+    MAIN LAYOUT & CARD
+=========================== */
+
+/* Ensures the form area utilizes the space well */
+.main-content-area {
+    padding: 0px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 72px - 80px); /* Adjust height to fill screen below header */
 }
 
-/* ===== Navbar (Matched with Edit Request Page) ===== */
-header {
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.2rem 3rem;
-  border-bottom: 1px solid #ddd;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+.add-request-card {
+    background: white;
+    padding: 50px;
+    border-radius: 16px;
+    box-shadow: var(--box-shadow-medium);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 850px; /* Wider card to accommodate grid layout */
 }
 
-.logo {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #000;
-  letter-spacing: 0.5px;
+.add-request-card h1 {
+    color: var(--secondary-dark);
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 5px;
 }
 
-nav {
-  display: flex;
-  gap: 2rem;
+.add-request-card .subtitle {
+    color: #6c757d;
+    font-size: 16px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
 }
 
-nav a {
-  color: #000;
-  text-decoration: none;
-  font-weight: 500;
-  position: relative;
-  padding: 0.4rem 0.6rem;
-  transition: all 0.3s ease;
-}
+/* ===========================
+    FORM GRID LAYOUT
+=========================== */
 
-/* Hover effect: underline grows in smoothly */
-nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -3px;
-  width: 0%;
-  height: 2px;
-  background-color: #000;
-  transition: width 0.3s ease;
-}
-
-nav a:hover::after {
-  width: 100%;
-}
-
-/* Optional: soft background fade */
-nav a:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 6px;
-}
-
-.user-icon {
-  color: #000;
-  font-weight: 500;
-  text-decoration: none;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-}
-
-.user-icon:hover {
-  transform: scale(1.05);
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-/* ===== Main Layout ===== */
-main {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 3rem 1rem;
-}
-
-/* ===== Card ===== */
-.card {
-  background: #fff;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 700px;
-  border: 1px solid #eaeaea;
-}
-
-.card h1 {
-  text-align: center;
-  font-size: 1.8rem;
-  color: #000;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.subtitle {
-  text-align: center;
-  color: #666;
-  font-size: 0.95rem;
-  margin-bottom: 2rem;
-}
-
-/* ===== Form ===== */
 .request-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+    padding-top: 10px;
+}
+
+.form-grid {
+    display: grid;
+    /* Two-column layout for smaller fields */
+    grid-template-columns: 1fr 1fr; 
+    gap: 30px 40px;
+    margin-bottom: 30px;
+}
+
+/* Forces fields like Title and Description to span the full width */
+.form-group-full {
+    grid-column: 1 / -1; 
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
-label {
-  font-weight: 600;
-  color: #000;
+.form-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 8px;
+    font-size: 15px;
 }
 
-input,
-select,
-textarea {
-  padding: 0.75rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.2s ease;
+/* ===========================
+    INPUT & SELECT STYLES
+=========================== */
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+    padding: 12px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--secondary-dark);
+    background-color: #fff;
+    transition: all 0.2s ease;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #999;
+.form-group input[type="text"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--primary-maroon);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-textarea {
-  resize: vertical;
-  min-height: 120px;
+.form-group textarea {
+    resize: vertical;
+    line-height: 1.6;
 }
 
-hr {
-  margin: 2rem 0 1.5rem;
-  border: none;
-  border-top: 1px solid #eee;
+/* Style for the file input */
+.file-upload-group input[type="file"] {
+    padding: 10px 0; /* Adjust padding for file input */
+    border: none;
+    background: none;
+    font-size: 15px;
 }
 
-/* ===== Buttons ===== */
+/* Current file text styling */
+.current-file {
+    color: var(--text-color);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+.current-file a {
+    color: var(--primary-maroon);
+    text-decoration: underline;
+}
+
+/* ===========================
+    BUTTONS
+=========================== */
+
 .btn-group {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
 }
 
 .button {
-  display: inline-block;
-  text-decoration: none;
-  padding: 0.75rem 1.8rem;
-  font-weight: 600;
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  border: none;
-  cursor: pointer;
-}
-
-.button.save {
-  background-color: #000;
-  color: #fff;
-}
-
-.button.save:hover {
-  background-color: #333;
-}
-
-.button.cancel {
-  background-color: #777;
-  color: #fff;
-}
-
-.button.cancel:hover {
-  background-color: #555;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  nav {
-    gap: 1rem;
-  }
-
-  .card {
-    padding: 1.5rem;
-  }
-
-  .btn-group {
-    flex-direction: column;
-  }
-
-  .button {
-    width: 100%;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    border: none;
+    font-size: 16px;
     text-align: center;
-  }
+    display: inline-flex;
+    align-items: center;
+}
+
+.button-save {
+    background-color: var(--primary-maroon);
+    color: white;
+}
+
+.button-save:hover {
+    background-color: #9f393e; 
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button-cancel {
+    background-color: #e9ecef;
+    color: var(--text-color);
+    border: 1px solid #ced4da;
+}
+
+.button-cancel:hover {
+    background-color: #d8dee3;
+}
+
+/* ===========================
+    MEDIA QUERIES (Responsiveness)
+=========================== */
+
+@media (max-width: 768px) {
+    .add-request-card {
+        padding: 30px 25px;
+        max-width: 100%;
+    }
+
+    .form-grid {
+        /* Single column layout on smaller screens */
+        grid-template-columns: 1fr; 
+        gap: 20px;
+    }
+    
+    .form-group-full {
+        grid-column: auto; /* Reset column span */
+    }
+
+    .btn-group {
+        justify-content: space-around;
+    }
+
+    .button {
+        flex-grow: 1; /* Make buttons fill available width */
+    }
 }

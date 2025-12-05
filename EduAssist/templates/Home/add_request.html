@@ -1,102 +1,123 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Add Request</title>
-  <link rel="stylesheet" href="{% static 'pos_app/css/add_requestStyle.css' %}">
-  <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
-  <link rel="stylesheet" href="{% static 'pos_app/css/theme.css' %}">
-  <script src="{% static 'pos_app/js/theme-cookie.js' %}" defer></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
 
-{% include 'include/header.html' %}
-<main>
-  <div class="card">
-    <h1>Create Request</h1>
-    <p class="subtitle">Fill in the details below to submit a new request</p>
+{% block title %}Create New Request{% endblock %}
 
-    <form method="POST" enctype="multipart/form-data" class="request-form">
-      {% csrf_token %}
+{% block extra_css %}
+{# The link below correctly references the external CSS file #}
+<link rel="stylesheet" href="{% static 'pos_app/css/add_requestStyle.css' %}">
+{% endblock %}
 
-      <div class="form-group">
-        <label>Title</label>
-        <input type="text" name="title" required>
-      </div>
+{% block content %}
+<main class="main-content-area">
+    <div class="card add-request-card">
+        <h1>Create Request</h1>
+        <p class="subtitle">Fill in the details below to submit a new request</p>
 
-      <div class="form-group">
-        <label>Description</label>
-        <textarea name="description" required></textarea>
-      </div>
+        <form method="POST" enctype="multipart/form-data" class="request-form">
+            {% csrf_token %}
 
-      <div class="form-group">
-        <label>Priority</label>
-        <select name="priority">
-            <option value="low">Low</option>
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-            <option value="critical">Critical</option>
-        </select>
-      </div>
+            <div class="form-grid">
+                
+                {# Row 1: Title #}
+                <div class="form-group form-group-full">
+                    <label for="id_title">Title</label>
+                    <input type="text" id="id_title" name="title" required placeholder="A brief, descriptive summary of your request">
+                </div>
+                
+                {# Row 2: Priority & Category #}
+                <div class="form-group">
+                    <label for="id_priority">Priority</label>
+                    <select id="id_priority" name="priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
 
-      <div class="form-group">
-        <label>Category</label>
-        <select name="category" id="category" required>
-          <option value="">Select Category</option>
-          {% for cat in categories %}
-            <option value="{{ cat.id }}">{{ cat.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
+                <div class="form-group">
+                    <label for="id_category">Category</label>
+                    <select id="id_category" name="category" required>
+                        <option value="">Select Category</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}">{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-      <div class="form-group">
-        <label>Query Type</label>
-          
-        <select name="category_choice" id="category_choice" required>
-          <option value="">Select Query Type</option>
-          {% for choice in category_choices %}
-            <option value="{{ choice.id }}" data-category="{{ choice.category.id }}">
-              {{ choice.value }} ({{ choice.category.name }})
-            </option>
-          {% endfor %}
-        </select>
-      </div>
+                {# Row 3: Query Type & Tags #}
+                <div class="form-group">
+                    <label for="id_query_type">Query Type</label>
+                    <select name="category_choice" id="id_query_type" required>
+                        <option value="">Select Query Type</option>
+                        {% for choice in category_choices %}
+                            <option value="{{ choice.id }}" data-category="{{ choice.category.id }}">
+                                {{ choice.value }} ({{ choice.category.name }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_tags">Tags (comma separated)</label>
+                    <input type="text" id="id_tags" name="tags" placeholder="urgent, bug, finance">
+                </div>
+                
+                {# Row 4: Description (Full Width) #}
+                <div class="form-group form-group-full">
+                    <label for="id_description">Description</label>
+                    <textarea id="id_description" name="description" required rows="6" placeholder="Provide full details, steps to reproduce, or required outcomes."></textarea>
+                </div>
 
-      <div class="form-group">
-        <label>Tags (comma separated)</label>
-        <input type="text" name="tags" placeholder="urgent, bug, finance">
-      </div>
+                {# Row 5: Attachment (Full Width) #}
+                <div class="form-group form-group-full file-upload-group">
+                    <label for="id_attachment">Attachment (Optional)</label>
+                    <input type="file" id="id_attachment" name="attachment">
+                </div>
 
-      <div class="form-group">
-        <label>Attachment</label>
-        <input type="file" name="attachment">
-      </div>
+            </div>
 
-      <div class="btn-group">
-        <button type="submit" class="button save">Submit Request</button>
-        <a href="{% url 'dashboard' %}" class="button cancel">Cancel</a>
-      </div>
-    </form>
-  </div>
+            <div class="btn-group">
+                <button type="submit" class="button button-save">Submit Request</button>
+                <a href="{% url 'dashboard' %}" class="button button-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
 </main>
+{% endblock content %}
 
+
+{% block extra_js %}
 <script>
-  const categorySelect = document.getElementById('category');
-  const choiceSelect = document.getElementById('category_choice');
+    const categorySelect = document.getElementById('id_category');
+    const choiceSelect = document.getElementById('id_query_type');
 
-  categorySelect.addEventListener('change', function() {
-      const selectedCategory = this.value;
-      for (const option of choiceSelect.options) {
-          if (!option.value) continue;
-          option.style.display = (option.dataset.category === selectedCategory) ? 'block' : 'none';
-      }
-      choiceSelect.value = '';
-  });
+    categorySelect.addEventListener('change', function() {
+        const selectedCategory = this.value;
+        let foundMatch = false;
+        
+        // Hide all options first
+        for (const option of choiceSelect.options) {
+            if (!option.value) continue; // Skip the "Select Query Type" option
+            option.style.display = 'none';
+        }
+        
+        // Show matching options
+        for (const option of choiceSelect.options) {
+            if (option.dataset.category === selectedCategory) {
+                option.style.display = 'block';
+                if (!foundMatch) {
+                    foundMatch = true;
+                }
+            }
+        }
+        
+        // Ensure choiceSelect value is cleared if the selected category has changed
+        choiceSelect.value = '';
+    });
 
-  categorySelect.dispatchEvent(new Event('change'));
+    // Initial run to hide/show options based on the initial category selection
+    categorySelect.dispatchEvent(new Event('change'));
 </script>
-
-</body>
-</html>
+{% endblock %}
