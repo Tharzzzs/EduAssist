@@ -1,81 +1,13 @@
+{% extends 'base.html' %} 
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
 
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_css %}
     <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
-    <link rel="stylesheet" href="{% static 'pos_app/css/theme.css' %}">
-    <link rel="stylesheet" href="{% static 'pos_app/css/modal.css' %}">
+    {% endblock %}
 
-    <script src="{% static 'pos_app/js/theme-cookie.js' %}" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-
-<body>
-
-<header>
-    <div class="logo">EduAssist</div>
-
-    <nav class="main-nav">
-        {% if user.is_staff %}
-            <a href="{% url 'dashboard' %}">All Requests</a>
-            <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
-            <a href="{% url 'create_category' %}">Create Category</a>
-        {% else %}
-            <a href="{% url 'dashboard' %}">My Requests</a>
-        {% endif %}
-    </nav>
-    
-    <div class="user-menu-container">
-        <button class="menu-toggle-btn" onclick="toggleMenu()">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-
-        <div class="dropdown-menu" id="userDropdown">
-            {% if user.is_staff %}
-            <a href="{% url 'profile' %}">
-                <i class="fa-solid fa-user-circle"></i> Profile
-            </a>
-            
-            <a href="{% url 'settings' %}">
-                <i class="fa-solid fa-gear"></i> Settings
-            </a>
-            
-            <a href="{% url 'logout' %}" class="logout-link">
-                <i class="fa-solid fa-sign-out-alt"></i> Logout
-            </a>
-
-            <a href="{% url 'all_feedback' %}" >
-            <i class="fa-solid fa-comment"></i> All Feedback
-            </a>
-            {% else %}
-
-            <a href="{% url 'profile' %}">
-                <i class="fa-solid fa-user-circle"></i> Profile
-            </a>
-            
-            <a href="{% url 'settings' %}">
-                <i class="fa-solid fa-gear"></i> Settings
-            </a>
-            
-            <a href="{% url 'logout' %}" class="logout-link">
-                <i class="fa-solid fa-sign-out-alt"></i> Logout
-            </a>
-
-            <a href="{% url 'submit_feedback' %}" >
-            <i class="fa-solid fa-comment"></i> Give Feedback
-            </a>
-            {% endif %}
-        
-        
-        </div>
-    </div>
-</header>
-
-
+{% block content %}
 <div class="container">
 
     <div class="top-actions">
@@ -116,8 +48,7 @@
                     <td><span class="status {{ req.status|lower }}">{{ req.status }}</span></td>
                     <td>{{ req.date }}</td>
                     <td>
-                        <button class="view-btn" onclick="openRequestModal(parseInt('{{ req.id }}'))">View</button>
-
+                        <a href="{% url 'request_detail' req.id %}" class="view-btn">View</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -131,57 +62,16 @@
 
 </div>
 
-<div id="requestModal" class="modal">
-    <div class="modal-content">
+{% endblock %}
 
-        <span class="close" onclick="closeModal()">&times;</span>
 
-        <div id="modal-body">
-            <p>Loading...</p>
-        </div>
-
-    </div>
-</div>
-
+{% block extra_js %}
 <script>
-function toggleMenu() {
-    const dropdown = document.getElementById('userDropdown');
-    dropdown.classList.toggle('show');
-}
+// --- START: Dashboard-Specific JavaScript ---
 
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-    if (!event.target.matches('.menu-toggle-btn') && !event.target.matches('.menu-toggle-btn i')) {
-        const dropdown = document.getElementById('userDropdown');
-        if (dropdown.classList.contains('show')) {
-            dropdown.classList.remove('show');
-        }
-    }
-}
+// REMOVED: openRequestModal and closeModal functions
 
-function openRequestModal(requestId) {
-    const modal = document.getElementById("requestModal");
-    const modalBody = document.getElementById("modal-body");
-
-    modal.style.display = "flex";
-    modalBody.innerHTML = "<p>Loading...</p>";
-
-    fetch(`/requests/${requestId}/`)
-        .then(response => response.text())
-        .then(html => {
-            modalBody.innerHTML = html;
-        })
-        .catch(err => {
-            modalBody.innerHTML = "<p>Error loading details.</p>";
-            console.error(err);
-        });
-}
-
-function closeModal() {
-    document.getElementById("requestModal").style.display = "none";
-}
-
-// Search + Filter (same as before)
+// Search + Filter Logic (KEPT AS IT IS)
 function filterTable() {
     const searchInput = document.getElementById("search").value.toLowerCase();
     const filterSelect = document.querySelector(".filter-select").value.toLowerCase();
@@ -222,8 +112,6 @@ function filterTable() {
 function applyFilter(value) {
     filterTable();
 }
-
+// --- END: Dashboard-Specific JavaScript ---
 </script>
-
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
+<header>
+    <div class="logo">EduAssist</div>
+
+    <nav class="main-nav">
+        {% if user.is_staff %}
+            <a href="{% url 'dashboard' %}">All Requests</a>
+            <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+            <a href="{% url 'create_category' %}">Create Category</a>
+        {% else %}
+            <a href="{% url 'dashboard' %}">My Requests</a>
+        {% endif %}
+    </nav>
+    
+    <div class="user-menu-container">
+        <button class="menu-toggle-btn" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="dropdown-menu" id="userDropdown">
+            
+            <a href="{% url 'profile' %}">
+                <i class="fa-solid fa-user-circle"></i> Profile
+            </a>
+            
+            <a href="{% url 'settings' %}">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+            
+            {% if user.is_staff %}
+                <a href="{% url 'all_feedback' %}" >
+                    <i class="fa-solid fa-comment"></i> All Feedback
+                </a>
+            {% else %}
+                <a href="{% url 'submit_feedback' %}" >
+                    <i class="fa-solid fa-comment"></i> Give Feedback
+                </a>
+            {% endif %}
+
+            <a href="{% url 'logout' %}" class="logout-link">
+                <i class="fa-solid fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+</header>
+
+<script>
+function toggleMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    // Check if the dropdown exists before toggling the class
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+    }
+}
+
+// Close the dropdown if the user clicks outside of the menu button area
+window.onclick = function(event) {
+    // We use .closest() to check if the clicked element or any of its parents 
+    // matches the menu toggle button.
+    if (!event.target.closest('.menu-toggle-btn')) {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown && dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+}
+</script>

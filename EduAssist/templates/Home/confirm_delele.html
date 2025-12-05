@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Confirm Delete Request{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pos_app/css/confirm_delete.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card delete-card">
+        <h2>Confirm Deletion 🗑️</h2>
+        
+        <p class="warning-text">
+            Are you sure you want to permanently delete the request titled: 
+            <strong>"{{ req.title }}"</strong>?
+        </p>
+
+        <p class="detail-text">
+            You are about to delete **Request ID: {{ req.id }}**. This action cannot be undone.
+        </p>
+
+        <form method="POST" class="delete-form">
+            {% csrf_token %}
+            
+            <div class="button-group">
+                <button type="submit" class="btn btn-danger">Yes, Delete It</button>
+                
+                <a href="{% url 'request_detail' req.id %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

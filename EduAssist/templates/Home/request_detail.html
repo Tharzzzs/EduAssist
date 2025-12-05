@@ -1,65 +1,150 @@
+{% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Details: {{ req.title }}{% endblock %}
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'pos_app/css/request_detailStyle.css' %}">
-<link rel="stylesheet" href="{% static 'pos_app/css/modal.css' %}">
+{% endblock %}
 
-<div class="detail-container">
-    <h2>Request Details</h2>
+{% block content %}
+<div class="container">
+    <div class="detail-container">
+        <h2>Request Details</h2>
 
-    <div class="detail-item">
-      <strong>Title:</strong> <span>{{ req.title }}</span>
-    </div>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <strong>Title:</strong> <span>{{ req.title }}</span>
+            </div>
 
-    <div class="detail-item">
-      <strong>Status:</strong>
-      <span class="status {{ req.status }}">{{ req.get_status_display }}</span>
-    </div>
+            <div class="detail-item">
+                <strong>Status:</strong>
+                <span class="status {{ req.status }}">{{ req.get_status_display }}</span>
+            </div>
 
-    <div class="detail-item">
-      <strong>Priority:</strong>
-      <span>{{ req.get_priority_display }}</span>
-    </div>
+            <div class="detail-item">
+                <strong>Priority:</strong>
+                <span>{{ req.get_priority_display }}</span>
+            </div>
 
-    <div class="detail-item">
-      <strong>Category:</strong>
-      <span>{{ req.category.name }}</span>
-    </div>
+            <div class="detail-item">
+                <strong>Category:</strong>
+                <span>{{ req.category.name }}</span>
+            </div>
 
-    <div class="detail-item">
-      <strong>Tags:</strong>
-      {% if req.tags.all %}
-        {% for tag in req.tags.all %}
-          {{ tag.name }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-      {% else %}
-        <span>No tags provided.</span>
-      {% endif %}
-    </div>
+            <div class="detail-item">
+                <strong>Tags:</strong>
+                {% if req.tags.all %}
+                    {% for tag in req.tags.all %}
+                        <span class="tag">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <span>No tags provided.</span>
+                {% endif %}
+            </div>
 
-    <div class="detail-item">
-      <strong>Date:</strong> <span>{{ req.date|date:"Y-m-d" }}</span>
-    </div>
+            <div class="detail-item">
+                <strong>Date:</strong> <span>{{ req.date|date:"Y-m-d" }}</span>
+            </div>
+        </div>
+        
+        <div class="description-section">
+            <strong>Description:</strong>
+            <div class="description-box">{{ req.description }}</div>
+        </div>
 
-    <div class="detail-item">
-      <strong>Description:</strong>
-      <div class="description-box">{{ req.description }}</div>
-    </div>
+        <div class="attachment-section">
+            <strong>Attachment:</strong>
+            {% if req.attachment %}
+                <a href="{{ req.attachment.url }}" target="_blank">View Attachment</a>
+            {% else %}
+                <span>No attachment provided.</span>
+            {% endif %}
+        </div>
 
-    <div class="detail-item">
-      <strong>Attachment:</strong>
-      {% if req.attachment %}
-        <a href="{{ req.attachment.url }}" target="_blank">View Attachment</a>
-      {% else %}
-        <span>No attachment provided.</span>
-      {% endif %}
-    </div>
-
-    <div class="detail-actions">
-      {% if request.user == req.user or request.user.is_staff %}
-      
-      <a href="{% url 'edit_request' req.id %}" class="btn-primary">Edit</a>
-      <a href="{% url 'delete_request' req.id %}" class="btn-danger">Delete</a>
-      {% endif %}
+        <div class="detail-actions">
+            <a href="{% url 'dashboard' %}" class="btn-secondary">← Back to Dashboard</a>
+            
+            {% if request.user == req.user or request.user.is_staff %}
+            
+            <a href="{% url 'edit_request' req.id %}" class="btn-primary">Edit Request</a>
+            
+            <button 
+                type="button" 
+                onclick='openDeleteModal({{ req.id }}, "{{ req.title|escapejs }}");' 
+                class="btn-danger"
+            >
+                Delete
+            </button>
+            {% endif %}
+        </div>
     </div>
 </div>
 
+<div id="deleteModal" class="modal" style="display: none;">
+    <div class="modal-content delete-modal-content">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        
+        <h2>Confirm Deletion</h2>
+        
+        <p class="warning-text">
+            Are you sure you want to delete the request titled: 
+            <strong id="deleteRequestTitle"></strong>?
+        </p>
+
+        <p class="detail-text">
+            This action cannot be undone.
+        </p>
+
+        <form method="POST" id="deleteRequestForm" action="{% url 'delete_request' 0 %}">
+            {% csrf_token %}
+            
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button type="submit" class="btn btn-danger">Yes, Delete It</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block extra_js %}
+<script>
+    // Goal: Construct the final URL (e.g., /requests/13/delete/)
+
+    // 1. Get the base URL template, including the placeholder '0'.
+    // Result: A string like '/Home/requests/0/delete/'
+    const deleteUrlTemplate = "{% url 'delete_request' 0 %}"; 
+    
+    // 2. We define the ID placeholder as a string to be replaced.
+    const idPlaceholder = '0'; 
+
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteRequestForm = document.getElementById('deleteRequestForm');
+    const deleteRequestTitle = document.getElementById('deleteRequestTitle');
+
+    /**
+     * Opens the delete modal and sets the correct form action and title.
+     */
+    function openDeleteModal(requestId, requestTitle) {
+        // Construct the final action URL by replacing the placeholder '0' with the actual ID.
+        // This ensures correct URL formatting (e.g., /Home/requests/13/delete/).
+        deleteRequestForm.action = deleteUrlTemplate.replace(idPlaceholder, requestId);
+        
+        deleteRequestTitle.textContent = requestTitle;
+        deleteModal.style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        deleteModal.style.display = 'none';
+    }
+
+    // Close modal when clicking outside content
+    window.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            closeDeleteModal();
+        }
+    });
+</script>
+{% endblock %}

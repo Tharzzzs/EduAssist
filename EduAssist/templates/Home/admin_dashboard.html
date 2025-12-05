@@ -1,59 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Admin Panel</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
-  <link rel="stylesheet" href="{% static 'pos_app/css/theme.css' %}">
-  <script src="{% static 'pos_app/js/theme-cookie.js' %}" defer></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-  <header>
-    <div class="logo">EduAssist</div>
-    <nav>
-      {% if user.is_staff %}
-          <a href="{% url 'dashboard' %}">All Requests</a>
-          <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
-          <a href="{% url 'create_category' %}">Create Category</a>
-      {% else %}
-          <a href="{% url 'dashboard' %}">My Requests</a>
-          <a href="{% url 'add_request' %}">New Request</a>
-      {% endif %}
+{% extends 'base.html' %}
+{% load static %}
 
-      
-      <a href="{% url 'logout' %}">Logout</a>
-  </nav>
-    <nav>
-    <a class="user-icon" href="{% url 'profile' %}">Profile</a>
-    <a href="{% url 'settings' %}">
-        <i class="fa-solid fa-gear"></i> Settings
-      </a>
-      </nav>
-  </header>
-  <div class="container">
+{% block title %}Admin Panel{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
     <h2>User Profiles</h2>
+    
+    {% if users %}
     <table>
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Contact</th>
-          <th>Program</th>
-          <th>Year Level</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for profile in users %}
-        <tr>
-          <td>{{ profile.user.username }}</td>
-          <td>{{ profile.contact }}</td>
-          <td>{{ profile.program }}</td>
-          <td>{{ profile.year_level }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Contact</th>
+                <th>Program</th>
+                <th>Year Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in users %}
+            <tr>
+                <td>{{ profile.user.username }}</td>
+                <td>{{ profile.contact }}</td>
+                <td>{{ profile.program }}</td>
+                <td>{{ profile.year_level }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-  </div>
-</body>
-</html>
+    {% else %}
+    <p class="empty">No user profiles found.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

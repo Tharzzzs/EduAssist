@@ -1,0 +1,101 @@
+/* --- Define Primary Color Variables (if not globally available in theme.css) --- */
+:root {
+    --primary-red: #8c0000;
+    --danger-red: #dc3545;
+    --danger-hover: #c82333;
+    --accent-color: #333;
+    --border-color: #e0e0e0;
+}
+
+/* Ensure the card is centered on the page by leveraging main's flex properties */
+.container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.delete-card {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px; /* Small, focused card */
+    margin: 3rem 1rem;
+    text-align: center;
+    border: 1px solid var(--danger-red); /* Danger border */
+}
+
+.delete-card h2 {
+    color: var(--danger-red);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.warning-text {
+    font-size: 1.1rem;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+.detail-text {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 2rem;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.btn-danger {
+    background-color: var(--danger-red);
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background-color: var(--danger-hover);
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+    color: var(--accent-color) !important;
+    border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+/* --- Dark Mode Overrides for Delete Card --- */
+html.dark .delete-card {
+    background: #1d1d1d !important;
+    border-color: #8b1e1e !important;
+}
+
+html.dark .delete-card h2,
+html.dark .warning-text,
+html.dark .detail-text {
+    color: #ffffff !important;
+}
+
+html.dark .btn-secondary {
+    background-color: #333 !important;
+    color: #ffffff !important;
+    border-color: #777 !important;
+}

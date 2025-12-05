@@ -1,9 +1,15 @@
+/* ======================================= */
+/* 🌙 DARK MODE STYLES */
+/* ======================================= */
+
+/* --- Base Colors --- */
 html.dark,
 body.dark {
     background-color: #121212 !important;
     color: #ffffff !important;
 }
 
+/* --- Header/Navigation --- */
 html.dark header,
 html.dark header nav {
     background: #1b1b1b !important;
@@ -15,6 +21,7 @@ html.dark .user-icon {
     color: #ffffff !important;
 }
 
+/* --- Text & Titles --- */
 html.dark label,
 html.dark .form-label,
 html.dark .field-label,
@@ -30,6 +37,32 @@ html.dark .profile-title {
     color: #ffffff !important;
 }
 
+html.dark a {
+    color: #bbd7ff !important; /* Light blue links */
+}
+
+html.dark p,
+html.dark span,
+html.dark .subtext,
+html.dark small {
+    color: #dcdcdc !important;
+}
+
+/* --- Containers/Cards/Sections --- */
+html.dark .container,
+html.dark .card,
+html.dark .section,
+html.dark .content,
+html.dark .request-container,
+html.dark .dashboard-container,
+html.dark .profile-container,
+html.dark .box {
+    background: #1d1d1d !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+/* --- Profile Specific Boxes (Background & Border) --- */
 html.dark .profile-container > div:first-child,
 html.dark .profile-container .profile-header-box,
 html.dark .profile-container .profile-info-box,
@@ -51,7 +84,6 @@ html.dark .profile-container p {
     color: #ffffff !important;
 }
 
-
 html.dark .profile-container,
 html.dark .profile-card,
 html.dark .profile-content {
@@ -59,24 +91,15 @@ html.dark .profile-content {
     color: #ffffff !important;
 }
 
-
 html.dark .profile-container label,
 html.dark .profile-container .label,
 html.dark .profile-container .field-label {
     color: #eaeaea !important;
 }
 
-
 html.dark .profile-container p,
 html.dark .profile-container small {
     color: #cccccc !important;
-}
-
-
-html.dark input::placeholder,
-html.dark textarea::placeholder,
-html.dark select::placeholder {
-    color: #bbbbbb !important;
 }
 
 html.dark .user-details {
@@ -92,6 +115,8 @@ html.dark .user-details b {
     color: #ffffff !important;
 }
 
+
+/* --- Forms/Inputs --- */
 html.dark input,
 html.dark select,
 html.dark textarea {
@@ -100,12 +125,18 @@ html.dark textarea {
     border: 1px solid #555 !important;
 }
 
+html.dark input::placeholder,
+html.dark textarea::placeholder,
+html.dark select::placeholder {
+    color: #bbbbbb !important;
+}
+
 html.dark select option {
     background: #2a2a2a !important;
     color: white !important;
 }
 
-
+/* --- Tables --- */
 html.dark table {
     background: #1c1c1c !important;
     color: #ffffff !important;
@@ -121,19 +152,8 @@ html.dark td {
     color: #f0f0f0 !important;
 }
 
-html.dark .container,
-html.dark .card,
-html.dark .section,
-html.dark .content,
-html.dark .request-container,
-html.dark .dashboard-container,
-html.dark .profile-container,
-html.dark .box {
-    background: #1d1d1d !important;
-    color: #ffffff !important;
-    border-color: #444 !important;
-}
 
+/* --- Buttons (Neutral Gray) --- */
 html.dark button,
 html.dark .btn {
     background-color: #333 !important;
@@ -146,26 +166,13 @@ html.dark .btn:hover {
     background-color: #444 !important;
 }
 
-html.dark a {
-    color: #bbd7ff !important;
-}
-
-html.dark p,
-html.dark span,
-html.dark .subtext,
-html.dark small {
-    color: #dcdcdc !important;
-}
-
-
-
+/* --- Change Password Container --- */
 html.dark .change-password-container,
 body.dark .change-password-container {
     background: #1d1d1d !important;
     color: #ffffff !important;
     border: 1px solid #444 !important;
 }
-
 
 html.dark .change-password-container label,
 html.dark .change-password-container p,
@@ -174,23 +181,21 @@ html.dark .change-password-container small {
     color: #eaeaea !important;
 }
 
-
 html.dark .change-password-container .requirement,
 html.dark .change-password-container .password-requirement {
-    color: #ff6b6b !important;
+    color: #ff6b6b !important; /* Error/Requirement Red */
 }
-
 
 html.dark .change-password-container a {
     color: #bbd7ff !important;
 }
 
-
+/* --- Detail/Modal Containers --- */
 html.dark .detail-container {
     background: #1d1d1d !important;      
     color: #ffffff !important;           
-    border: 1px solid #444 !important;  
-    box-shadow: none !important;         
+    border: 1px solid #444 !important;   
+    box-shadow: none !important;          
 }
 
 html.dark .detail-container * {
@@ -205,9 +210,10 @@ html.dark .detail-container .card-body {
     border: 1px solid #444 !important;
 }
 
+/* --- Specific Action Buttons (Success/Approve) --- */
 html.dark .btn-approve,
 body.dark .btn-approve {
-    background: #4CAF50 !important;
+    background: #4CAF50 !important; /* Green */
     color: #ffffff !important;
 }
 

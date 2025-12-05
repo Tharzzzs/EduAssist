@@ -11,61 +11,7 @@
 </head>
 
 <body>
-  <header>
-    <div class="logo">EduAssist</div>
-    <nav class="main-nav">
-        {% if user.is_staff %}
-            <a href="{% url 'dashboard' %}">All Requests</a>
-            <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
-            <a href="{% url 'create_category' %}">Create Category</a>
-        {% else %}
-            <a href="{% url 'dashboard' %}">My Requests</a>
-        {% endif %}
-    </nav>
-
-    <!-- User Dropdown Menu -->
-    <div class="user-menu-container">
-        <button class="menu-toggle-btn" onclick="toggleMenu()">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-
-        <div class="dropdown-menu" id="userDropdown">
-            {% if user.is_staff %}
-            <a href="{% url 'profile' %}">
-                <i class="fa-solid fa-user-circle"></i> Profile
-            </a>
-            
-            <a href="{% url 'settings' %}">
-                <i class="fa-solid fa-gear"></i> Settings
-            </a>
-            
-            <a href="{% url 'logout' %}" class="logout-link">
-                <i class="fa-solid fa-sign-out-alt"></i> Logout
-            </a>
-
-            <a href="{% url 'all_feedback' %}" >
-            <i class="fa-solid fa-comment"></i> All Feedback
-            </a>
-            {% else %}
-
-            <a href="{% url 'profile' %}">
-                <i class="fa-solid fa-user-circle"></i> Profile
-            </a>
-            
-            <a href="{% url 'settings' %}">
-                <i class="fa-solid fa-gear"></i> Settings
-            </a>
-            
-            <a href="{% url 'logout' %}" class="logout-link">
-                <i class="fa-solid fa-sign-out-alt"></i> Logout
-            </a>
-
-            <a href="{% url 'submit_feedback' %}" >
-            <i class="fa-solid fa-comment"></i> Give Feedback
-            </a>
-            {% endif %}
-    </div>
-</header>
+  {% include 'include/header.html' %}
 
   <main>
     <div class="profile-card">

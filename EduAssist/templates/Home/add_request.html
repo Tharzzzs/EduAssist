@@ -11,29 +11,7 @@
 </head>
 <body>
 
-<header>
-    <div class="logo">EduAssist</div>
-    <nav>
-      {% if user.is_staff %}
-          <a href="{% url 'dashboard' %}">All Requests</a>
-          <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
-          <a href="{% url 'create_category' %}">Create Category</a>
-      {% else %}
-          <a href="{% url 'dashboard' %}">My Requests</a>
-          <a href="{% url 'add_request' %}">New Request</a>
-      {% endif %}
-
-      
-      <a href="{% url 'logout' %}">Logout</a>
-  </nav>
-    <nav>
-    <a class="user-icon" href="{% url 'profile' %}">Profile</a>
-    <a href="{% url 'settings' %}">
-        <i class="fa-solid fa-gear"></i> Settings
-      </a>
-      </nav>
-  </header>
-
+{% include 'include/header.html' %}
 <main>
   <div class="card">
     <h1>Create Request</h1>
