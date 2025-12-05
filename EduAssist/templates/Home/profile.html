@@ -1,115 +1,107 @@
+{% extends 'base.html' %} 
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Profile</title>
-  <link rel="stylesheet" href="{% static 'pos_app/css/profileStyle.css' %}">
-  <link rel="stylesheet" href="{% static 'pos_app/css/theme.css' %}">
-  <script src="{% static 'pos_app/js/theme-cookie.js' %}" defer></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
 
-<body>
-  {% include 'include/header.html' %}
+{% block title %}Profile{% endblock %}
 
-  <main>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
+<link rel="stylesheet" href="{% static 'pos_app/css/profileStyle.css' %}">
+{% endblock %}
+
+{% block content %}
+<main>
     <div class="profile-card">
-      <h2>My Profile</h2>
-      <p class="profile-subtitle">Manage your personal information</p>
+        <h2>My Profile</h2>
+        <p class="profile-subtitle">Manage your personal information</p>
 
-      <div class="user-details">
-        <p><strong>Username:</strong> {{ user_info.username|default:"" }}</p>
-        <p><strong>Email:</strong> {{ user_info.email|default:"" }}</p>
-      </div>
-
-      <!-- Editable Profile Form -->
-      <form method="post" id="profileForm" class="profile-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        <div class="form-actions">
-          <button type="button" id="editBtn" class="btn-secondary">Edit</button>
-          <button type="submit" id="saveBtn" class="btn-save" disabled>Save Changes</button>
+        <div class="user-details">
+            <p><strong>Username:</strong> {{ user_info.username|default:"" }}</p>
+            <p><strong>Email:</strong> {{ user_info.email|default:"" }}</p>
         </div>
-      </form>
 
-      <div class="messages">
-        {% for message in messages %}
-          <p class="{{ message.tags }}">{{ message }}</p>
-        {% endfor %}
-      </div>
+        <form method="post" id="profileForm" class="profile-form">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-      <div class="extra-actions">
-        <!-- Change Password Button -->
-        <form method="get" action="{% url 'change_password' %}">
-          <button type="submit" class="btn-secondary">Change Password</button>
+            <div class="form-actions">
+                <button type="button" id="editBtn" class="btn-secondary">Edit</button>
+                <button type="submit" id="saveBtn" class="btn-save" disabled>Save Changes</button>
+            </div>
         </form>
 
-        {% if not user.is_staff %}
-        <!-- My Feedback Button (only for non-admin users) -->
-        <form method="get" action="{% url 'my_feedback' %}">
-          <button type="submit" class="btn-primary">My Feedback</button>
-        </form>
-        {% endif %}
-      </div>
+        <div class="messages">
+            {% for message in messages %}
+                <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </div>
 
+        <div class="extra-actions">
+            <form method="get" action="{% url 'change_password' %}">
+                <button type="submit" class="btn-secondary">Change Password</button>
+            </form>
+
+            {% if not user.is_staff %}
+            <form method="get" action="{% url 'my_feedback' %}">
+                <button type="submit" class="btn-primary">My Feedback</button>
+            </form>
+            {% endif %}
+        </div>
     </div>
-  </main>
+</main>
+{% endblock %}
 
-  <script>
-  document.addEventListener("DOMContentLoaded", function () {
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
     const editBtn = document.getElementById("editBtn");
     const saveBtn = document.getElementById("saveBtn");
-    const editableFields = ["id_contact", "id_program", "id_year_level"];
+    // Fields that the user is allowed to edit
+    const editableFields = ["id_contact", "id_program", "id_year_level"]; 
 
     // Lock all editable fields on load
     editableFields.forEach(fieldId => {
-      const field = document.getElementById(fieldId);
-      if (field) {
-        field.setAttribute("readonly", "true");
-        field.classList.remove("editable");
-      }
+        const field = document.getElementById(fieldId);
+        if (field) {
+            // Check if it's a select element before setting 'readonly'
+            if (field.tagName === 'SELECT') {
+                field.setAttribute("disabled", "true"); // Use disabled for select fields
+            } else {
+                field.setAttribute("readonly", "true");
+            }
+            field.classList.remove("editable");
+        }
     });
 
     let isEditing = false;
 
     editBtn.addEventListener("click", () => {
-      isEditing = !isEditing;
+        isEditing = !isEditing;
 
-      editableFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-          if (isEditing) {
-            field.removeAttribute("readonly");
-            field.classList.add("editable");
-          } else {
-            field.setAttribute("readonly", "true");
-            field.classList.remove("editable");
-          }
-        }
-      });
+        editableFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                if (isEditing) {
+                    if (field.tagName === 'SELECT') {
+                        field.removeAttribute("disabled");
+                    } else {
+                        field.removeAttribute("readonly");
+                    }
+                    field.classList.add("editable");
+                } else {
+                    if (field.tagName === 'SELECT') {
+                        field.setAttribute("disabled", "true");
+                    } else {
+                        field.setAttribute("readonly", "true");
+                    }
+                    field.classList.remove("editable");
+                }
+            }
+        });
 
-      // Toggle button states
-      editBtn.textContent = isEditing ? "Cancel Edit" : "Edit";
-      saveBtn.disabled = !isEditing;
+        // Toggle button states
+        editBtn.textContent = isEditing ? "Cancel Edit" : "Edit";
+        saveBtn.disabled = !isEditing;
     });
-  });
-
-  function toggleMenu() {
-    const dropdown = document.getElementById('userDropdown');
-    dropdown.classList.toggle('show');
-}
-
-window.onclick = function(event) {
-    if (!event.target.matches('.menu-toggle-btn') && !event.target.matches('.menu-toggle-btn i')) {
-        const dropdown = document.getElementById('userDropdown');
-        if (dropdown.classList.contains('show')) {
-            dropdown.classList.remove('show');
-        }
-    }
-}
-
+});
 </script>
-</body>
-</html>
+{% endblock %}

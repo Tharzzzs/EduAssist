@@ -1,23 +1,14 @@
+{% extends 'base.html' %} 
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Settings</title>
+{% block title %}User Settings{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'pos_app/css/profileStyle.css' %}">
-    <link rel="stylesheet" href="{% static 'pos_app/css/settings.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
+<link rel="stylesheet" href="{% static 'pos_app/css/settings.css' %}">
+{% endblock %}
 
-<body>
-  
-
-    {% include 'include/header.html' %}
-
-
+{% block content %}
 <div class="settings-container">
 
     <h1>User Settings</h1>
@@ -60,8 +51,8 @@
                 Receive Email Notifications
                 <input type="checkbox" name="receive_email" {% if settings.receive_email %}checked{% endif %}>
             </label>
-</div>
- 
+        </div>
+    
 
         <div class="section">
             <h2 class="section-title"><i class="fa-solid fa-user-shield"></i> Privacy Options</h2>
@@ -70,7 +61,6 @@
                 <input type="checkbox" name="profile_visible" {% if settings.profile_visible %}checked{% endif %}>
             </label>
             
-
             <label>Allow Data Sharing
                 <input type="checkbox" name="allow_data_sharing" {% if settings.allow_data_sharing %}checked{% endif %}>
             </label>
@@ -79,14 +69,16 @@
         <button type="submit" class="save-button">Save Changes</button>
     </form>
 </div>
+{% endblock %}
 
-
+{% block extra_js %}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const themeFromDB = "{{ settings.dark_mode|yesno:'dark,light' }}";
         const container = document.querySelector(".settings-container");
         const body = document.body;
 
+        // Apply theme on initial load based on Django context
         if (themeFromDB === "dark") {
             body.classList.add("dark");
             container.classList.add("dark");
@@ -94,6 +86,7 @@
 
         const themeSelector = document.getElementById("theme_selector");
 
+        // Theme selector listener for dynamic preview
         themeSelector.addEventListener("change", function () {
             if (themeSelector.value === "dark") {
                 body.classList.add("dark");
@@ -104,21 +97,5 @@
             }
         });
     });
-
-      function toggleMenu() {
-    const dropdown = document.getElementById('userDropdown');
-    dropdown.classList.toggle('show');
-}
-
-window.onclick = function(event) {
-    if (!event.target.matches('.menu-toggle-btn') && !event.target.matches('.menu-toggle-btn i')) {
-        const dropdown = document.getElementById('userDropdown');
-        if (dropdown.classList.contains('show')) {
-            dropdown.classList.remove('show');
-        }
-    }
-}
 </script>
-
-</body>
-</html>
+{% endblock %}

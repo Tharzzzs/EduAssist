@@ -4,74 +4,97 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
-    {% endblock %}
-
-{% block content %}
-<div class="container">
-
-    <div class="top-actions">
-        {% if not user.is_staff %}
-            <a href="{% url 'add_request' %}" class="btn btn-primary">Add New Request</a>
-        {% endif %}
-
-        <input type="text" id="search" placeholder="Search requests..." onkeyup="filterTable()">
-        <select class="filter-select" onchange="applyFilter(this.value)">
-            <option value="all">All</option>
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="cancelled">Cancelled</option>
-        </select>
-    </div>
-
-    {% if user.is_staff %}
-        <h2>All Requests (Admin View)</h2>
-    {% else %}
-        <h2>My Requests</h2>
-    {% endif %}
-
-    {% if requests %}
-        <table id="requestsTable">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for req in requests %}
-                <tr>
-                    <td>{{ req.title }}</td>
-                    <td><span class="status {{ req.status|lower }}">{{ req.status }}</span></td>
-                    <td>{{ req.date }}</td>
-                    <td>
-                        <a href="{% url 'request_detail' req.id %}" class="view-btn">View</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <p id="noResultsMessage"></p>
-    {% else %}
-        <p class="empty">No requests available.</p>
-    {% endif %}
-
-</div>
-
+    <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
 {% endblock %}
 
+{% block content %}
+<div class="container-fluid">
+
+    <div class="dashboard-grid">
+
+        <div class="summary-area">
+            
+            <div class="summary-card maroon-bg">
+                <p>Total Pending Requests</p>
+                <h3>{{ pending_count|default:0 }}</h3>
+            </div>
+
+            <div class="summary-card gold-bg">
+                <p>Total Approved Requests</p>
+                <h3>{{ approved_count|default:0 }}</h3>
+            </div>
+            
+            <div class="summary-card light-bg">
+                <p>Total Requests</p>
+                <h3>{{ total_count|default:0 }}</h3>
+            </div>
+            
+        </div>
+
+        <div class="table-area">
+            
+            <div class="top-actions">
+                {% if not user.is_staff %}
+                    <a href="{% url 'add_request' %}" class="btn btn-primary">Add New Request</a>
+                {% endif %}
+
+                <div class="search-and-filter">
+                    <input type="text" id="search" placeholder="Search requests..." onkeyup="filterTable()">
+                    <select class="filter-select" onchange="applyFilter(this.value)">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            {% if user.is_staff %}
+                <h2 class="dashboard-title">All Requests (Admin View)</h2>
+            {% else %}
+                <h2 class="dashboard-title">My Requests</h2>
+            {% endif %}
+
+            {% if requests %}
+                <div class="table-responsive"> 
+                    <table id="requestsTable">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <td data-label="Title">{{ req.title }}</td>
+                                <td data-label="Status"><span class="status {{ req.status|lower }}">{{ req.status }}</span></td>
+                                <td data-label="Date">{{ req.date }}</td>
+                                <td data-label="Actions">
+                                    <a href="{% url 'request_detail' req.id %}" class="view-btn">View Details</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <p id="noResultsMessage"></p>
+            {% else %}
+                <p class="empty">No requests found. Time to create one!</p>
+            {% endif %}
+
+        </div>
+        
+    </div>
+    </div>
+{% endblock %}
 
 {% block extra_js %}
 <script>
-// --- START: Dashboard-Specific JavaScript ---
-
-// REMOVED: openRequestModal and closeModal functions
-
-// Search + Filter Logic (KEPT AS IT IS)
+// (Your existing filterTable and applyFilter JS goes here, unchanged)
 function filterTable() {
     const searchInput = document.getElementById("search").value.toLowerCase();
     const filterSelect = document.querySelector(".filter-select").value.toLowerCase();
@@ -83,8 +106,9 @@ function filterTable() {
     if (!tbody) return;
 
     for (let i = 0; i < rows.length; i++) {
-        const titleCell = rows[i].querySelector('td:nth-child(1)'); // Assuming Title is the first column
-        const statusElement = rows[i].querySelector(".status"); 
+        // Updated selector for title and status based on column index
+        const titleCell = rows[i].querySelector('td:nth-child(1)');
+        const statusElement = rows[i].querySelector('td:nth-child(2) .status'); 
         
         if (!titleCell || !statusElement) continue;
 
@@ -112,6 +136,5 @@ function filterTable() {
 function applyFilter(value) {
     filterTable();
 }
-// --- END: Dashboard-Specific JavaScript ---
 </script>
 {% endblock %}

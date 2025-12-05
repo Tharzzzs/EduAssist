@@ -1,290 +1,170 @@
-/* ===== Profile page ===== */
+/* ===== Profile Page (DOCUTRACKR Theme) ===== */
+
+/* Assume color variables are defined in the linked dashboardStyle.css:
+:root {
+    --primary-maroon: #993333; 
+    --secondary-gold: #FFCC33;  
+    --dark-maroon: #7A2828;    
+    --light-bg: #ffffff;
+    --dark-text: #212529;
+}
+*/
+
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f7f4;
-  margin: 0;
-  padding: 0;
-  color: #1e1e2f;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4; /* Light gray background */
+    margin: 0;
+    padding: 0;
+    color: #1e1e2f;
 }
 
-/* ===== Navbar (Matched with Edit Request Page) ===== */
-header {
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.2rem 3rem;
-    border-bottom: 1px solid #ddd;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #000;
-    letter-spacing: 0.5px;
-}
-
-nav.main-nav {
-    display: flex;
-    gap: 2rem;
-    flex-grow: 1;
-    justify-content: center;
-}
-
-nav.main-nav a {
-    color: #000;
-    text-decoration: none;
-    font-weight: 500;
-    position: relative;
-    padding: 0.4rem 0.6rem;
-    transition: all 0.3s ease;
-}
-
-nav.main-nav a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -3px;
-    width: 0%;
-    height: 2px;
-    background-color: #000;
-    transition: width 0.3s ease;
-}
-
-nav.main-nav a:hover::after {
-    width: 100%;
-}
-
-.user-menu-container {
-    position: relative;
-    margin-left: auto;
-}
-
-.menu-toggle-btn {
-    background: none;
-    border: 1px solid #ccc;
-    padding: 10px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    color: #000;
-    transition: background-color 0.2s;
-}
-
-.menu-toggle-btn:hover {
-    background-color: #f0f0f0;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
-    min-width: 180px;
-    z-index: 1001;
-    display: none;
-    padding: 10px 0;
-    margin-top: 10px;
-}
-
-.dropdown-menu.show {
-    display: block;
-}
-
-.dropdown-menu a {
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background-color 0.2s;
-}
-
-.dropdown-menu a:hover {
-    background-color: #f5f5f5;
-}
-
-.logout-link {
-    border-top: 1px solid #eee;
-    margin-top: 5px;
-    padding-top: 10px !important;
-    color: #b30000 !important;
-}
-
-.user-icon {
-  color: #000;
-  font-weight: 500;
-  text-decoration: none;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-}
-
-.user-icon:hover {
-  transform: scale(1.05);
-  background-color: rgba(0, 0, 0, 0.05);
-}
 /* ===== Profile Card ===== */
 .profile-card {
-  max-width: 800px;
-  margin: 50px auto;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  padding: 40px 50px;
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 40px 50px;
 }
 
 .profile-card h2 {
-  margin-bottom: 5px;
-  font-size: 1.6rem;
-  font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 1.8rem; /* Slightly larger title */
+    font-weight: 700;
+    color: var(--primary-maroon); /* Maroon Title */
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
 }
 
 .profile-subtitle {
-  color: #666;
-  font-size: 0.95rem;
-  margin-bottom: 25px;
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
 }
 
 /* ===== User Info ===== */
 .user-details {
-  background: #fafafa;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 30px;
+    background: #fffdf9; /* Very light, warm background */
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-left: 4px solid var(--secondary-gold); /* Gold accent stripe */
+    font-size: 1rem;
+}
+.user-details p {
+    margin: 8px 0;
 }
 
-.user-details p {
-  margin: 10px 0;
-  font-size: 1rem;
-}
 
 /* ===== Form Styling ===== */
 .profile-form label {
-  font-weight: 500;
-  display: block;
-  margin-bottom: 6px;
-  color: #333;
+    font-weight: 600; /* Bolder label */
+    display: block;
+    margin-bottom: 6px;
+    color: var(--dark-text);
 }
 
 .profile-form input,
 .profile-form select,
 .profile-form textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
-  margin-bottom: 15px;
-  box-sizing: border-box;
-  background-color: #f9f9f9;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
 }
 
 .profile-form input[readonly],
-.profile-form select[readonly],
-.profile-form textarea[readonly] {
-  background-color: #f0f0f0;
-  color: #555;
-  cursor: not-allowed;
+.profile-form select[disabled] {
+    background-color: #f0f0f0;
+    color: #555;
+    cursor: not-allowed;
 }
 
 .profile-form input.editable,
 .profile-form select.editable {
-  background-color: #fff;
-  border-color: #000;
+    background-color: #fff;
 }
 
-/* ===== Buttons ===== */
+.profile-form input.editable:focus,
+.profile-form select.editable:focus {
+    border-color: var(--primary-maroon);
+    box-shadow: 0 0 0 3px rgba(153, 51, 51, 0.2); 
+    background-color: #fff;
+    outline: none;
+}
+
+/* ===== Buttons (Maroon) ===== */
 .form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
 }
 
-.btn-save {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s ease;
+.extra-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
 }
 
-.btn-save:hover {
-  background-color: #222;
+.btn-save, .btn-secondary, .btn-primary {
+    background-color: var(--primary-maroon); /* Maroon */
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.1s;
+    text-decoration: none; /* For forms containing buttons */
 }
 
-.btn-save:disabled {
-  background-color: #999;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  font-size: 0.95rem;
+/* Apply specific styles for buttons to match roles */
+.btn-secondary { 
+    background-color: #555; /* Darker gray for secondary actions (Edit/Change Password) */
 }
 
 .btn-secondary:hover {
-  background-color: #222;
+    background-color: #333;
 }
 
-/* ===== Messages ===== */
-.messages {
-  margin-top: 20px;
+.btn-save, .btn-primary {
+    background-color: var(--primary-maroon);
 }
 
+.btn-save:hover, .btn-primary:hover {
+    background-color: var(--dark-maroon);
+}
+
+.btn-save:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+/* ===== Messages (Maroon/Gold Themed) ===== */
 .messages p {
-  padding: 10px 15px;
-  border-radius: 6px;
-  font-weight: 500;
-  margin: 8px 0;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin: 8px 0;
 }
 
 .messages .success {
-  background-color: #e8f8f5;
-  color: #1e8449;
-  border-left: 4px solid #1abc9c;
+    background-color: #e8f5e9; /* Light Green */
+    color: #1e8449;
+    border-left: 4px solid #388e3c;
 }
 
 .messages .error {
-  background-color: #fdecea;
-  color: #c0392b;
-  border-left: 4px solid #e74c3c;
-}
-
-/* ===== Extra Actions ===== */
-.extra-actions {
-  text-align: right;
-  margin-top: 20px;
-}
-body.dark header#main-header {
-    background-color: #1a1a1a !important;
-    color: white !important;
-}
-
-body.dark header#main-header .logo,
-body.dark header#main-header nav a,
-body.dark header#main-header .user-icon {
-    color: white !important;
-}
-html.dark header .logo,
-html.dark header nav a,
-html.dark header .user-icon {
-    color: white !important;
+    background-color: #fdecea;
+    color: var(--primary-maroon);
+    border-left: 4px solid var(--primary-maroon);
 }

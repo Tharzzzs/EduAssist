@@ -1,0 +1,123 @@
+/* ======================================= */
+/* 🚀 Admin Panel Styles (DOCUTRACKR Theme) */
+/* Requires color variables from dashboardStyle.css to be loaded first. */
+/* ======================================= */
+
+/* --- Main Container (Mimics Dashboard Card) --- */
+.container-fluid {
+    width: 95%; 
+    margin: 2rem auto;
+    background: var(--light-bg); /* White card background */
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Title Styling --- */
+.container-fluid h2 {
+    color: var(--primary-maroon);
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+/* --- Table Styles (Consistent with Dashboard Table) --- */
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0;
+    margin-top: 1rem;
+    border-radius: 10px;
+    overflow: hidden; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+table th,
+table td {
+    padding: 1.2rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+table thead th {
+    background: #f8f8f8; /* Light gray for header */
+    color: var(--dark-maroon); /* Dark maroon text */
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary-maroon); /* Maroon separator */
+}
+
+table tr:nth-child(even) {
+    background: #fcfcfc; /* Subtle striping */
+}
+
+table tr:hover {
+    background: #fffdf9; /* Light, warm hover effect */
+    box-shadow: inset 4px 0 0 0 var(--secondary-gold); /* Highlight using Gold */
+}
+
+/* --- Empty State --- */
+.empty {
+    text-align: center;
+    color: #777;
+    font-size: 1.1rem;
+    margin-top: 3rem;
+    padding: 2rem;
+    background: #f8f8f8;
+    border-radius: 10px;
+    border: 1px dashed #ddd;
+}
+
+/* --- Responsive Adaptations (Matches Dashboard) --- */
+@media (max-width: 768px) {
+    .container-fluid {
+        width: 98%;
+        padding: 1.5rem 1rem;
+    }
+    
+    /* Adapt table for small screens */
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    table tr {
+        border: 1px solid #eee;
+        margin-bottom: 10px;
+        border-radius: 6px;
+    }
+    
+    table td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+        border-bottom: 1px dashed #f0f0f0;
+    }
+
+    table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 700;
+        color: var(--primary-maroon); /* Maroon label on mobile */
+        font-size: 0.9rem;
+    }
+}

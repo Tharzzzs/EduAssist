@@ -1,119 +1,16 @@
-/* Settings */
+/* ===== Settings Page (DOCUTRACKR Theme) ===== */
 :root {
-    --primary-red: #8B0000;
+    --primary-maroon: #993333; /* Deep Red/Maroon */
+    --secondary-gold: #FFCC33;  /* Gold/Yellow Ochre */
+    --dark-maroon: #7A2828;    
+    --light-bg: #ffffff;
     --dark-gray: #1e1e1e;
-    --light-gray: #f0f0f0;
     --border: #e0e0e0;
 }
 
-/* ===== Navbar (Matched with Edit Request Page) ===== */
-header {
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.2rem 3rem;
-    border-bottom: 1px solid #ddd;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #000;
-    letter-spacing: 0.5px;
-}
-
-nav.main-nav {
-    display: flex;
-    gap: 2rem;
-    flex-grow: 1;
-    justify-content: center;
-}
-
-nav.main-nav a {
-    color: #000;
-    text-decoration: none;
-    font-weight: 500;
-    position: relative;
-    padding: 0.4rem 0.6rem;
-    transition: all 0.3s ease;
-}
-
-nav.main-nav a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -3px;
-    width: 0%;
-    height: 2px;
-    background-color: #000;
-    transition: width 0.3s ease;
-}
-
-nav.main-nav a:hover::after {
-    width: 100%;
-}
-
-.user-menu-container {
-    position: relative;
-    margin-left: auto;
-}
-
-.menu-toggle-btn {
-    background: none;
-    border: 1px solid #ccc;
-    padding: 10px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    color: #000;
-    transition: background-color 0.2s;
-}
-
-.menu-toggle-btn:hover {
-    background-color: #f0f0f0;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
-    min-width: 180px;
-    z-index: 1001;
-    display: none;
-    padding: 10px 0;
-    margin-top: 10px;
-}
-
-.dropdown-menu.show {
-    display: block;
-}
-
-.dropdown-menu a {
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background-color 0.2s;
-}
-
-.dropdown-menu a:hover {
-    background-color: #f5f5f5;
-}
-
-.logout-link {
-    border-top: 1px solid #eee;
-    margin-top: 5px;
-    padding-top: 10px !important;
-    color: #b30000 !important;
+/* Re-setting NavBar styles to ensure clean inheritance from header.css */
+header, .logo, nav.main-nav a, .user-menu-container, .menu-toggle-btn, .dropdown-menu {
+    /* These styles should largely be handled by header.css */
 }
 
 .settings-container {
@@ -130,40 +27,37 @@ nav.main-nav a:hover::after {
     position: relative;
 }
 
-
-.settings-container.dark {
-    background: #1e1e1e !important;
-    color: white !important;
-    border: 1px solid #333;
-}
-
-
+/* --- Dark Mode Backgrounds --- */
 body {
-    background: #ffffff;
+    background: #f4f4f4; /* Light gray */
 }
 
 body.dark {
     background: #121212 !important;
-    color: #ffffff !important;
 }
 
-
+/* --- Heading Styles (Maroon) --- */
 h1 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 30px;
     font-weight: 700;
-    color: var(--primary-red);
+    color: var(--primary-maroon);
 }
 
 .section h2 {
     font-size: 19px;
     margin-bottom: 12px;
     font-weight: 600;
-    color: var(--primary-red);
+    color: var(--primary-maroon);
 }
 
+.section-title i {
+    font-size: 20px;
+    color: var(--primary-maroon);
+}
 
+/* --- Section Card Styles --- */
 .section {
     background: #ffffff;
     padding: 16px 20px;
@@ -173,80 +67,40 @@ h1 {
     transition: 0.35s ease;
 }
 
+/* --- Dark Mode Colors --- */
+.settings-container.dark {
+    background: #1e1e1e !important;
+    color: white !important;
+    border: 1px solid #333;
+}
 body.dark .section {
     background: #262626 !important;
     border-color: #3a3a3a;
 }
-
-
-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; 
-    padding: 12px 0;
-    font-size: 15px;
-    border-bottom: 1px solid var(--border);
-}
-label:last-child {
-    border-bottom: none;
+body.dark .section-title i,
+body.dark .section h2,
+body.dark .h1,
+body.dark .section label {
+    color: #ffffff !important;
 }
 
 
+/* --- Form Elements --- */
 .theme-select {
-    width: 180px;
-    padding: 8px 12px;
-    border-radius: 6px;
     border: 1px solid #bbb;
-    font-size: 15px;
+    /* Focus styles */
 }
 
-body.dark .theme-select {
-    background: #333;
-    color: white;
-    border-color: #555;
-}
-
-
-input[type="checkbox"] {
-    appearance: none;
-    width: 44px;
-    height: 24px;
-    background: #b3b3b3;
-    border-radius: 20px;
-    position: relative;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-input[type="checkbox"]::before {
-    content: "";
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: white;
-    border-radius: 50%;
-    top: 2px;
-    left: 2px;
-    transition: 0.25s;
-}
-
+/* --- Toggle Switch (Maroon Accent) --- */
 input[type="checkbox"]:checked {
-    background: var(--primary-red);
+    background: var(--primary-maroon); /* Maroon when checked */
 }
 
-input[type="checkbox"]:checked::before {
-    transform: translateX(20px);
-}
-
-body.dark input[type="checkbox"] {
-    background: #777;
-}
-
-
+/* --- Save Button (Maroon) --- */
 .save-button {
     width: 100%;
     padding: 14px;
-    background: var(--primary-red);
+    background: var(--primary-maroon);
     color: white;
     border: none;
     border-radius: 8px;
@@ -255,93 +109,29 @@ body.dark input[type="checkbox"] {
     transition: 0.3s ease;
 }
 .save-button:hover {
-    opacity: 0.92;
+    background: var(--dark-maroon);
+    opacity: 1; /* Reset opacity hover and use background change */
 }
 
 
-.section-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.section-title i {
-    font-size: 20px;
-    color: var(--primary-red);
-}
-
-
-html, body, .settings-container, .section {
-    transition: background-color 0.35s ease, color 0.35s ease;
-}
-
-
+/* --- Close Button (Maroon) --- */
 .close-btn {
-    position: absolute;
-    top: 25px;
-    right: 15px;
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    color: var(--primary-red);
-    cursor: pointer;
-    transition: 0.25s ease;
+    color: var(--primary-maroon);
 }
 
-.close-btn:hover {
-    opacity: 0.7;
-}
-
-
-.success-message, .error-message {
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    font-weight: 600;
-}
-
+/* --- Message Boxes (Maroon/Gold Themed) --- */
 .success-message {
-    background: #e6ffe6;
+    background: #e8f5e9;
     color: #006600;
 }
 
 .error-message {
     background: #ffe6e6;
-    color: #990000;
+    color: var(--dark-maroon);
 }
 
 
-body.dark .section-title i,
-body.dark .section h2,
-body.dark .h1,
-body.dark .section label,
-body.dark .section {
-    color: #ffffff !important;
-}
-
-body.dark .section {
-    background: #2a2a2a !important;
-    border-color: #3a3a3a !important;
-}
-
-
-body.dark .section label {
-    color: #ffffff !important;
-}
-
-
-body.dark input[type="checkbox"] {
-    background: #444;  
-}
-
-body.dark input[type="checkbox"]::before {
-    background: #e6e6e6;   
-}
-
+/* --- Dark Mode Checkbox Overrides --- */
 body.dark input[type="checkbox"]:checked {
-    background: var(--primary-red) !important;
-}
-
-body.dark input[type="checkbox"]:checked::before {
-    background: white !important;  
+    background: var(--primary-maroon) !important;
 }

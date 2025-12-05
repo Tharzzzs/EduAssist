@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseForbidden
-from django.db.models import Q, Count
+from django.db.models import Q, Count # <-- Count is essential for this
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.template.loader import render_to_string
@@ -15,7 +15,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import RequestSerializer, TagSerializer
-from django.contrib.auth.decorators import login_required, user_passes_test
 from eduassist_app.email_service import send_notification_email
 
 # ------------------------
@@ -24,17 +23,40 @@ from eduassist_app.email_service import send_notification_email
 @login_required(login_url='login')
 def dashboard_view(request):
     form = SearchForm(request.GET or None)
+    
+    # 1. Initialize Base QuerySet based on user role
     if request.user.is_staff:
-        requests = Request.objects.all()
+        # Staff sees all requests
+        base_queryset = Request.objects.all()
     else:
-        requests = Request.objects.filter(user=request.user)
-
+        # Standard user sees only their own requests
+        base_queryset = Request.objects.filter(user=request.user)
+        
+    # 2. Apply search filter if present (filters the list of requests for the table)
+    requests = base_queryset
     if form.is_valid():
         query = form.cleaned_data.get('search')
         if query:
+            # Filters the requests list that gets displayed in the table
             requests = requests.filter(Q(title__icontains=query) | Q(status__icontains=query))
 
-    return render(request, 'Home/dashboard.html', {'requests': requests, 'form': form})
+    # 3. Dynamic Count Calculation (reflecting the full base_queryset for summary cards)
+    total_count = base_queryset.count()
+    pending_count = base_queryset.filter(status='pending').count()
+    approved_count = base_queryset.filter(status='approved').count()
+
+    # Ensure the requests for the table are ordered
+    requests = requests.order_by('-date')
+    
+    context = {
+        'requests': requests, 
+        'form': form,
+        'total_count': total_count,          # Passed to template
+        'pending_count': pending_count,      # Passed to template
+        'approved_count': approved_count,    # Passed to template
+    }
+
+    return render(request, 'Home/dashboard.html', context)
 
 # ------------------------
 # Request Detail
@@ -59,7 +81,7 @@ def add_request(request):
 
     if request.method == "POST":
         title = request.POST.get('title')
-        status = request.POST.get('status', 'pending')  # <- Add this line
+        status = request.POST.get('status', 'pending')  
         priority = request.POST.get('priority')
         description = request.POST.get('description')
         category_id = request.POST.get('category')
@@ -73,7 +95,7 @@ def add_request(request):
         new_request = Request.objects.create(
             user=request.user,
             title=title,
-            status=status,  # this will now default to 'pending' if not provided
+            status=status,  
             priority=priority,
             description=description,
             category=category,

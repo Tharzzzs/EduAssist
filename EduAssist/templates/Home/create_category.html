@@ -4,20 +4,21 @@
 {% block title %}Create Category & Query Type{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
 <link rel="stylesheet" href="{% static 'pos_app/css/create_category.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="card">
+<div class="category-page-container">
     
     <div class="card-grid">
-        <div>
+        <div class="form-column">
             <h2>Create Category</h2>
             <form method="POST">
                 {% csrf_token %}
                 <label for="category_name">Category Name</label>
                 <input type="text" id="category_name" name="category_name" placeholder="e.g., Finance, Security" required>
-                <button type="submit">Create Category</button>
+                <button type="submit" class="btn-submit">Create Category</button>
             </form>
 
             <h2>Create Query Type</h2>
@@ -34,29 +35,33 @@
                     {% endfor %}
                 </select>
 
-                <button type="submit">Create Query Type</button>
+                <button type="submit" class="btn-submit">Create Query Type</button>
             </form>
         </div>
 
-        <div>
-            <h3>Existing Categories</h3>
-            <ul>
-                {% for cat in categories %}
-                    <li>
-                        <span>{{ cat.name }}</span>
+        <div class="list-column">
+            <div class="list-card">
+                <h3>Existing Categories</h3>
+                <ul>
+                    {% for cat in categories %}
+                        <li>
+                            <span>{{ cat.name }}</span>
                         </li>
-                {% endfor %}
-            </ul>
+                    {% endfor %}
+                </ul>
+            </div>
 
-            <h3>Existing Query Types</h3>
-            <ul>
-                {% for choice in choices %}
-                    <li>
-                        <span>{{ choice.category.name }}</span>
-                        <span>{{ choice.value }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
+            <div class="list-card">
+                <h3>Existing Query Types</h3>
+                <ul>
+                    {% for choice in choices %}
+                        <li>
+                            <span>{{ choice.category.name }}</span>
+                            <span class="query-value">{{ choice.value }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 

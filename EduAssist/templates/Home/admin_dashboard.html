@@ -5,33 +5,41 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
+<link rel="stylesheet" href="{% static 'pos_app/css/adminPanelStyle.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid">
     <h2>User Profiles</h2>
     
+    <div class="top-actions">
+        <input type="text" id="search" placeholder="Search users (Username, Program, Contact...)" onkeyup="filterTable()">
+        </div>
+
     {% if users %}
-    <table>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Contact</th>
-                <th>Program</th>
-                <th>Year Level</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for profile in users %}
-            <tr>
-                <td>{{ profile.user.username }}</td>
-                <td>{{ profile.contact }}</td>
-                <td>{{ profile.program }}</td>
-                <td>{{ profile.year_level }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Contact</th>
+                    <th>Program</th>
+                    <th>Year Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profile in users %}
+                <tr>
+                    <td data-label="Username">{{ profile.user.username }}</td>
+                    <td data-label="Contact">{{ profile.contact }}</td>
+                    <td data-label="Program">{{ profile.program }}</td>
+                    <td data-label="Year Level">{{ profile.year_level }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p id="noResultsMessage"></p>
+    </div>
     {% else %}
     <p class="empty">No user profiles found.</p>
     {% endif %}
@@ -39,4 +47,46 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+function filterTable() {
+    const searchInput = document.getElementById("search").value.toLowerCase();
+    const table = document.getElementById("userTable");
+    const tbody = table ? table.querySelector("tbody") : null;
+    const rows = tbody ? tbody.getElementsByTagName("tr") : [];
+    let visibleRowCount = 0;
+
+    if (!tbody) return;
+
+    for (let i = 0; i < rows.length; i++) {
+        // Get all cell data from the current row
+        const cells = rows[i].getElementsByTagName('td');
+        let rowMatches = false;
+
+        // Iterate through all cells to see if any content matches the search input
+        for (let j = 0; j < cells.length; j++) {
+            const cellText = cells[j].textContent || cells[j].innerText;
+            if (cellText.toLowerCase().includes(searchInput)) {
+                rowMatches = true;
+                break;
+            }
+        }
+
+        if (rowMatches) {
+            rows[i].style.display = "";
+            visibleRowCount++;
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+
+    // Display 'no results' message
+    const noResults = document.getElementById("noResultsMessage");
+    if (noResults) {
+        // Only show no results if the table has rows but none are visible
+        noResults.textContent = (visibleRowCount === 0 && rows.length > 0) 
+            ? "🚫 No user profiles match your search criteria." 
+            : "";
+    }
+}
+</script>
 {% endblock %}
