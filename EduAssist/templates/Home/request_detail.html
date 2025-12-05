@@ -33,15 +33,17 @@
                 <span>{{ req.category.name }}</span>
             </div>
 
-            <div class="detail-item">
+            <div class="detail-item tags-container"> {# Added a class for specific tag alignment #}
                 <strong>Tags:</strong>
-                {% if req.tags.all %}
-                    {% for tag in req.tags.all %}
-                        <span class="tag">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <span>No tags provided.</span>
-                {% endif %}
+                <div class="tag-list"> {# Wrapper for tags #}
+                    {% if req.tags.all %}
+                        {% for tag in req.tags.all %}
+                            <span class="tag">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <span>No tags provided.</span>
+                    {% endif %}
+                </div>
             </div>
 
             <div class="detail-item">
@@ -66,8 +68,21 @@
         <div class="detail-actions">
             <a href="{% url 'dashboard' %}" class="btn-secondary">← Back to Dashboard</a>
             
-            {% if request.user == req.user or request.user.is_staff %}
+            {% if request.user.is_staff %}
             
+                {# STAFF ACTION: Link to the view that allows status change and commenting #}
+            <a href="{% url 'approve_request' req.id %}" class="btn-primary">Update Status / Comment</a>
+
+            <button 
+                type="button" 
+                onclick="openDeleteModal({{ req.id }}, '{{ req.title|escapejs }}');"
+                class="btn-danger"
+            >
+                Delete
+            </button>
+
+            {% elif request.user == req.user %}
+                {# USER ACTION: User can edit or delete their own request #}
             <a href="{% url 'edit_request' req.id %}" class="btn-primary">Edit Request</a>
             
             <button 

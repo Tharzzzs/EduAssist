@@ -11,17 +11,7 @@ body {
 
 
 /* ===== Navbar (Matched with Edit Request Page) ===== */
-header {
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.2rem 3rem;
-  border-bottom: 1px solid #ddd;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
+
 
 .logo {
   font-size: 1.3rem;
@@ -207,3 +197,35 @@ hr {
     text-align: center;
   }
 }
+
+/* Add these styles to your add_requestStyle.css */
+
+/* Style for the container of the read-only status */
+.read-only-status {
+    padding: 10px 0; /* Add vertical space matching input padding */
+    margin: 0;
+}
+
+/* Status Badge Styles (Reused from your detail page) */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-block;
+    color: white; 
+    text-transform: uppercase;
+}
+
+/* Custom Status Colors (Ensure these are defined in your CSS) */
+.status-badge.pending { 
+    background-color: var(--warning-color); 
+    color: var(--secondary-dark); /* Light color text on dark background */
+}
+.status-badge.approved { 
+    background-color: var(--success-color); 
+}
+.status-badge.cancelled { 
+    background-color: var(--danger-color); 
+}
+/* You may need to define colors for 'low', 'medium', 'high', etc., if your status uses those too. */

@@ -33,14 +33,19 @@
                     <input type="text" id="id_title" name="title" required value="{{ request_obj.title }}">
                 </div>
                 
-                {# Row 2: Status & Priority #}
+                {# Row 2: Status (MODIFIED TO READ-ONLY) #}
                 <div class="form-group">
-                    <label for="id_status">Status</label>
-                    <select id="id_status" name="status" required>
-                        <option value="pending" {% if request_obj.status == "pending" %}selected{% endif %}>Pending</option>
-                        <option value="approved" {% if request_obj.status == "approved" %}selected{% endif %}>Approved</option>
-                        <option value="cancelled" {% if request_obj.status == "cancelled" %}selected{% endif %}>Cancelled</option>
-                    </select>
+                    <label for="id_status">Status (Read Only)</label>
+                    
+                    {# Display the status as non-editable text/badge #}
+                    <p class="read-only-status">
+                        <span class="status-badge status {{ request_obj.status }}">
+                            {{ request_obj.get_status_display }}
+                        </span>
+                    </p>
+                    
+                    
+                    <input type="hidden" id="id_status" name="status" value="{{ request_obj.status }}">
                 </div>
 
                 <div class="form-group">
@@ -53,7 +58,7 @@
                     </select>
                 </div>
 
-                {# Row 3: Category & Query Type (Assumes `categories` and `category_choices` are passed to context) #}
+                {# Row 3: Category & Query Type #}
                 <div class="form-group">
                     <label for="id_category">Category</label>
                     <select id="id_category" name="category" required>

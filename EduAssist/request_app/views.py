@@ -123,38 +123,60 @@ def add_request(request):
 @login_required
 def edit_request(request, id):
     req = get_object_or_404(Request, id=id)
-    if not (request.user == req.user or request.user.is_staff):
-        return HttpResponseForbidden()
+    
+    # CRITICAL CHECK: Block staff from editing requests they did not create.
+    if request.user.is_staff and request.user != req.user:
+        messages.error(request, "Staff cannot directly edit request details submitted by other users. Use the 'Update Status / Comment' link for administrative actions.")
+        return redirect('request_detail', id=req.id)
+    
+    # Only the creator of the request can proceed
+    if not request.user == req.user:
+        return HttpResponseForbidden() # Should only happen if the user isn't staff OR the creator
 
     categories = Category.objects.all()
+    category_choices = CategoryChoice.objects.all()
     current_tags_str = ", ".join([t.name for t in req.tags.all()])
 
     if request.method == 'POST':
+        # --- Start POST logic ---
         req.title = request.POST.get('title')
-        req.status = request.POST.get('status')
+        req.status = request.POST.get('status') 
         req.priority = request.POST.get('priority')
         req.category_id = request.POST.get('category')
-        req.date = request.POST.get('date')
+        req.category_choice_id = request.POST.get('category_choice')
         req.description = request.POST.get('description')
 
         if 'attachment' in request.FILES:
             req.attachment = request.FILES['attachment']
-
+        
+        # Handle Tags update
+        req.tags.clear() 
+        tags_input = request.POST.get('tags')
+        if tags_input:
+            tag_names = [t.strip().lower() for t in tags_input.split(',') if t.strip()]
+            for tag_name in tag_names:
+                tag, _ = Tag.objects.get_or_create(name=tag_name)
+                req.tags.add(tag)
+        
         req.save()
+        # --- End POST logic ---
 
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'success': True})
 
+        messages.success(request, "Request updated successfully.")
         return redirect('request_detail', id=req.id)
 
     context = {
         'request_obj': req,
         'categories': categories,
+        'category_choices': category_choices,
         'current_tags_str': current_tags_str
     }
 
+    # Added necessary JSON response handling for potential AJAX/modal use
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('pos_app/edit_request.html', context, request=request)
+        html = render_to_string('Home/edit_request.html', context, request=request)
         return JsonResponse({'form_html': html})
 
     return render(request, 'Home/edit_request.html', context)
@@ -278,3 +300,58 @@ def approve_request(request, id):
         return redirect('request_detail', id=id)
 
     return HttpResponseForbidden()
+
+
+# ------------------------
+# APPROVE REQUEST (Admin Action)
+# ------------------------
+@login_required
+# @user_passes_test(lambda u: u.is_staff)
+def approve_request(request, id):
+    req = get_object_or_404(Request, id=id)
+
+    if request.method == "POST":
+        
+        # 1. Grab new status and admin message from the POST data
+        new_status = request.POST.get('new_status', req.status) # Grab new status, default to current status
+        admin_message = request.POST.get("admin_message", "")
+        
+        # 2. Update Request Status
+        is_status_changed = (req.status != new_status)
+        req.status = new_status
+        req.save()
+
+        # 3. Handle Notification (Only send email if status actually changed)
+        if is_status_changed:
+             # Assuming 'pending', 'approved', 'rejected', etc. match email templates
+             email_type = f"request_{new_status}" 
+
+             send_notification_email(
+                 to_email=req.user.email,
+                 type=email_type,
+                 template_name=email_type,
+                 context_data={
+                     "name": req.user.first_name,
+                     "title": req.title,
+                     "admin_message": admin_message,
+                     "new_status": req.get_status_display()
+                 }
+             )
+        
+        # 4. Success message and redirect
+        messages.success(request, f"Request status changed to '{req.get_status_display()}' and user notified.")
+        
+        # Optional: Save the admin_message/comment (requires a separate Comment model)
+        # if admin_message:
+        #     Comment.objects.create(request=req, user=request.user, text=admin_message)
+
+        return redirect('request_detail', id=id)
+
+    # GET Request: Renders the Admin Status/Comment Form
+    # Note: You MUST create the template 'Home/approve_request.html'
+    return render(request, 'Home/approve_request.html', {
+        'req': req,
+        'current_status': req.status,
+        # Pass all possible status choices (assuming status is defined in Request model)
+        'status_choices': Request.STATUS_CHOICES 
+    })

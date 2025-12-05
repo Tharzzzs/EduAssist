@@ -1,0 +1,214 @@
+/* =========================================
+    approve_requestStyle.css
+    Styles for the Admin Action: Update Status Page
+========================================= */
+
+/* Use the same root variables defined in the main CSS for consistency */
+:root {
+    --primary-maroon: #7c2d30; 
+    --secondary-dark: #293241; 
+    --light-bg: #f7f7f7;     
+    --text-color: #4a4e69; 
+    --danger-color: #dc3545;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --border-color: #e9ecef;
+    --box-shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.1);
+    --input-border: #ced4da;
+    --read-only-bg: #e9ecef;
+}
+
+/* ===========================
+    MAIN LAYOUT & CARD
+=========================== */
+
+.main-content-area {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 50px 20px;
+    background-color: var(--light-bg);
+    min-height: 100vh;
+}
+
+.card.add-request-card {
+    background: #fff;
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: var(--box-shadow-medium);
+    max-width: 800px;
+    width: 100%;
+    border: 1px solid var(--border-color);
+}
+
+.admin-action-title {
+    color: var(--primary-maroon);
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: var(--secondary-dark);
+    font-size: 18px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.current-status-badge {
+    /* Inherits status colors from the general status styles */
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+/* Status badge specific colors (reused from detail page) */
+.status.New { background-color: var(--info-color); color: white; }
+.status.In_Progress { background-color: var(--warning-color); color: var(--secondary-dark); }
+.status.Closed, .status.Completed { background-color: var(--success-color); color: white; }
+.status.Rejected { background-color: var(--danger-color); color: white; }
+.status.Cancelled { background-color: var(--primary-maroon); color: white; }
+
+
+/* ===========================
+    FORM LAYOUT & GROUPS
+=========================== */
+
+.form-grid {
+    display: grid;
+    /* Two columns, but the full-width items span both */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-full {
+    grid-column: 1 / -1; /* Make this group span all columns */
+}
+
+/* ===========================
+    FORM ELEMENTS
+=========================== */
+
+.request-form label {
+    font-weight: 700;
+    color: var(--secondary-dark);
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.request-form input[type="text"],
+.request-form select,
+.request-form textarea {
+    padding: 12px 15px;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    font-size: 16px;
+    color: var(--text-color);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    box-sizing: border-box; /* Important for padding/border within 100% width */
+}
+
+.request-form input[type="text"]:focus,
+.request-form select:focus,
+.request-form textarea:focus {
+    border-color: var(--primary-maroon);
+    box-shadow: 0 0 0 3px rgba(124, 45, 48, 0.2);
+    outline: none;
+}
+
+/* Read-Only Input Styling */
+.read-only-input {
+    background-color: var(--read-only-bg);
+    cursor: default;
+    border: 1px solid #d1d9e0;
+    font-style: italic;
+}
+
+.read-only-input:focus {
+    box-shadow: none;
+    border-color: #d1d9e0;
+}
+
+.request-form textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* ===========================
+    BUTTON GROUP
+=========================== */
+
+.btn-group {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 15px;
+}
+
+.button {
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 17px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button-save {
+    background-color: var(--primary-maroon);
+    color: white;
+}
+
+.button-save:hover {
+    background-color: #9f393e;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button-cancel {
+    background-color: var(--read-only-bg);
+    color: var(--secondary-dark);
+    border: 1px solid var(--input-border);
+}
+
+.button-cancel:hover {
+    background-color: #d8dee6;
+    transform: translateY(-1px);
+}
+
+
+/* ===========================
+    RESPONSIVENESS
+=========================== */
+
+@media (max-width: 768px) {
+    .card.add-request-card {
+        padding: 30px 20px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr; /* Stack columns on smaller screens */
+        gap: 20px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

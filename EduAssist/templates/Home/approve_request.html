@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Action: {{ req.title }}{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'pos_app/css/approve_requestStyle.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="main-content-area">
+    <div class="card add-request-card">
+        
+        <h1 class="admin-action-title">Admin Action: Update Status</h1>
+        <p class="subtitle">Processing Request #{{ req.id }} | Current Status: <span class="current-status-badge status {{ req.status }}">{{ req.get_status_display }}</span></p>
+
+        <form method="POST" class="request-form">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                
+                {# Display Read-Only Request Title #}
+                <div class="form-group form-group-full">
+                    <label>Request Title (Read Only)</label>
+                    <input type="text" value="{{ req.title }}" disabled class="read-only-input">
+                </div>
+
+                {# Status Dropdown #}
+                <div class="form-group">
+                    <label for="id_new_status">Change Status To:</label>
+                    <select id="id_new_status" name="new_status" required>
+                        {# Iterate through the choices passed from the view context #}
+                        {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if value == req.status %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                
+
+                {# Admin Message/Comment Box #}
+                <div class="form-group form-group-full">
+                    <label for="id_admin_message">Admin Comment / Notification Message:</label>
+                    <textarea id="id_admin_message" name="admin_message" rows="5" placeholder="Enter a message to be sent to the user regarding the status change (e.g., reason for approval/rejection, steps taken)."></textarea>
+                    
+                </div>
+
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="button button-save">Save Status & Notify User</button>
+                <a href="{% url 'request_detail' req.id %}" class="button button-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock content %}
+
+{% block extra_js %}
+{# No custom JS needed for this simple form #}
+{% endblock %}
