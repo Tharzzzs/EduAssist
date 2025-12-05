@@ -71,7 +71,7 @@
             
             <button 
                 type="button" 
-                onclick='openDeleteModal({{ req.id }}, "{{ req.title|escapejs }}");' 
+                onclick="openDeleteModal({{ req.id }}, '{{ req.title|escapejs }}');"
                 class="btn-danger"
             >
                 Delete
