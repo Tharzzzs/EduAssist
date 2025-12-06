@@ -37,13 +37,12 @@ def submit_feedback(request):
             return redirect('my_feedback')
     else:
         form = FeedbackForm()
-        
-    return render(request, 'feedback/submit_feedback.html', {'form': form})
+    return render(request, 'Feedback/submit_feedback.html', {'form': form})
 
 @login_required
 def my_feedback(request):
     feedbacks = Feedback.objects.filter(user=request.user)
-    return render(request, 'feedback/my_feedback.html', {'feedbacks': feedbacks})
+    return render(request, 'Feedback/my_feedback.html', {'feedbacks': feedbacks})
 
 @login_required
 def edit_feedback(request, feedback_id):
@@ -57,7 +56,7 @@ def edit_feedback(request, feedback_id):
             return redirect('my_feedback')
     else:
         form = FeedbackForm(instance=feedback)
-    return render(request, 'feedback/edit_feedback.html', {'form': form})
+    return render(request, 'Feedback/edit_feedback.html', {'form': form})
 
 @login_required
 def delete_feedback(request, feedback_id):
@@ -67,7 +66,7 @@ def delete_feedback(request, feedback_id):
         feedback.delete()
         messages.success(request, "Feedback deleted.")
         return redirect('my_feedback')
-    return render(request, 'feedback/confirm_delete.html', {'feedback': feedback})
+    return render(request, 'Feedback/confirm_delete.html', {'feedback': feedback})
 
 # --- AJAX View ---
 
@@ -112,7 +111,7 @@ def all_feedback(request):
     # --- FIX: Pass a range iterable for the star icons ---
     STAR_RANGE = range(1, 6) # Creates the iterable [1, 2, 3, 4, 5]
     
-    return render(request, 'feedback/all_feedback.html', {
+    return render(request, 'Feedback/all_feedback.html', {
         'feedbacks': feedbacks,
         'star_range': STAR_RANGE, # Pass the new variable to the template
     })

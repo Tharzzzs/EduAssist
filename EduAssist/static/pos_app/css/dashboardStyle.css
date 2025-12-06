@@ -69,10 +69,10 @@ header {
     transition: transform 0.3s ease;
 }
 
-.summary-card:hover {
+/* .summary-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+} */
 
 .summary-card p {
     margin: 0 0 5px 0;
