@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import RequestSerializer, TagSerializer
 from eduassist_app.email_service import send_notification_email
-
+from eduassist_app.utils import send_notification_email
 # ------------------------
 # Dashboard (Updated for Priority Sorting)
 # ------------------------

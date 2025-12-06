@@ -151,6 +151,7 @@ DEFAULT_FILE_STORAGE = "eduassist_app.storages_backend.SupabaseStorage"
 
 # for sending emails for notifications
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
