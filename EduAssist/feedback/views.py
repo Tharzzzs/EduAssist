@@ -16,11 +16,22 @@ def is_staff_check(user):
 
 @login_required
 def submit_feedback(request):
+    # 🌟 Check 1: See if the user has already submitted feedback
+    if Feedback.objects.filter(user=request.user).exists():
+        messages.warning(request, "You have already submitted feedback. You can view or edit your existing feedback below.")
+        return redirect('my_feedback') # Redirects to their existing feedback
+        
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
         if form.is_valid():
             feedback = form.save(commit=False)
             feedback.user = request.user
+            
+            # 🌟 Check 2: Final check before saving (safety)
+            if Feedback.objects.filter(user=request.user).exists():
+                messages.warning(request, "A duplicate submission was prevented.")
+                return redirect('my_feedback')
+
             feedback.save()
             messages.success(request, "Thank you, your feedback has been submitted!")
             return redirect('my_feedback')

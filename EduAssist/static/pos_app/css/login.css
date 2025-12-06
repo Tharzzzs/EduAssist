@@ -7,6 +7,7 @@
     --dark-text: #212529; 
     --light-text: #6c757d;
     --white: #ffffff;
+    --error-color: #dc3545; /* Distinct error color (red) */
 }
 
 body {
@@ -22,11 +23,11 @@ body {
 .auth-container {
     background-color: var(--light-background);
     padding: 30px; 
-    border-radius: 8px; 
+    border-radius: 8px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     width: 380px;
     text-align: center;
-    border: 1px solid #f0f0f0; 
+    border: 1px solid #f0f0f0;
 }
 
 /* Logo Styling */
@@ -55,6 +56,7 @@ body {
     font-size: 15px;
     color: var(--light-text);
     margin-bottom: 25px;
+    line-height: 1.4;
 }
 
 /* Form Elements */
@@ -68,15 +70,25 @@ input[type="text"],
 input[type="password"],
 input[type="email"] {
     width: 100%;
-    /* THINNER INPUT: Reduced padding from 12px to 10px */
-    padding: 10px; 
+    padding: 10px;
     border: 1px solid #dee2e6;
     border-radius: 5px;
     box-sizing: border-box;
     font-size: 16px;
+    transition: border-color 0.3s ease;
 }
 
-/* Primary Button Styling (from landing page) */
+/* --- ERROR STYLES --- */
+input.input-error {
+    border: 1px solid var(--error-color); 
+}
+
+input.input-error:focus {
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25); 
+}
+
+/* Primary Button Styling */
 .btn-primary {
     width: 100%;
     background: var(--primary-color);
@@ -110,6 +122,7 @@ a:hover {
 }
 
 .forgot {
+    /* Specific to login page */
     text-align: right;
     display: block;
     margin-bottom: 5px; 
@@ -118,13 +131,23 @@ a:hover {
 }
 
 .register-link {
+    /* Specific to login page */
     margin-top: 20px; 
     font-size: 0.9rem;
     color: var(--dark-text);
 }
 
 .message {
-    color: var(--primary-color);
+    color: var(--primary-color); 
     font-size: 0.9rem;
     margin-top: 10px;
+}
+
+.error-inline {
+    color: var(--error-color); 
+    font-size: 0.85rem; 
+    text-align: left; 
+    margin-top: -5px; 
+    margin-bottom: 5px; 
+    font-weight: 500;
 }
