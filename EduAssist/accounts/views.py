@@ -113,10 +113,14 @@ def profile(request):
             for field_name in allowed_fields:
                 if field_name in form.cleaned_data:
                     setattr(profile, field_name, form.cleaned_data[field_name])
-
-            profile.save()
             
-            return redirect('profile')
+            # ✅ Year level validation: must be 1-5
+            if profile.year_level < '1' or profile.year_level > '5':
+                messages.error(request, "Year level must be between 1 and 5.")
+                return redirect('profile')
+            else:
+                profile.save()
+                return redirect('profile')
         else:
             # Handle common validation issues
             contact = request.POST.get('contact_number', '').strip()
@@ -133,6 +137,7 @@ def profile(request):
         'form': form,
         'user_info': request.user,
     })
+
 
 
 @user_passes_test(lambda u: u.is_staff)

@@ -1,50 +1,157 @@
 {% extends 'base.html' %} 
 {% load static %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Profile - EduAssist{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
 <link rel="stylesheet" href="{% static 'pos_app/css/profileStyle.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-<main>
-    <div class="profile-card">
-        <h2>My Profile</h2>
-        <p class="profile-subtitle">Manage your personal information</p>
-
-        <div class="user-details">
-            <p><strong>Username:</strong> {{ user_info.username|default:"" }}</p>
-            <p><strong>Email:</strong> {{ user_info.email|default:"" }}</p>
-        </div>
-
-        <form method="post" id="profileForm" class="profile-form">
-            {% csrf_token %}
-            {{ form.as_p }}
-
-            <div class="form-actions">
-                <button type="button" id="editBtn" class="btn-secondary">Edit</button>
-                <button type="submit" id="saveBtn" class="btn-save" disabled>Save Changes</button>
+<main class="profile-page">
+    <div class="profile-container">
+        <!-- Sidebar -->
+        <aside class="profile-sidebar">
+            <!-- Avatar Card -->
+            <div class="profile-avatar-card">
+                <div class="avatar-placeholder">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="profile-name">{{ user_info.first_name }} {{ user_info.last_name }}</h3>
+                <span class="profile-role">
+                    {% if user.is_staff %}
+                        <i class="fas fa-shield-alt"></i> Administrator
+                    {% else %}
+                        <i class="fas fa-graduation-cap"></i> Student
+                    {% endif %}
+                </span>
             </div>
-        </form>
 
-        <div class="messages">
-            {% for message in messages %}
-                <p class="{{ message.tags }}">{{ message }}</p>
-            {% endfor %}
-        </div>
+            <!-- Quick Info Card -->
+            <div class="quick-info-card">
+                <h4><i class="fas fa-info-circle"></i> Account Info</h4>
+                <div class="info-item">
+                    <i class="fas fa-user-tag"></i>
+                    <div>
+                        <span class="info-label">Username</span>
+                        <span class="info-value">{{ user_info.username|default:"Not set" }}</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <span class="info-label">Email</span>
+                        <span class="info-value">{{ user_info.email|default:"Not set" }}</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div>
+                        <span class="info-label">Member Since</span>
+                        <span class="info-value">{{ user_info.date_joined|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="extra-actions">
-            <form method="get" action="{% url 'change_password' %}">
-                <button type="submit" class="btn-secondary">Change Password</button>
-            </form>
+            <!-- Quick Actions Card -->
+            <div class="quick-actions-card">
+                <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+                <form method="get" action="{% url 'change_password' %}">
+                    <button type="submit" class="action-btn">
+                        <i class="fas fa-key"></i>
+                        Change Password
+                    </button>
+                </form>
+                {% if not user.is_staff %}
+                <form method="get" action="{% url 'my_feedback' %}">
+                    <button type="submit" class="action-btn">
+                        <i class="fas fa-comment-dots"></i>
+                        My Feedback
+                    </button>
+                </form>
+                {% endif %}
+                <a href="{% url 'settings' %}" class="action-btn">
+                    <i class="fas fa-cog"></i>
+                    Account Settings
+                </a>
+            </div>
+        </aside>
 
-            {% if not user.is_staff %}
-            <form method="get" action="{% url 'my_feedback' %}">
-                <button type="submit" class="btn-primary">My Feedback</button>
-            </form>
+        <!-- Main Content -->
+        <div class="profile-main">
+            <!-- Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="message-alert {{ message.tags }}">
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                        <span>{{ message }}</span>
+                        <button class="close-message" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
             {% endif %}
+
+            <!-- Profile Form Card -->
+            <div class="profile-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-id-card"></i> Personal Information</h2>
+                    <p class="card-subtitle">Update your personal details and contact information</p>
+                </div>
+
+                <div class="card-body">
+                    <form method="post" id="profileForm" class="profile-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-grid">
+                            {% for field in form %}
+                                <div class="form-group {% if field.name == 'bio' or field.name == 'address' %}full-width{% endif %}">
+                                    <label for="{{ field.id_for_label }}">
+                                        {% if field.name == 'first_name' %}
+                                            <i class="fas fa-user"></i>
+                                        {% elif field.name == 'last_name' %}
+                                            <i class="fas fa-user"></i>
+                                        {% elif field.name == 'contact' %}
+                                            <i class="fas fa-phone"></i>
+                                        {% elif field.name == 'program' %}
+                                            <i class="fas fa-book"></i>
+                                        {% elif field.name == 'year_level' %}
+                                            <i class="fas fa-layer-group"></i>
+                                        {% elif field.name == 'bio' %}
+                                            <i class="fas fa-align-left"></i>
+                                        {% else %}
+                                            <i class="fas fa-edit"></i>
+                                        {% endif %}
+                                        {{ field.label }}
+                                    </label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <span class="field-error">{{ field.errors.0 }}</span>
+                                    {% endif %}
+                                    {% if field.help_text %}
+                                        <span class="field-help">{{ field.help_text }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="editBtn" class="btn-secondary">
+                                <i class="fas fa-edit"></i>
+                                Edit Profile
+                            </button>
+                            <button type="submit" id="saveBtn" class="btn-save" disabled>
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>  
         </div>
     </div>
 </main>
@@ -62,9 +169,8 @@ document.addEventListener("DOMContentLoaded", function () {
     editableFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (field) {
-            // Check if it's a select element before setting 'readonly'
             if (field.tagName === 'SELECT') {
-                field.setAttribute("disabled", "true"); // Use disabled for select fields
+                field.setAttribute("disabled", "true");
             } else {
                 field.setAttribute("readonly", "true");
             }
@@ -99,9 +205,24 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         // Toggle button states
-        editBtn.textContent = isEditing ? "Cancel Edit" : "Edit";
+        if (isEditing) {
+            editBtn.innerHTML = '<i class="fas fa-times"></i> Cancel Edit';
+            editBtn.classList.add('cancel-mode');
+        } else {
+            editBtn.innerHTML = '<i class="fas fa-edit"></i> Edit Profile';
+            editBtn.classList.remove('cancel-mode');
+        }
         saveBtn.disabled = !isEditing;
     });
+
+    // Auto-hide messages after 5 seconds
+    setTimeout(() => {
+        const messages = document.querySelectorAll('.message-alert');
+        messages.forEach(msg => {
+            msg.style.animation = 'slideOut 0.4s ease-out forwards';
+            setTimeout(() => msg.remove(), 400);
+        });
+    }, 5000);
 });
 </script>
 {% endblock %}

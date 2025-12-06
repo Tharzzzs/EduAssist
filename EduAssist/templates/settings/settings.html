@@ -1,101 +1,236 @@
 {% extends 'base.html' %} 
 {% load static %}
 
-{% block title %}User Settings{% endblock %}
+{% block title %}Settings - EduAssist{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
 <link rel="stylesheet" href="{% static 'pos_app/css/settings.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-<div class="settings-container">
+<main class="settings-page">
+    <div class="settings-container">
+        <!-- Sidebar -->
+        <aside class="settings-sidebar">
+            <!-- Avatar Card -->
+            <div class="profile-avatar-card">
+                <div class="avatar-placeholder">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h3>
+                <span class="profile-role">
+                    {% if user.is_staff %}
+                        <i class="fas fa-shield-alt"></i> Administrator
+                    {% else %}
+                        <i class="fas fa-graduation-cap"></i> Student
+                    {% endif %}
+                </span>
+            </div>
 
-    <h1>User Settings</h1>
+            <!-- Quick Info Card -->
+            <div class="quick-info-card">
+                <h4><i class="fas fa-info-circle"></i> Account Info</h4>
+                <div class="info-item">
+                    <i class="fas fa-user-tag"></i>
+                    <div>
+                        <span class="info-label">Username</span>
+                        <span class="info-value">{{ user.username|default:"Not set" }}</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <span class="info-label">Email</span>
+                        <span class="info-value">{{ user.email|default:"Not set" }}</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div>
+                        <span class="info-label">Member Since</span>
+                        <span class="info-value">{{ user.date_joined|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+            </div>
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
-            {{ message }}
+            <!-- Quick Actions Card -->
+            <div class="quick-actions-card">
+                <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+                <a href="{% url 'profile' %}" class="action-btn">
+                    <i class="fas fa-user-circle"></i>
+                    View Profile
+                </a>
+                <form method="get" action="{% url 'change_password' %}">
+                    <button type="submit" class="action-btn">
+                        <i class="fas fa-key"></i>
+                        Change Password
+                    </button>
+                </form>
+                {% if not user.is_staff %}
+                <form method="get" action="{% url 'my_feedback' %}">
+                    <button type="submit" class="action-btn">
+                        <i class="fas fa-comment-dots"></i>
+                        My Feedback
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="settings-main">
+            <!-- Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="message-alert {{ message.tags }}">
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                        <span>{{ message }}</span>
+                        <button class="close-message" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Settings Form -->
+            <form method="POST" class="settings-form">
+                {% csrf_token %}
+
+                <!-- Notifications Section -->
+                <div class="settings-card" id="notifications">
+                    <div class="card-header">
+                        <div class="header-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div>
+                            <h2>Notification Settings</h2>
+                            <p>Control how you receive notifications</p>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="notification_email">
+                                <i class="fas fa-envelope"></i>
+                                Notification Email
+                            </label>
+                            <input 
+                                type="text" 
+                                name="notification_email" 
+                                id="notification_email"
+                                value="{{ user.email }}" 
+                                readonly
+                                class="form-input"
+                            >
+                            <span class="field-help">
+                                <i class="fas fa-info-circle"></i>
+                                This is your account email and cannot be changed here
+                            </span>
+                        </div>
+
+                        <div class="toggle-group">
+                            <div class="toggle-item">
+                                <div class="toggle-content">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <div>
+                                        <h4>Email Notifications</h4>
+                                        <p>Receive updates and alerts via email</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input 
+                                        type="checkbox" 
+                                        name="receive_email" 
+                                        {% if settings.receive_email %}checked{% endif %}
+                                    >
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Section -->
+                <div class="settings-card" id="privacy">
+                    <div class="card-header">
+                        <div class="header-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div>
+                            <h2>Privacy & Security</h2>
+                            <p>Manage your privacy preferences</p>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="toggle-group">
+                            <div class="toggle-item">
+                                <div class="toggle-content">
+                                    <i class="fas fa-eye"></i>
+                                    <div>
+                                        <h4>Profile Visibility</h4>
+                                        <p>Allow others to view your profile information</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input 
+                                        type="checkbox" 
+                                        name="profile_visible" 
+                                        {% if settings.profile_visible %}checked{% endif %}
+                                    >
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-content">
+                                    <i class="fas fa-share-nodes"></i>
+                                    <div>
+                                        <h4>Data Sharing</h4>
+                                        <p>Allow sharing of anonymized data for analytics</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input 
+                                        type="checkbox" 
+                                        name="allow_data_sharing" 
+                                        {% if settings.allow_data_sharing %}checked{% endif %}
+                                    >
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
         </div>
-    {% endfor %}
-{% endif %}
-
-
-    <form method="POST">
-        {% csrf_token %}
-
-        <div class="section">
-            <h2 class="section-title"><i class="fa-solid fa-palette"></i> Theme Preferences</h2>
-
-            <label>
-                Choose Theme:
-                <select class="theme-select" name="theme" id="theme_selector">
-                    <option value="light" {% if not settings.dark_mode %}selected{% endif %}>Light Mode</option>
-                    <option value="dark" {% if settings.dark_mode %}selected{% endif %}>Dark Mode</option>
-                </select>
-            </label>
-        </div>
-
-        <div class="section">
-            <h2 class="section-title"><i class="fa-solid fa-bell"></i> Notification Settings</h2>
-
-            <label>
-                Notification Email:
-                <input type="text" name="notification_email" 
-                value="{{ user.email }}" readonly>
-            </label>
-
-
-            <label>
-                Receive Email Notifications
-                <input type="checkbox" name="receive_email" {% if settings.receive_email %}checked{% endif %}>
-            </label>
-        </div>
-    
-
-        <div class="section">
-            <h2 class="section-title"><i class="fa-solid fa-user-shield"></i> Privacy Options</h2>
-
-            <label>Profile Visibility
-                <input type="checkbox" name="profile_visible" {% if settings.profile_visible %}checked{% endif %}>
-            </label>
-            
-            <label>Allow Data Sharing
-                <input type="checkbox" name="allow_data_sharing" {% if settings.allow_data_sharing %}checked{% endif %}>
-            </label>
-        </div>
-
-        <button type="submit" class="save-button">Save Changes</button>
-    </form>
-</div>
+    </div>
+</main>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const themeFromDB = "{{ settings.dark_mode|yesno:'dark,light' }}";
-        const container = document.querySelector(".settings-container");
-        const body = document.body;
-
-        // Apply theme on initial load based on Django context
-        if (themeFromDB === "dark") {
-            body.classList.add("dark");
-            container.classList.add("dark");
-        }
-
-        const themeSelector = document.getElementById("theme_selector");
-
-        // Theme selector listener for dynamic preview
-        themeSelector.addEventListener("change", function () {
-            if (themeSelector.value === "dark") {
-                body.classList.add("dark");
-                container.classList.add("dark");
-            } else {
-                body.classList.remove("dark");
-                container.classList.remove("dark");
-            }
+document.addEventListener("DOMContentLoaded", function () {
+    // Auto-hide messages after 5 seconds
+    setTimeout(() => {
+        const messages = document.querySelectorAll('.message-alert');
+        messages.forEach(msg => {
+            msg.style.animation = 'slideOut 0.4s ease-out forwards';
+            setTimeout(() => msg.remove(), 400);
         });
-    });
+    }, 5000);
+});
 </script>
 {% endblock %}

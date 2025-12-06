@@ -12,11 +12,6 @@ def settings_view(request):
     if request.method == "POST":
         errors = []
 
-        # --- THEME VALIDATION ---
-        theme = request.POST.get("theme")
-        if theme not in ["light", "dark"]:
-            errors.append("Selected theme is not available.")
-
         # --- EMAIL + NOTIFICATION VALIDATION ---
         email = request.POST.get("notification_email", "").strip()
         receive_email = request.POST.get("receive_email") == "on"
@@ -37,7 +32,6 @@ def settings_view(request):
             return redirect("settings")
 
         # --- SAVE VALID SETTINGS TO DATABASE ---
-        settings.dark_mode = (theme == "dark")
         settings.notification_email = email
         settings.receive_email = receive_email
         settings.profile_visible = request.POST.get("profile_visible") == "on"
@@ -52,7 +46,6 @@ def settings_view(request):
         return redirect("settings")
 
     return render(request, "settings/settings.html", {
-    "settings": settings,
-    "user": request.user
-})
-
+        "settings": settings,
+        "user": request.user
+    })
