@@ -2,22 +2,42 @@
 
 <link rel="stylesheet" href="{% static 'pos_app/css/header.css' %}">
 <header>
-    <div class="edu" style="color:white !important;">EduAssist</div>
 
+    <div class="logo">
+        <span class="edu">Edu</span><span class="highlight-assist">Assist</span>
+    </div>
 
     <nav class="main-nav">
-        {% if user.is_staff %}
-            <a href="{% url 'dashboard' %}">All Requests</a>
-            <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
-            <a href="{% url 'create_category' %}">Create Category</a>
-        {% else %}
-            <a href="{% url 'dashboard' %}">My Requests</a>
-        {% endif %}
-        {% if not user.is_staff %}
-                    <a href="{% url 'add_request' %}" class="btn btn-primary">Add Request</a>
-                {% endif %}
-    </nav>
-    
+    {% if user.is_staff %}
+        <a href="{% url 'dashboard' %}"
+           class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+           All Requests
+        </a>
+
+        <a href="{% url 'admin_dashboard' %}"
+           class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+           Admin Panel
+        </a>
+
+        <a href="{% url 'create_category' %}"
+           class="{% if request.resolver_match.url_name == 'create_category' %}active{% endif %}">
+           Create Category
+        </a>
+    {% else %}
+        <a href="{% url 'dashboard' %}"
+           class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+           My Requests
+        </a>
+    {% endif %}
+
+    {% if not user.is_staff %}
+        <a href="{% url 'add_request' %}"
+           class="btn btn-primary {% if request.resolver_match.url_name == 'add_request' %}active{% endif %}">
+           Add Request
+        </a>
+    {% endif %}
+</nav>
+
     <div class="user-menu-container">
         <button class="menu-toggle-btn" onclick="toggleMenu()">
             <i class="fa-solid fa-bars"></i>
@@ -70,4 +90,5 @@ window.onclick = function(event) {
         }
     }
 }
+
 </script>

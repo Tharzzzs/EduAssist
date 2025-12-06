@@ -3,9 +3,9 @@
 =========================== */
 :root {
     --primary-maroon: #750000;
-    --secondary-dark: #2c3e50;
+    --secondary-dark: #000000;
     --light-grey: #ecf0f1;
-    --text-color: #34495e;
+    --text-color: #000000;
     --hover-transition: all 0.2s ease-in-out;
 }
 
@@ -54,14 +54,24 @@ header {
 /* ===========================
     LOGO (BIGGER)
 =========================== */
+
+.logo {
+    background: white;
+    border: 1px solid white;
+    padding: 0 4px;
+    border-radius: 5px;
+    font-size: 28px;
+    font-weight: 650;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+
 .edu {
-    font-size: 24px;          /* clean + proportional like screenshot */
-    font-weight: 650;         /* not too bold */
-    letter-spacing: 0.3px;    /* tighter spacing for more professional logo look */
-    color: #ffffff !important; 
-              /* pure white */
-    text-transform: uppercase; /* same style as DOCUTRACKR */
-    text-shadow: 0 1px 2px rgba(0,0,0,0.25); /* subtle lift */
+    color: var( --secondary-dark);
+}
+
+.highlight-assist {
+    color: var(--primary-maroon);
 }
 
 /* ===========================
@@ -83,6 +93,11 @@ header {
 .main-nav a:hover {
     opacity: 1;
     color: #ffcccc;
+}
+
+.main-nav a.active {
+    border-bottom: 2px solid white;
+    padding-bottom: 3px;
 }
 
 /* ===========================
