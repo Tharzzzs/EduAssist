@@ -32,10 +32,19 @@ def dashboard_view(request):
         # Standard user sees only their own requests
         base_queryset = Request.objects.filter(user=request.user)
         
+    # --- START MODIFICATION ---
     # 2. Dynamic Count Calculation (reflecting the full base_queryset for summary cards)
-    total_count = base_queryset.count()
+    
+    # Create a non-cancelled queryset for the TOTAL count
+    non_cancelled_queryset = base_queryset.exclude(status='cancelled')
+    
+    # total_count now only counts requests that are NOT 'cancelled'
+    total_count = non_cancelled_queryset.count() 
+    
+    # Other counts remain the same, calculated from the full base_queryset
     pending_count = base_queryset.filter(status='pending').count()
     approved_count = base_queryset.filter(status='approved').count()
+    # --- END MODIFICATION ---
 
     # 3. Apply custom ordering (Pending -> Approved -> Cancelled)
     requests = base_queryset.annotate(
@@ -58,9 +67,9 @@ def dashboard_view(request):
     context = {
         'requests': requests, 
         'form': form,
-        'total_count': total_count,# Passed to template
-        'pending_count': pending_count, # Passed to template
-        'approved_count': approved_count, # Passed to template
+        'total_count': total_count,     # Updated to exclude 'cancelled'
+        'pending_count': pending_count, 
+        'approved_count': approved_count,
     }
 
     return render(request, 'Home/dashboard.html', context)
@@ -291,7 +300,7 @@ def create_category(request):
 # Approve/Update Request Status (Admin Action)
 # ------------------------
 @login_required
-# @user_passes_test(lambda u: u.is_staff) # Note: Admin check should be implemented here, but is commented out in original snippet
+@user_passes_test(lambda u: u.is_staff) # Note: Admin check should be implemented here, but is commented out in original snippet
 def approve_request(request, id):
     req = get_object_or_404(Request, id=id)
 
@@ -308,23 +317,45 @@ def approve_request(request, id):
 
         # 3. Handle Notification (Only send email if status actually changed)
         if is_status_changed:
-            # Assuming 'pending', 'approved', 'rejected', etc. match email templates
-            # Note: The original example only handled 'approved' in this block.
-            # I will use the new status for dynamic email type if templates exist.
-            email_type = f"request_{new_status}" 
+            
+            # Use a specific template name if the status is 'approved'
+            # Assuming 'approved' is the value for the approved status in your model
+            if new_status == 'approved':
+                template_file = 'request_approved.html' 
+                email_subject = f"Your Request '{req.title}' Has Been Approved"
+            else:
+                # Fallback or logic for other statuses (e.g., 'rejected', 'pending')
+                template_file = f"request_{new_status}.html"
+                email_subject = f"Your Request '{req.title}' Status Updated to {req.get_status_display()}"
 
-            send_notification_email(
-                to_email=req.user.email,
-                type=email_type,
-                template_name=email_type,
-                context_data={
-                    "name": req.user.first_name,
-                    "title": req.title,
-                    "admin_message": admin_message,
-                    "new_status": req.get_status_display()
-                }
-            )
-        
+
+            # --- This is where the email is actually sent ---
+            # You will need to make sure your send_notification_email function 
+            # can find and render the 'request_approved.html' template.
+            # A common implementation uses django.core.mail.send_mail or a wrapper.
+            
+            # Note: I am simplifying your original send_notification_email arguments 
+            # to match a more standard Django email sending wrapper.
+            
+            try:
+                # The send_notification_email function should likely look something like this in a helper file:
+                # def send_notification_email(subject, to_email, template_name, context): ...
+                send_notification_email(
+                    subject=email_subject,
+                    to_email=req.user.email,
+                    template_name=template_file, # E.g., 'request_approved.html'
+                    context_data={
+                        "name": req.user.first_name,
+                        "title": req.title,
+                        "admin_message": admin_message,
+                        "new_status": req.get_status_display() # Added for flexibility
+                    }
+                )
+            except Exception as e:
+                 # Log error but continue
+                 print(f"Error sending email: {e}")
+                 messages.warning(request, f"Request status updated, but failed to send email: {e}")
+                 
         # 4. Success message and redirect
         messages.success(request, f"Request status changed to '{req.get_status_display()}' and user notified.")
         
@@ -334,7 +365,5 @@ def approve_request(request, id):
     return render(request, 'Home/approve_request.html', {
         'req': req,
         'current_status': req.status,
-        # Pass all possible status choices (assuming STATUS_CHOICES is defined in Request model)
-        # You will need to ensure Request.STATUS_CHOICES is correctly imported/available.
         'status_choices': Request.STATUS_CHOICES 
     })

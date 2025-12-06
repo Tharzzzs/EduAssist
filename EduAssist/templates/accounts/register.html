@@ -20,19 +20,40 @@
 
         <form method="post" class="auth-form">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Full Name" required>
-            <input type="email" name="email" placeholder="Email Address" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <input type="password" name="password2" placeholder="Confirm Password" required>
+            
+            <input type="text" name="username" placeholder="Full Name" required
+                value="{{ request.POST.username }}"
+                class="{% if username_error %} input-error{% endif %}"
+            >
+            {# RENDER USERNAME ERROR INLINE #}
+            {% if username_error %}
+                <p class="message error-inline">{{ username_error }}</p>
+            {% endif %}
+
+            <input type="email" name="email" placeholder="Email Address" required
+                value="{{ request.POST.email }}"
+                class="{% if email_error %} input-error{% endif %}"
+            >
+            {# RENDER EMAIL ERROR INLINE #}
+            {% if email_error %}
+                <p class="message error-inline">{{ email_error }}</p>
+            {% endif %}
+
+            <input type="password" name="password" placeholder="Password" required
+                class="{% if password_error or password2_error %} input-error{% endif %}"
+            >
+            <input type="password" name="password2" placeholder="Confirm Password" required
+                class="{% if password_error or password2_error %} input-error{% endif %}"
+            >
+            {# RENDER PASSWORD/CONFIRM PASSWORD ERROR INLINE #}
+            {% if password_error %}
+                <p class="message error-inline">{{ password_error }}</p>
+            {% elif password2_error %}
+                <p class="message error-inline">{{ password2_error }}</p>
+            {% endif %}
             
             <button type="submit" class="btn-primary">Sign Up</button>
         </form>
-
-        {% if messages %}
-            {% for message in messages %}
-                <p class="message">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
 
         <p class="login-link">Already have an account? <a href="{% url 'login' %}">Sign in here.</a></p>
     </div>
