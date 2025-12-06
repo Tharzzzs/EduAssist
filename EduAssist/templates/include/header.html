@@ -28,14 +28,18 @@
            class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
            My Requests
         </a>
-    {% endif %}
-
-    {% if not user.is_staff %}
         <a href="{% url 'add_request' %}"
            class="btn btn-primary {% if request.resolver_match.url_name == 'add_request' %}active{% endif %}">
            Add Request
         </a>
     {% endif %}
+
+    <!-- {% if not user.is_staff %}
+        <a href="{% url 'add_request' %}"
+           class="btn btn-primary {% if request.resolver_match.url_name == 'add_request' %}active{% endif %}">
+           Add Request
+        </a>
+    {% endif %} -->
 </nav>
 
     <div class="user-menu-container">
