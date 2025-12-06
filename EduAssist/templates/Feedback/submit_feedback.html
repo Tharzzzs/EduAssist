@@ -1,56 +1,62 @@
+{% extends 'base.html' %} 
 {% load static %}
-<head>
-    <title>Submit Feedback</title>
-    <link rel="stylesheet" href="{% static 'pos_app/css/submit_feedback.css' %}">
-</head>
 
-<body>
+{% block title %}Submit Feedback{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pos_app/css/submit_feedback.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+
+{% block content %}
     <div class="container">
-        <h2>
-            <span class="header-icon"></span>
-            Submit Your Feedback
-        </h2>
-        
+        <div class="feedback-header">
+            <h2>Submit Your Feedback</h2>
+            <p>We value your input. Please share your experience with us.</p>
+        </div>
+
         <form method="post">
             {% csrf_token %}
-            
+
             <div class="form-fields">
-                
-                <div>
-                    <label for="id_rating_1">{{ form.rating.label }}</label>
-                    
-                    <div class="rating-input data-rating">
-                        {% for radio in form.rating %} 
-                            {{ radio.tag }}
-                            <label for="{{ radio.id_for_label }}">
-                                {{ radio.choice_label }}
-                            </label>
-                        {% endfor %}
+                <div class="rating-section">
+                    <label>{{ form.rating.label }}</label>
+                    <div class="rating-input">
+                        <input type="radio" id="id_rating_0" name="{{ form.rating.name }}" value="5">
+                        <label for="id_rating_0" title="5 star"></label>
+                        <input type="radio" id="id_rating_1" name="{{ form.rating.name }}" value="4">
+                        <label for="id_rating_1" title="4 stars"></label>
+                        <input type="radio" id="id_rating_2" name="{{ form.rating.name }}" value="3">
+                        <label for="id_rating_2" title="3 stars"></label>
+                        <input type="radio" id="id_rating_3" name="{{ form.rating.name }}" value="2">
+                        <label for="id_rating_3" title="2 stars"></label>
+                        <input type="radio" id="id_rating_4" name="{{ form.rating.name }}" value="1" checked>
+                        <label for="id_rating_4" title="1 stars"></label>
                     </div>
                     {% if form.rating.errors %}
                         <div class="errorlist">{{ form.rating.errors }}</div>
                     {% endif %}
                 </div>
+
                 {% for field in form %}
                     {% if field.name != 'rating' %}
-                        <p>
+                        <div class="form-group">
                             {{ field.label_tag }}
                             {{ field }}
                             {{ field.errors }}
-                        </p>
+                        </div>
                     {% endif %}
                 {% endfor %}
-                
             </div>
-            
+
             <div class="action-buttons">
-                <button type="submit" class="btn-primary">
-                    <span class="send-icon"></span> Send Feedback
-                </button>
-                <a href="{% url 'dashboard' %}" class="btn-secondary">
-                    <span class="back-icon"></span> Back to Requests
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                    <span class="back-icon">←</span> Back
                 </a>
+                <button type="submit" class="btn btn-primary">
+                    Send Feedback <span class="send-icon">→</span>
+                </button>
             </div>
         </form>
     </div>
-</body>
+{% endblock %}

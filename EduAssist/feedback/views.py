@@ -33,7 +33,7 @@ def submit_feedback(request):
                 return redirect('my_feedback')
 
             feedback.save()
-            messages.success(request, "Thank you, your feedback has been submitted!")
+            # messages.success(request, "Thank you, your feedback has been submitted!")
             return redirect('my_feedback')
     else:
         form = FeedbackForm()

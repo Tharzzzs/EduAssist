@@ -6,6 +6,7 @@
     --secondary-dark: #000000;
     --light-grey: #ecf0f1;
     --text-color: #000000;
+    --secondary-gold: #FFCC33;
     --hover-transition: all 0.2s ease-in-out;
 }
 
@@ -55,9 +56,8 @@ header {
     LOGO (BIGGER)
 =========================== */
 
-.logo {
-    background: white;
-    border: 1px solid white;
+header .logo {
+   
     padding: 0 4px;
     border-radius: 5px;
     font-size: 28px;
@@ -67,11 +67,11 @@ header {
 }
 
 .edu {
-    color: var( --secondary-dark);
+    color: white;
 }
 
 .highlight-assist {
-    color: var(--primary-maroon);
+    color: var(--secondary-gold);
 }
 
 /* ===========================

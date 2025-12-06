@@ -1,53 +1,71 @@
+{% include 'include/header.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Feedback</title>
     <link rel="stylesheet" href="{% static 'pos_app/css/edit_feedback.css' %}">
 </head>
+<body>
+    <div class="container">
+        
+        <div class="feedback-header">
+            <h2>Edit Your Feedback</h2>
+            <p>Make changes to your submitted feedback below.</p>
+        </div>
 
-<div class="container">
-    <h2>Edit Feedback</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-fields">
-            
-            {# 1. CUSTOM RATING FIELD STRUCTURE #}
-            <div>
-                <label for="id_rating_1">{{ form.rating.label }}</label>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-fields">
                 
-                <div class="rating-input data-rating">
-                    {% for radio in form.rating %} 
-                        {{ radio.tag }}
-                        <label for="{{ radio.id_for_label }}">
-                            {{ radio.choice_label }}
-                        </label>
-                    {% endfor %}
+                <div class="rating-section">
+                    <label>{{ form.rating.label }}</label>
+                    
+                    <div class="rating-input">
+
+                        {% comment %} Always show exactly 5 stars (5 to 1) {% endcomment %}
+                        {% for i in "54321" %}
+                            <input 
+                                type="radio" 
+                                name="{{ form.rating.name }}" 
+                                value="{{ i }}" 
+                                id="star{{ i }}"
+                                {% if form.rating.value|stringformat:"s" == i %}checked{% endif %}
+                            >
+                            <label for="star{{ i }}" title="{{ i }} stars"></label>
+                        {% endfor %}
+
+                    </div>
+                    
+                    {% if form.rating.errors %}
+                        <div class="errorlist">{{ form.rating.errors }}</div>
+                    {% endif %}
                 </div>
-                {% if form.rating.errors %}
-                    <div class="errorlist">{{ form.rating.errors }}</div>
-                {% endif %}
+                
+                {% for field in form %}
+                    {% if field.name != 'rating' %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                
             </div>
             
-            {# 2. LOOP THROUGH REMAINING FIELDS (e.g., comment, non-rating fields) #}
-            {% for field in form %}
-                {% if field.name != 'rating' %}
-                    <p>
-                        {{ field.label_tag }}
-                        {{ field }}
-                        {{ field.errors }}
-                    </p>
-                {% endif %}
-            {% endfor %}
-            
-        </div>
-        
-        {# 3. ACTION BUTTONS #}
-        <div class="action-buttons">
-            <button type="submit" class="btn-primary">
-                Save Changes
-            </button>
-            <a href="{% url 'my_feedback' %}" class="btn-secondary">
-                Back
-            </a>
-        </div>
-    </form>
-</div>
+            <div class="action-buttons">
+                <a href="{% url 'my_feedback' %}" class="btn btn-secondary">
+                    <span class="back-icon">←</span> Back
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    Save Changes <span class="send-icon">→</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,3 +1,4 @@
+{% include 'include/header.html' %}
 {% load static %}
 <head>
     <title>My Feedback</title>
@@ -18,7 +19,7 @@
                     <a href="{% url 'edit_feedback' f.id %}" class="btn-secondary" style="margin: 0;">
                         <i class="fa-solid fa-pen"></i> Edit
                     </a>
-                    <button class="deleteBtn" data-id="{{ f.id }}">
+                    <button class="deleteBtn" data-url="{% url 'delete_feedback' f.id %}">
                         <i class="fa-solid fa-trash-can"></i> Delete
                     </button>
                 </div>
@@ -51,14 +52,20 @@
 
     document.querySelectorAll('.deleteBtn').forEach(btn => {
         btn.addEventListener('click', function() {
-            const feedbackId = this.dataset.id;
-            // Ensure the dynamic URL is correctly configured in your Django project
-            deleteForm.action = `/feedback/delete/${feedbackId}/`; 
-            modal.style.display = 'flex'; // Display modal using flex for centering
+            const url = this.dataset.url;
+            deleteForm.action = url; // Dynamically set form action to Django delete URL
+            modal.style.display = 'flex'; // Display modal
         });
     });
 
     cancelBtn.addEventListener('click', function() {
         modal.style.display = 'none';
+    });
+
+    // Close modal if user clicks outside modal content
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
     });
 </script>

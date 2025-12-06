@@ -27,10 +27,10 @@ body {
 
 
 /* ===== Navbar (Header is 72px tall and should be styled via header.css) ===== */
-header {
+/* header {
     top: 0;
     z-index: 1000;
-}
+} */
 
 
 /* ===== Main Container (Mimics White Card Background) ===== */

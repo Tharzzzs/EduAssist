@@ -1,225 +1,154 @@
 :root {
-	--primary-red: #B30000;
-	--accent-red: #D62C2C;
-	--background-light: #ffffff;
-	--border-color: #eeeeee;
-	--text-color-dark: #333333;
-	--error-red: #dc3545;
-	--rating-default-bg: #f7f7f7;
-	--rating-default-border: #cccccc;
-	--star-unselected-color: #AAAAAA;
+    --primary-maroon: #750000;
+    --secondary-dark: #000000;
+    --light-grey: #ecf0f1;
+    --text-color: #000000;
+    --hover-transition: all 0.2s ease-in-out;
 }
 
-body {
-	background-color: #f8f9fa;
-	font-family: Arial, sans-serif;
-	color: var(--text-color-dark);
-}
-
+/* --- Container --- */
 .container {
-	background-color: var(--background-light);
-	border-radius: 12px;
-	padding: 30px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-	margin: 40px auto;
-	max-width: 600px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+    max-width: 500px;
+    border-top: 5px solid var(--primary-maroon);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
 }
 
-.container h2 {
-	color: var(--primary-red);
-	margin-bottom: 25px;
-	border-bottom: 2px solid var(--border-color);
-	padding-bottom: 10px;
-	display: flex;
-	align-items: center;
-	font-size: 1.6rem;
+/* --- Form Fields and Labels --- */
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.container h2 .header-icon::before {
-	content: "\272D";
-	margin-right: 10px;
-	color: var(--primary-red);
-	display: inline-block;
-	font-size: 1.2em;
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
 }
 
-.form-fields label {
-	display: block;
-	font-weight: 600;
-	margin-top: 15px;
-	color: var(--text-color-dark);
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    color: var(--text-color);
+    transition: var(--hover-transition);
 }
 
-.form-fields input:not([type="radio"]),
-.form-fields textarea,
-.form-fields select {
-	width: 100%;
-	padding: 10px 12px;
-	margin-top: 5px;
-	margin-bottom: 15px;
-	border: 1px solid #ced4da;
-	border-radius: 6px;
-	box-sizing: border-box;
-	transition: border-color 0.3s, box-shadow 0.3s;
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
 }
 
-.form-fields input:focus:not([type="radio"]),
-.form-fields textarea:focus,
-.form-fields select:focus {
-	border-color: var(--primary-red);
-	outline: none;
-	box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.1);
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-maroon);
+    outline: none;
+    box-shadow: 0 0 5px rgba(117, 0, 0, 0.2);
 }
 
-.form-fields .errorlist {
-	color: var(--error-red);
-	font-size: 0.9rem;
-	list-style: none;
-	padding: 0;
-	margin-top: -10px;
-	margin-bottom: 10px;
+.errorlist {
+    color: var(--primary-maroon);
+    font-size: 0.85rem;
+    list-style: none;
+    padding: 0;
+    margin-top: 0.25rem;
 }
 
-.form-fields > div:has(.rating-input) {
-	margin-bottom: 25px;
+/* --- Rating Component --- */
+.rating-section {
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--light-grey);
+    border-radius: 4px;
+}
+
+.rating-section label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.rating-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    gap: 0.25rem;
+    position: relative;
 }
 
 .rating-input input[type="radio"] {
-	position: absolute;
-	opacity: 0;
-	pointer-events: none;
+    position: absolute;
+    opacity: 0;
 }
 
-/* --- Star Icon Inside Box Rating Layout --- */
-.rating-input.data-rating {
-	display: flex;
-	flex-direction: row; /* 1 to 5 order */
-	gap: 0;
-	margin-top: 10px;
-	overflow: hidden;
-	border: 1px solid var(--rating-default-border);
-	border-radius: 6px;
-	width: fit-content;
+.rating-input label {
+    font-size: 2.5rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: var(--hover-transition);
 }
 
-.rating-input.data-rating label {
-	font-size: 1.4rem;
-	color: var(--star-unselected-color); /* Star icon color */
-	cursor: pointer;
-	transition: background-color 0.2s ease, color 0.2s ease;
-	margin: 0 !important;
-	padding: 5px 0;
-	font-weight: normal;
-	width: 40px; /* Box width */
-	height: 40px; /* Box height */
-	text-align: center;
-	line-height: 30px; /* Centers icon vertically */
-	background-color: var(--rating-default-bg);
-	border-right: 1px solid var(--rating-default-border);
-	display: block;
-	box-sizing: border-box;
+.rating-input label::before {
+    content: '★';
 }
 
-.rating-input.data-rating label:last-child {
-	border-right: none;
+.rating-input label:hover,
+.rating-input label:hover ~ label {
+    color: var(--primary-maroon);
 }
 
-/* Star Icon Content */
-.rating-input.data-rating label::before {
-	content: "\2605";
+.rating-input input[type="radio"]:checked ~ label {
+    color: var(--primary-maroon);
 }
 
-/* Hover effect: makes star red and box lighter */
-.rating-input.data-rating label:hover {
-	background-color: #fcebeb;
-	color: var(--accent-red);
-	transform: none;
-}
-
-/* Selected state (Box) - Primary Red Background, White Star */
-.rating-input.data-rating input[type="radio"]:checked + label {
-	background-color: var(--primary-red); /* Red box */
-	color: white; /* White star */
-	border-color: var(--primary-red);
-	transform: none;
-	position: relative;
-	z-index: 1;
-}
-
-/* Ensure selected box stays red and white on hover */
-.rating-input.data-rating input[type="radio"]:checked + label:hover {
-	background-color: var(--primary-red);
-	color: white;
-}
-
-/* Focus style */
-.rating-input.data-rating input[type="radio"]:focus + label {
-	box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.5);
-}
-
-
+/* --- Action Buttons --- */
 .action-buttons {
-	margin-top: 30px;
-	border-top: 1px solid var(--border-color);
-	padding-top: 20px;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.btn-primary,
-button[type="submit"] {
-	background-color: var(--primary-red);
-	color: white;
-	border: none;
-	padding: 12px 25px;
-	border-radius: 8px;
-	font-size: 1.0rem;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.3s ease, box-shadow 0.3s ease;
-	text-decoration: none;
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
+.btn {
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: var(--hover-transition);
+    cursor: pointer;
+    text-decoration: none;
 }
 
-.btn-primary:hover,
-button[type="submit"]:hover {
-	background-color: var(--accent-red);
-	box-shadow: 0 4px 8px rgba(179, 0, 0, 0.2);
+.btn-primary {
+    background-color: var(--primary-maroon);
+    color: white;
 }
 
-.btn-primary .send-icon::before {
-	content: "\27A4";
-	font-size: 0.9em;
-	line-height: 1;
+.btn-primary:hover {
+    opacity: 0.9;
 }
 
-.btn-secondary,
-a.btn-secondary {
-	background-color: #f0f0f0;
-	color: var(--text-color-dark);
-	border: 1px solid var(--border-color);
-	padding: 10px 20px;
-	border-radius: 8px;
-	font-size: 0.95rem;
-	cursor: pointer;
-	transition: all 0.3s ease;
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	text-decoration: none;
-	font-weight: 500;
-	margin-left: 15px;
+.btn-secondary {
+    background-color: transparent;
+    color: var(--secondary-dark);
+    border: 1px solid #ccc;
 }
 
-.btn-secondary:hover,
-a.btn-secondary:hover {
-	background-color: var(--border-color);
-	color: var(--primary-red);
-	border-color: #ddd;
-}
-
-.btn-secondary .back-icon::before {
-	content: "\2190";
-	font-size: 0.9em;
-	line-height: 1;
+.btn-secondary:hover {
+    background-color: var(--light-grey);
 }
