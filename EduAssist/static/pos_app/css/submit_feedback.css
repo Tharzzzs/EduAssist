@@ -3,11 +3,20 @@
     --secondary-dark: #000000;
     --light-grey: #ecf0f1;
     --text-color: #000000;
+    --secondary-gold: #FFCC33;
     --hover-transition: all 0.2s ease-in-out;
 }
 
+/* ===========================
+   SUBMIT FEEDBACK PAGE STYLES
+=========================== */
+.submit-feedback-page {
+    font-family: Arial, sans-serif;
+    color: var(--text-color);
+}
+
 /* --- Container --- */
-.container {
+.submit-feedback-page .container {
     background-color: #ffffff;
     border-radius: 8px;
     padding: 2rem;
@@ -15,27 +24,38 @@
     margin: 2rem auto;
     max-width: 500px;
     border-top: 5px solid var(--primary-maroon);
-    color: var(--text-color);
-    font-family: Arial, sans-serif;
     line-height: 1.6;
 }
 
-/* --- Form Fields and Labels --- */
-.form-fields {
+/* --- Header in Container --- */
+.submit-feedback-page .feedback-header h2 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-maroon);
+}
+
+.submit-feedback-page .feedback-header p {
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* --- Form Fields --- */
+.submit-feedback-page .form-fields {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.form-group label {
+.submit-feedback-page .form-group label {
     display: block;
     font-weight: 600;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
 }
 
-.form-group input,
-.form-group textarea {
+.submit-feedback-page .form-group input,
+.submit-feedback-page .form-group textarea {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ccc;
@@ -46,19 +66,20 @@
     transition: var(--hover-transition);
 }
 
-.form-group textarea {
+.submit-feedback-page .form-group textarea {
     min-height: 100px;
     resize: vertical;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.submit-feedback-page .form-group input:focus,
+.submit-feedback-page .form-group textarea:focus {
     border-color: var(--primary-maroon);
     outline: none;
     box-shadow: 0 0 5px rgba(117, 0, 0, 0.2);
 }
 
-.errorlist {
+/* --- Django Errors --- */
+.submit-feedback-page .errorlist {
     color: var(--primary-maroon);
     font-size: 0.85rem;
     list-style: none;
@@ -67,20 +88,20 @@
 }
 
 /* --- Rating Component --- */
-.rating-section {
+.submit-feedback-page .rating-section {
     text-align: center;
     padding: 1rem;
     background-color: var(--light-grey);
     border-radius: 4px;
 }
 
-.rating-section label {
+.submit-feedback-page .rating-section label {
     font-weight: 600;
     display: block;
     margin-bottom: 0.5rem;
 }
 
-.rating-input {
+.submit-feedback-page .rating-input {
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
@@ -88,33 +109,33 @@
     position: relative;
 }
 
-.rating-input input[type="radio"] {
+.submit-feedback-page .rating-input input[type="radio"] {
     position: absolute;
     opacity: 0;
 }
 
-.rating-input label {
+.submit-feedback-page .rating-input label {
     font-size: 2.5rem;
     color: #ccc;
     cursor: pointer;
     transition: var(--hover-transition);
 }
 
-.rating-input label::before {
+.submit-feedback-page .rating-input label::before {
     content: '★';
 }
 
-.rating-input label:hover,
-.rating-input label:hover ~ label {
+.submit-feedback-page .rating-input label:hover,
+.submit-feedback-page .rating-input label:hover ~ label {
     color: var(--primary-maroon);
 }
 
-.rating-input input[type="radio"]:checked ~ label {
+.submit-feedback-page .rating-input input[type="radio"]:checked ~ label {
     color: var(--primary-maroon);
 }
 
 /* --- Action Buttons --- */
-.action-buttons {
+.submit-feedback-page .action-buttons {
     margin-top: 2rem;
     padding-top: 1rem;
     border-top: 1px solid #eee;
@@ -123,7 +144,7 @@
     align-items: center;
 }
 
-.btn {
+.submit-feedback-page .btn {
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 4px;
@@ -132,23 +153,49 @@
     transition: var(--hover-transition);
     cursor: pointer;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.btn-primary {
+.submit-feedback-page .btn-primary {
     background-color: var(--primary-maroon);
     color: white;
 }
 
-.btn-primary:hover {
+.submit-feedback-page .btn-primary:hover {
     opacity: 0.9;
 }
 
-.btn-secondary {
+.submit-feedback-page .btn-secondary {
     background-color: transparent;
     color: var(--secondary-dark);
     border: 1px solid #ccc;
 }
 
-.btn-secondary:hover {
+.submit-feedback-page .btn-secondary:hover {
     background-color: var(--light-grey);
+}
+
+/* --- Icon spacing --- */
+.submit-feedback-page .btn .back-icon,
+.submit-feedback-page .btn .send-icon {
+    font-weight: bold;
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+    .submit-feedback-page .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .submit-feedback-page .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .submit-feedback-page .rating-input label {
+        font-size: 2rem;
+    }
 }
