@@ -1,0 +1,23 @@
+<p>Hi {{ name }},</p>
+
+<p>
+We regret to inform you that your request <strong>{{ title }}</strong> has been 
+<strong style="color: #d9534f;">cancelled</strong>.
+</p>
+
+{% if admin_message %}
+    <p><strong>Reason provided by the admin:</strong></p>
+    <blockquote style="border-left: 3px solid #d9534f; padding-left: 10px; margin: 8px 0;">
+        {{ admin_message }}
+    </blockquote>
+{% endif %}
+
+<p>
+If you believe this was a mistake or need further clarification,  
+please don't hesitate to submit a new inquiry through your EduAssist account.
+</p>
+
+<p style="margin-top: 20px;">
+Best regards,<br>
+<strong>EduAssist Team</strong>
+</p>
