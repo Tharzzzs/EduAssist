@@ -55,7 +55,14 @@ def register_view(request):
         
         required_domain = "@cit.edu"
         
-        if not email.endswith(required_domain):
+        # --- NEW VALIDATION: Full Name Format ---
+        # The regex pattern r'^[a-zA-Z\s]+$' matches strings that
+        # start (^) and end ($) with one or more (+) letters (a-z, A-Z) or whitespace (\s).
+        if not re.match(r'^[a-zA-Z\s]+$', username):
+            context['username_error'] = "Full Name can only contain letters and spaces."
+        # --- END NEW VALIDATION ---
+        
+        elif not email.endswith(required_domain):
             context['email_error'] = f"Please use your educational email ending in {required_domain}."
         elif password != password2:
             context['password2_error'] = "Passwords do not match."
@@ -65,9 +72,6 @@ def register_view(request):
             # If all checks pass, create the user
             user = User.objects.create_user(username=username, email=email, password=password)
             user.save()
-            # Since the user is redirected, we can still use the messages framework here
-            # or rely on a successful redirect to 'login' which the user can see.
-            # We'll stick to redirecting for success.
             return redirect('login')
 
     # Render the template with the context (which may contain specific error messages)

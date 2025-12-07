@@ -24,7 +24,7 @@
             <input type="text" name="username" placeholder="Full Name" required
                 value="{{ request.POST.username }}"
                 class="{% if username_error %} input-error{% endif %}"
-            >
+                id="full-name" >
             {# RENDER USERNAME ERROR INLINE #}
             {% if username_error %}
                 <p class="message error-inline">{{ username_error }}</p>
@@ -57,5 +57,17 @@
 
         <p class="login-link">Already have an account? <a href="{% url 'login' %}">Sign in here.</a></p>
     </div>
+    
+    <script>
+        document.getElementById('full-name').oninput = function() {
+            // Check if the input value contains any character that is NOT a letter or a space
+            // Pattern /[^a-zA-Z\s]/
+            if (this.value.match(/[^a-zA-Z\s]/)) {
+                this.setCustomValidity('Full Name can only contain letters and spaces.');
+            } else {
+                this.setCustomValidity('');
+            }
+        };
+    </script>
 </body>
 </html>
