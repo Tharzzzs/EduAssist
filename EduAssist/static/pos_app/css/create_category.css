@@ -11,7 +11,7 @@
 /* --- Page Container (Full Width / Full Page Look) --- */
 .category-page-container {
     width: 95%; /* Takes up most of the page width */
-    margin: 2rem auto;
+    margin: auto;
     background: var(--light-bg); /* White background */
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);

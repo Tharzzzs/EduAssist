@@ -6,7 +6,7 @@
 /* --- Main Container (Mimics Dashboard Card) --- */
 .container-fluid {
     width: 95%; 
-    margin: 2rem auto;
+    margin: auto;
     background: var(--light-bg); /* White card background */
     padding: 2.5rem;
     border-radius: 15px;
