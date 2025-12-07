@@ -148,5 +148,41 @@ def profile(request):
 
 @user_passes_test(lambda u: u.is_staff)
 def admin_dashboard(request):
+    profile = Profile.objects.get(user=request.user)
+
+    # Only SUPERADMIN or ADMIN may view dashboard
+    if profile.role not in ["SUPERADMIN", "ADMIN"]:
+        return HttpResponseForbidden("Unauthorized access")
+
     users = Profile.objects.select_related('user').all()
     return render(request, 'Home/admin_dashboard.html', {'users': users})
+
+
+@login_required
+def change_role_view(request, user_id):
+
+    current = Profile.objects.get(user=request.user)
+
+    if current.role != "SUPERADMIN":
+        return HttpResponseForbidden("Only Superadmins can change roles.")
+
+    target = get_object_or_404(Profile, id=user_id)
+    target_user = target.user
+
+    if request.method == "POST":
+        new_role = request.POST.get("role")
+        target.role = new_role
+        target.save()
+
+        # IMPORTANT: Match Django permissions
+        if new_role in ["ADMIN", "SUPERADMIN"]:
+            target_user.is_staff = True
+        else:
+            target_user.is_staff = False
+        
+        target_user.save()
+
+        messages.success(request, "Role updated successfully.")
+        return redirect("admin_dashboard")
+
+    return redirect("admin_dashboard")

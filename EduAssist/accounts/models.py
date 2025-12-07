@@ -7,7 +7,8 @@ class Profile(models.Model):
     # 🔑 FIX: Re-add the 'role' field with a default value
     ROLE_CHOICES = [
         ('STUDENT', 'Student'),
-        ('TEACHER', 'Teacher'),
+        ('SUPERADMIN', 'Super Admin'),
+        ('ADMIN', 'Admin'),
         # Add any other roles you need
     ]
     role = models.CharField(
@@ -22,3 +23,16 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+    # Helper properties
+    @property
+    def is_superadmin(self):
+        return self.role == "SUPERADMIN"
+
+    @property
+    def is_admin(self):
+        return self.role == "ADMIN"
+
+    @property
+    def is_student(self):
+        return self.role == "STUDENT"

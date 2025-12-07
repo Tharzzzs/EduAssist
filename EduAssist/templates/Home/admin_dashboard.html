@@ -6,6 +6,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
 <link rel="stylesheet" href="{% static 'pos_app/css/adminPanelStyle.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -25,6 +26,7 @@
                     <th>Contact</th>
                     <th>Program</th>
                     <th>Year Level</th>
+                    <th>Role</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +36,21 @@
                     <td data-label="Contact">{{ profile.contact }}</td>
                     <td data-label="Program">{{ profile.program }}</td>
                     <td data-label="Year Level">{{ profile.year_level }}</td>
+                    <td>
+                        {% if request.user.profile.role == "SUPERADMIN" %}
+                        <!-- Clickable -->
+                        <span class="role-badge changeRoleBtn"
+                              data-id="{{ profile.id }}"
+                              data-role="{{ profile.role }}"
+                              data-name="{{ profile.user.username }}">
+                              {{ profile.role }}
+                              <i class="fas fa-edit"></i>
+                        </span>
+                        {% else %}
+                        <!-- NON-clickable for ADMIN -->
+                        <span class="role-badge disabled">{{ profile.role }}</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -43,6 +60,27 @@
     {% else %}
     <p class="empty">No user profiles found.</p>
     {% endif %}
+</div>
+
+<div id="roleModal" class="modal">
+    <div class="modal-content">
+        <h3>Change Role</h3>
+        <p id="modalMessage"></p>
+
+        <form method="POST" id="roleForm">
+            {% csrf_token %}
+            <select name="role" id="roleSelect">
+                <option value="SUPERADMIN">Super Admin</option>
+                <option value="ADMIN">Admin</option>
+                <option value="STUDENT">Student</option>
+            </select>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-confirm">Confirm</button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
 
@@ -87,6 +125,29 @@ function filterTable() {
             ? "🚫 No user profiles match your search criteria." 
             : "";
     }
+}
+
+let modal = document.getElementById("roleModal")
+let form = document.getElementById("roleForm")
+let message = document.getElementById("modalMessage")
+let roleSelect = document.getElementById("roleSelect")
+
+document.querySelectorAll(".changeRoleBtn").forEach(btn => {
+    btn.addEventListener("click", function() {
+        let id = this.dataset.id
+        let username = this.dataset.name
+        let role = this.dataset.role
+
+        message.innerHTML = `Change role for <b>${username}</b>?`
+        form.action = `/accounts/change-role/${id}/`
+        roleSelect.value = role
+
+        modal.style.display = "flex"
+    })
+})
+
+function closeModal() {
+    modal.style.display = "none"
 }
 </script>
 {% endblock %}
