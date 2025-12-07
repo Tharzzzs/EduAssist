@@ -4,7 +4,6 @@
 {% block title %}Profile - EduAssist{% endblock %}
 
 {% block extra_css %}
-<!-- <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}"> -->
 <link rel="stylesheet" href="{% static 'pos_app/css/profileStyle.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
@@ -12,16 +11,14 @@
 {% block content %}
 <main class="profile-page">
     <div class="profile-container">
-        <!-- Sidebar -->
         <aside class="profile-sidebar">
-            <!-- Avatar Card -->
             <div class="profile-avatar-card">
                 <div class="avatar-placeholder">
                     <i class="fas fa-user"></i>
                 </div>
                 <h3 class="profile-name">{{ user_info.first_name }} {{ user_info.last_name }}</h3>
                 <span class="profile-role">
-                    {% if user.is_staff %}
+                    {% if user.is_staff or profile.is_admin or profile.is_superadmin %}
                         <i class="fas fa-shield-alt"></i> Administrator
                     {% else %}
                         <i class="fas fa-graduation-cap"></i> Student
@@ -29,7 +26,6 @@
                 </span>
             </div>
 
-            <!-- Quick Info Card -->
             <div class="quick-info-card">
                 <h4><i class="fas fa-info-circle"></i> Account Info</h4>
                 <div class="info-item">
@@ -55,7 +51,6 @@
                 </div>
             </div>
 
-            <!-- Quick Actions Card -->
             <div class="quick-actions-card">
                 <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
                 <form method="get" action="{% url 'change_password' %}">
@@ -64,7 +59,8 @@
                         Change Password
                     </button>
                 </form>
-                {% if not user.is_staff %}
+                
+                {% if not user.is_staff and not profile.is_admin %}
                 <form method="get" action="{% url 'my_feedback' %}">
                     <button type="submit" class="action-btn">
                         <i class="fas fa-comment-dots"></i>
@@ -72,6 +68,7 @@
                     </button>
                 </form>
                 {% endif %}
+                
                 <a href="{% url 'settings' %}" class="action-btn">
                     <i class="fas fa-cog"></i>
                     Account Settings
@@ -79,9 +76,7 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <div class="profile-main">
-            <!-- Messages -->
             {% if messages %}
             <div class="messages-container">
                 {% for message in messages %}
@@ -96,7 +91,6 @@
             </div>
             {% endif %}
 
-            <!-- Profile Form Card -->
             <div class="profile-card">
                 <div class="card-header">
                     <h2><i class="fas fa-id-card"></i> Personal Information</h2>
@@ -111,24 +105,21 @@
                             {% for field in form %}
                                 <div class="form-group {% if field.name == 'bio' or field.name == 'address' %}full-width{% endif %}">
                                     <label for="{{ field.id_for_label }}">
-                                        {% if field.name == 'first_name' %}
-                                            <i class="fas fa-user"></i>
-                                        {% elif field.name == 'last_name' %}
-                                            <i class="fas fa-user"></i>
-                                        {% elif field.name == 'contact' %}
-                                            <i class="fas fa-phone"></i>
-                                        {% elif field.name == 'program' %}
-                                            <i class="fas fa-book"></i>
-                                        {% elif field.name == 'year_level' %}
-                                            <i class="fas fa-layer-group"></i>
-                                        {% elif field.name == 'bio' %}
-                                            <i class="fas fa-align-left"></i>
-                                        {% else %}
-                                            <i class="fas fa-edit"></i>
+                                        {% if field.name == 'first_name' %} <i class="fas fa-user"></i>
+                                        {% elif field.name == 'last_name' %} <i class="fas fa-user"></i>
+                                        {% elif field.name == 'contact' %} <i class="fas fa-phone"></i>
+                                        {% elif field.name == 'program' %} <i class="fas fa-book"></i>
+                                        {% elif field.name == 'year_level' %} <i class="fas fa-layer-group"></i>
+                                        {% elif field.name == 'bio' %} <i class="fas fa-align-left"></i>
+                                        {% elif field.name == 'address' %} <i class="fas fa-map-marker-alt"></i>
+                                        {% else %} <i class="fas fa-edit"></i>
                                         {% endif %}
+                                        
                                         {{ field.label }}
                                     </label>
+                                    
                                     {{ field }}
+                                    
                                     {% if field.errors %}
                                         <span class="field-error">{{ field.errors.0 }}</span>
                                     {% endif %}
@@ -162,13 +153,16 @@
 document.addEventListener("DOMContentLoaded", function () {
     const editBtn = document.getElementById("editBtn");
     const saveBtn = document.getElementById("saveBtn");
-    // Fields that the user is allowed to edit
-    const editableFields = ["id_contact", "id_program", "id_year_level"]; 
+    
+    // UPDATED: These IDs match the fields in your forms.py
+    // If you haven't added bio/address to forms.py yet, those IDs won't exist but the script won't crash.
+    const editableFields = ["id_contact", "id_program", "id_year_level", "id_bio", "id_address"]; 
 
-    // Lock all editable fields on load
+    // Initial State: Lock all editable fields on load
     editableFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (field) {
+            // For SELECT elements we use 'disabled', for INPUT/TEXTAREA we use 'readonly'
             if (field.tagName === 'SELECT') {
                 field.setAttribute("disabled", "true");
             } else {
@@ -187,6 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const field = document.getElementById(fieldId);
             if (field) {
                 if (isEditing) {
+                    // UNLOCK
                     if (field.tagName === 'SELECT') {
                         field.removeAttribute("disabled");
                     } else {
@@ -194,6 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     field.classList.add("editable");
                 } else {
+                    // LOCK
                     if (field.tagName === 'SELECT') {
                         field.setAttribute("disabled", "true");
                     } else {
@@ -204,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Toggle button states
+        // Toggle button visual states
         if (isEditing) {
             editBtn.innerHTML = '<i class="fas fa-times"></i> Cancel Edit';
             editBtn.classList.add('cancel-mode');
@@ -212,10 +208,12 @@ document.addEventListener("DOMContentLoaded", function () {
             editBtn.innerHTML = '<i class="fas fa-edit"></i> Edit Profile';
             editBtn.classList.remove('cancel-mode');
         }
+        
+        // Enable/Disable Save Button
         saveBtn.disabled = !isEditing;
     });
 
-    // Auto-hide messages after 5 seconds
+    // Auto-hide success/error messages after 5 seconds
     setTimeout(() => {
         const messages = document.querySelectorAll('.message-alert');
         messages.forEach(msg => {
