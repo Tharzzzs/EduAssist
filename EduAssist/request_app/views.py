@@ -22,52 +22,57 @@ from eduassist_app.utils import send_notification_email
 # ------------------------
 @login_required(login_url='login')
 def dashboard_view(request):
+    # Ensure necessary imports are available at the top of your views.py:
+    # from django.db.models import Case, When, Value, IntegerField, Q
+    # from django.shortcuts import render
+    # from django.contrib.auth.decorators import login_required
+    # ... and your Request model
+    
+    # Initialization and QuerySet setup remains the same
     form = SearchForm(request.GET or None)
     
-    # 1. Initialize Base QuerySet based on user role
     if request.user.is_staff:
-        # Staff sees all requests
         base_queryset = Request.objects.all()
     else:
-        # Standard user sees only their own requests
         base_queryset = Request.objects.filter(user=request.user)
         
-    # --- START MODIFICATION ---
-    # 2. Dynamic Count Calculation (reflecting the full base_queryset for summary cards)
-    
-    # Create a non-cancelled queryset for the TOTAL count
     non_cancelled_queryset = base_queryset.exclude(status='cancelled')
-    
-    # total_count now only counts requests that are NOT 'cancelled'
     total_count = non_cancelled_queryset.count() 
-    
-    # Other counts remain the same, calculated from the full base_queryset
     pending_count = base_queryset.filter(status='pending').count()
     approved_count = base_queryset.filter(status='approved').count()
-    # --- END MODIFICATION ---
 
-    # 3. Apply custom ordering (Pending -> Approved -> Cancelled)
+    # 3. Apply custom ordering (Status -> Priority -> Date)
     requests = base_queryset.annotate(
+        # Status Ordering (Pending=1, Approved=2, Cancelled=3)
         status_order=Case(
-            When(status='pending', then=Value(1)),      # Highest Priority
-            When(status='approved', then=Value(2)),     # Middle Priority
-            When(status='cancelled', then=Value(3)),    # Lowest Priority
-            default=Value(4),                           # Catch-all/Other
+            When(status='pending', then=Value(1)), 
+            When(status='approved', then=Value(2)), 
+            When(status='cancelled', then=Value(3)), 
+            default=Value(4),
             output_field=IntegerField()
         )
-    ).order_by('status_order', '-date') # Order by status priority, then by date (latest first)
+    ).annotate(
+        # Priority Ordering (Critical=1, High=2, Medium=3, Low=4)
+        priority_order=Case(
+            When(priority='critical', then=Value(1)), 
+            When(priority='high', then=Value(2)), 
+            When(priority='medium', then=Value(3)), 
+            When(priority='low', then=Value(4)), 
+            default=Value(5),
+            output_field=IntegerField()
+        )
+    ).order_by('status_order', 'priority_order', '-date') # Order by: Status (asc), Priority (asc), Date (desc)
 
     # 4. Apply search filter if present (filters the list of requests for the table)
     if form.is_valid():
         query = form.cleaned_data.get('search')
         if query:
-            # Filters the requests list that gets displayed in the table
             requests = requests.filter(Q(title__icontains=query) | Q(status__icontains=query))
 
     context = {
         'requests': requests, 
         'form': form,
-        'total_count': total_count,     # Updated to exclude 'cancelled'
+        'total_count': total_count, 
         'pending_count': pending_count, 
         'approved_count': approved_count,
     }
