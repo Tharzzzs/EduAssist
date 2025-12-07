@@ -1,0 +1,20 @@
+<p>Hi {{ name }},</p>
+
+<p>Your request <strong>{{ title }}</strong> is currently marked as <strong style="color: #f0ad4e;">Pending</strong>.</p>
+
+{% if admin_message %}
+    <p><strong>Update from the admin:</strong></p>
+    <blockquote style="border-left: 3px solid #f0ad4e; padding-left: 10px; margin: 8px 0;">
+        {{ admin_message }}
+    </blockquote>
+{% endif %}
+
+<p>
+Our team is reviewing your request.  
+We will notify you as soon as there are new updates.
+</p>
+
+<p style="margin-top: 20px;">
+Best regards,<br>
+<strong>EduAssist Team</strong>
+</p>

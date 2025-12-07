@@ -43,10 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'eduassist_app',
-    'accounts',
+    # 'accounts',
     'request_app',
     'settings',
     'feedback',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [

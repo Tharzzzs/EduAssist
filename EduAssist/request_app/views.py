@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import RequestSerializer, TagSerializer
 from eduassist_app.email_service import send_notification_email
-from eduassist_app.utils import send_notification_email
+# from eduassist_app.utils import send_notification_email
 # ------------------------
 # Dashboard (Updated for Priority Sorting)
 # ------------------------
@@ -305,70 +305,63 @@ def create_category(request):
 # Approve/Update Request Status (Admin Action)
 # ------------------------
 @login_required
-@user_passes_test(lambda u: u.is_staff) # Note: Admin check should be implemented here, but is commented out in original snippet
+@user_passes_test(lambda u: u.is_staff)
 def approve_request(request, id):
     req = get_object_or_404(Request, id=id)
 
     if request.method == "POST":
-        
-        # 1. Grab new status and admin message from the POST data
-        new_status = request.POST.get('new_status', req.status) # Grab new status, default to current status
+
+        new_status = request.POST.get("new_status", req.status)
         admin_message = request.POST.get("admin_message", "")
-        
-        # 2. Update Request Status
-        is_status_changed = (req.status != new_status)
+
+        is_status_changed = req.status != new_status
         req.status = new_status
         req.save()
 
-        # 3. Handle Notification (Only send email if status actually changed)
+        # Only send email if status changed
         if is_status_changed:
-            
-            # Use a specific template name if the status is 'approved'
-            # Assuming 'approved' is the value for the approved status in your model
-            if new_status == 'approved':
-                template_file = 'request_approved.html' 
+
+            # SELECT TEMPLATE + SUBJECT
+            if new_status == "approved":
+                template_file = "request_approved"
                 email_subject = f"Your Request '{req.title}' Has Been Approved"
             else:
-                # Fallback or logic for other statuses (e.g., 'rejected', 'pending')
-                template_file = f"request_{new_status}.html"
-                email_subject = f"Your Request '{req.title}' Status Updated to {req.get_status_display()}"
+                # pending → request_pending
+                # cancelled → request_cancelled
+                template_file = f"request_{new_status}"
+                email_subject = (
+                    f"Your Request '{req.title}' Status Updated to {req.get_status_display()}"
+                )
 
-
-            # --- This is where the email is actually sent ---
-            # You will need to make sure your send_notification_email function 
-            # can find and render the 'request_approved.html' template.
-            # A common implementation uses django.core.mail.send_mail or a wrapper.
-            
-            # Note: I am simplifying your original send_notification_email arguments 
-            # to match a more standard Django email sending wrapper.
-            
+            # SEND EMAIL
             try:
-                # The send_notification_email function should likely look something like this in a helper file:
-                # def send_notification_email(subject, to_email, template_name, context): ...
                 send_notification_email(
                     subject=email_subject,
                     to_email=req.user.email,
-                    template_name=template_file, # E.g., 'request_approved.html'
+                    template_name=template_file,   # <-- FIXED
                     context_data={
                         "name": req.user.first_name,
                         "title": req.title,
                         "admin_message": admin_message,
-                        "new_status": req.get_status_display() # Added for flexibility
+                        "new_status": req.get_status_display(),
                     }
                 )
             except Exception as e:
-                 # Log error but continue
-                 print(f"Error sending email: {e}")
-                 messages.warning(request, f"Request status updated, but failed to send email: {e}")
-                 
-        # 4. Success message and redirect
-        messages.success(request, f"Request status changed to '{req.get_status_display()}' and user notified.")
-        
-        return redirect('request_detail', id=id)
+                messages.warning(request, f"Request updated, but email failed: {e}")
 
-    # GET Request: Renders the Admin Status/Comment Form
-    return render(request, 'Home/approve_request.html', {
-        'req': req,
-        'current_status': req.status,
-        'status_choices': Request.STATUS_CHOICES 
-    })
+        messages.success(
+            request,
+            f"Request status changed to '{req.get_status_display()}' and user notified."
+        )
+
+        return redirect("request_detail", id=id)
+
+    return render(
+        request,
+        "Home/approve_request.html",
+        {
+            "req": req,
+            "current_status": req.status,
+            "status_choices": Request.STATUS_CHOICES,
+        },
+    )

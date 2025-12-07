@@ -1,12 +1,21 @@
 <p>Hi {{ name }},</p>
 
-<p>We’re pleased to inform you that your request <strong>{{ title }}</strong> has been approved.</p>
+<p>Good news! Your request <strong>{{ title }}</strong> has been <strong style="color: #28a745;">approved</strong>.</p>
 
 {% if admin_message %}
     <p><strong>Message from the admin:</strong></p>
-    <p>{{ admin_message }}</p>
+    <blockquote style="border-left: 3px solid #28a745; padding-left: 10px; margin: 8px 0;">
+        {{ admin_message }}
+    </blockquote>
 {% endif %}
 
-<p>If you need anything else or have additional questions, feel free to reach out.</p>
+<p>
+You may now proceed with the next steps (if applicable).  
+This is an automated message. For any questions or further assistance, please submit a new inquiry through your EduAssist account.
 
-<p>Best regards,<br>EduAssist Team</p>
+</p>
+
+<p style="margin-top: 20px;">
+Best regards,<br>
+<strong>EduAssist Team</strong>
+</p>
