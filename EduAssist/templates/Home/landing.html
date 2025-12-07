@@ -6,18 +6,19 @@
     <title>EduAssist - Guiding Every Student</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'pos_app/css/landing.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <header class="header">
-        <div class="header-content">
-            <div class="header-branding">
-                <h1 class="logo">Edu<span class="highlight-logo">Assist</span></h1> 
-            </div>
-            <nav class="nav">
-                <a href="{% url 'login' %}" class="nav-link">Login</a>
-                <a href="{% url 'register' %}" class="btn-signup">Sign Up</a>
-            </nav>
+        <div class="header-branding">
+            <h1 class="logo">
+                <span class="edu">Edu</span><span class="highlight-assist">Assist</span>
+            </h1> 
         </div>
+        <nav class="nav">
+            <a href="{% url 'login' %}" class="nav-link">Login</a>
+            <a href="{% url 'register' %}" class="btn-signup">Sign Up</a>
+        </nav>
     </header>
 
     <main class="hero">
@@ -42,7 +43,7 @@
                         </div>
                     </div>
                     <div class="preview-body">
-                        <div class="preview-line accent-gradient-line long"></div>
+                        <div class="preview-line accent-line long"></div>
                         <div class="preview-line gray-line long-w"></div>
                         <div class="preview-line gray-line full-w"></div>
                         <div class="preview-line gray-line medium-w"></div>
@@ -56,17 +57,23 @@
     <section class="features">
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon-image icon-1"></div>
+                <div class="feature-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
                 <h3 class="feature-title">Real-Time Tracking</h3>
                 <p class="feature-text">Monitor your queries instantly with live updates and detailed status information at every step.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon-image icon-2"></div>
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
                 <h3 class="feature-title">Fast Response</h3>
                 <p class="feature-text">Get quick answers and solutions to your academic concerns without unnecessary delays.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon-image icon-3"></div>
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
                 <h3 class="feature-title">Centralized Dashboard</h3>
                 <p class="feature-text">Organize and manage all your student support requests in one convenient, easy-to-use platform.</p>
             </div>
