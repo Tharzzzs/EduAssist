@@ -161,3 +161,29 @@ EMAIL_HOST_USER = "eduassist.noreply@gmail.com"
 EMAIL_HOST_PASSWORD = "iqwg hsui hvva iqku"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+    # --- Add the custom validator for dictionary checks ---
+    {
+        'NAME': 'password_validators.validators.CommonPasswordsValidator',
+        'OPTIONS': {
+            'max_occurrences': 0, # Reject if found in common list
+        }
+    },
+    # --- END Custom Validator ---
+]

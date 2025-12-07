@@ -12,6 +12,7 @@ from .models import Profile
 from .forms import ProfileForm, SearchForm
 from django.http import HttpResponseForbidden
 from feedback.models import Feedback
+import re
 
 def login_view(request):
     # Initialize an empty dictionary for context
@@ -44,7 +45,6 @@ def logout_view(request):
 
 
 def register_view(request):
-    # Initialize an empty dictionary for context
     context = {}
     
     if request.method == 'POST':
@@ -55,28 +55,43 @@ def register_view(request):
         
         required_domain = "@cit.edu"
         
-        # --- NEW VALIDATION: Full Name Format ---
-        # The regex pattern r'^[a-zA-Z\s]+$' matches strings that
-        # start (^) and end ($) with one or more (+) letters (a-z, A-Z) or whitespace (\s).
+        # Combined regex pattern for mandatory complexity requirements (8 chars, 1 lower, 1 upper, 1 special)
+        complexity_pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=-]).{8,}$')
+
+        # --- VALIDATION CHAIN ---
         if not re.match(r'^[a-zA-Z\s]+$', username):
             context['username_error'] = "Full Name can only contain letters and spaces."
-        # --- END NEW VALIDATION ---
         
         elif not email.endswith(required_domain):
             context['email_error'] = f"Please use your educational email ending in {required_domain}."
+            
         elif password != password2:
             context['password2_error'] = "Passwords do not match."
-        elif User.objects.filter(username=username).exists():
-            context['username_error'] = "Username already exists."
+            
+        # --- NEW PASSWORD VALIDATION INTEGRATION ---
+        elif not complexity_pattern.match(password):
+            context['password_error'] = "Password must be at least 8 characters and include an uppercase letter, a lowercase letter, and a special character (!@#$%^&*()_+=-)."
+            
         else:
-            # If all checks pass, create the user
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
-            return redirect('login')
+            try:
+                # 1. Run all password validators from settings.py (including CommonPasswordValidator)
+                validate_password(password, user=User(username=username))
+                
+                # 2. If validation passes, check if username exists
+                if User.objects.filter(username=username).exists():
+                    context['username_error'] = "Username already exists."
+                else:
+                    # If all checks pass, create the user
+                    user = User.objects.create_user(username=username, email=email, password=password)
+                    user.save()
+                    return redirect('login')
+                    
+            except ValidationError as e:
+                # Catch errors from the common password check and other validators
+                context['password_error'] = e.messages[0]
+        # --- END NEW PASSWORD VALIDATION INTEGRATION ---
 
-    # Render the template with the context (which may contain specific error messages)
     return render(request, 'accounts/register.html', context)
-
 
 @login_required(login_url='login')
 def home_view(request):

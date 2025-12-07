@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - EduAssist</title>
-    <link rel="stylesheet" href="{% static 'pos_app/css/register.css' %}">
+    <link rel="stylesheet" href="{% static 'pos_app/css/auth.css' %}">
 </head>
 <body>
     <div class="auth-container">
@@ -24,8 +24,8 @@
             <input type="text" name="username" placeholder="Full Name" required
                 value="{{ request.POST.username }}"
                 class="{% if username_error %} input-error{% endif %}"
-                id="full-name" >
-            {# RENDER USERNAME ERROR INLINE #}
+                id="full-name" 
+            >
             {% if username_error %}
                 <p class="message error-inline">{{ username_error }}</p>
             {% endif %}
@@ -33,19 +33,28 @@
             <input type="email" name="email" placeholder="Email Address" required
                 value="{{ request.POST.email }}"
                 class="{% if email_error %} input-error{% endif %}"
+                id="email-input"
             >
-            {# RENDER EMAIL ERROR INLINE #}
             {% if email_error %}
                 <p class="message error-inline">{{ email_error }}</p>
             {% endif %}
 
             <input type="password" name="password" placeholder="Password" required
                 class="{% if password_error or password2_error %} input-error{% endif %}"
+                id="password-input"
             >
+            
+            <div id="password-strength-container" style="display: none;">
+                <div id="password-strength-bar" class="strength-0"></div>
+                <p id="strength-label" class="strength-text">Empty</p>
+            </div>
+            
+            <div id="password-requirements" class="requirements-list"></div>
+            
             <input type="password" name="password2" placeholder="Confirm Password" required
                 class="{% if password_error or password2_error %} input-error{% endif %}"
             >
-            {# RENDER PASSWORD/CONFIRM PASSWORD ERROR INLINE #}
+            
             {% if password_error %}
                 <p class="message error-inline">{{ password_error }}</p>
             {% elif password2_error %}
@@ -55,19 +64,122 @@
             <button type="submit" class="btn-primary">Sign Up</button>
         </form>
 
-        <p class="login-link">Already have an account? <a href="{% url 'login' %}">Sign in here.</a></p>
+        <p class="bottom-link">Already have an account? <a href="{% url 'login' %}">Sign in here.</a></p>
+        
+        <div class="back-home-container">
+            <a href="{% url 'landing' %}" class="back-link">
+                <span>&larr;</span> Back to Home
+            </a>
+        </div>
+
     </div>
     
     <script>
+        // Name Validation
         document.getElementById('full-name').oninput = function() {
-            // Check if the input value contains any character that is NOT a letter or a space
-            // Pattern /[^a-zA-Z\s]/
             if (this.value.match(/[^a-zA-Z\s]/)) {
                 this.setCustomValidity('Full Name can only contain letters and spaces.');
             } else {
                 this.setCustomValidity('');
             }
         };
+
+        // Password Strength Logic
+        const passwordInput = document.getElementById('password-input');
+        const requirementsDiv = document.getElementById('password-requirements');
+        const strengthBar = document.getElementById('password-strength-bar');
+        const strengthContainer = document.getElementById('password-strength-container');
+        const strengthLabel = document.getElementById('strength-label');
+
+        const rules = [
+            { id: 'length', text: 'At least 8 characters', regex: /.{8,}/ },
+            { id: 'lowercase', text: 'A lowercase letter', regex: /[a-z]/ },
+            { id: 'uppercase', text: 'An uppercase letter', regex: /[A-Z]/ },
+            { id: 'special', text: 'A special character (!@#$%^&*()_+=-)', regex: /[!@#$%^&*()_+=-]/ },
+        ];
+        
+        // Initialize List
+        requirementsDiv.innerHTML = rules.map(rule => 
+            `<p id="${rule.id}" class="requirement unmet">${rule.text}</p>`
+        ).join('');
+
+        // Score Function
+        function checkPasswordStrength(password) {
+            let score = 0;
+            if (password.length >= 8) score += 1; 
+            if (password.length >= 12) score += 1; 
+            if (/[a-z]/.test(password)) score += 1;
+            if (/[A-Z]/.test(password)) score += 1;
+            if (/\d/.test(password)) score += 1; 
+            if (/[!@#$%^&*()_+=-]/.test(password)) score += 2; 
+            if (/(123|abc|password|qwerty|qwert)/i.test(password)) score -= 2;
+            return Math.max(0, Math.min(6, score)); 
+        }
+
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let allMandatoryRulesMet = true;
+
+            // Check Rules
+            rules.forEach(rule => {
+                const element = document.getElementById(rule.id);
+                if (rule.regex.test(password)) {
+                    element.classList.remove('unmet');
+                    element.classList.add('met');
+                } else {
+                    element.classList.remove('met');
+                    element.classList.add('unmet');
+                    allMandatoryRulesMet = false;
+                }
+            });
+            
+            // Calc Strength
+            const score = checkPasswordStrength(password);
+            let strengthText = 'Weak';
+            if (score >= 6) strengthText = 'Excellent';
+            else if (score >= 4) strengthText = 'Strong';
+            else if (score >= 2) strengthText = 'Medium';
+            else strengthText = 'Weak';
+
+            // Update UI
+            strengthBar.className = `strength-${score}`; 
+            strengthLabel.textContent = strengthText;
+            
+            // Visibility & HTML5 Validation
+            // FIX: Only show if length > 0
+            if (password.length > 0) {
+                requirementsDiv.style.display = 'block';
+                strengthContainer.style.display = 'flex'; // Use flex to align items correctly
+                
+                if (!allMandatoryRulesMet) {
+                    this.setCustomValidity('Password does not meet minimum complexity requirements.');
+                } else {
+                    this.setCustomValidity(''); 
+                }
+            } else {
+                requirementsDiv.style.display = 'none';
+                strengthContainer.style.display = 'none';
+                this.setCustomValidity(''); 
+            }
+        });
+        
+        // FIX: Ensure it hides on blur if valid, or just hide the list
+        passwordInput.addEventListener('blur', function() {
+            const allMet = rules.every(rule => rule.regex.test(this.value));
+            if (allMet) this.setCustomValidity('');
+            // Hide visual hints when not focused
+            requirementsDiv.style.display = 'none';
+            strengthContainer.style.display = 'none';
+        });
+
+        // FIX: On Focus, ONLY show if text exists
+        passwordInput.addEventListener('focus', function() {
+            if (this.value.length > 0) {
+                requirementsDiv.style.display = 'block';
+                strengthContainer.style.display = 'flex';
+            }
+            // If empty, do nothing (keep hidden)
+        });
     </script>
 </body>
 </html>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - EduAssist</title>
-    <link rel="stylesheet" href="{% static 'pos_app/css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'pos_app/css/auth.css' %}">
 </head>
 <body>
     <div class="auth-container">
@@ -20,19 +20,16 @@
             {% csrf_token %}
             
             <input type="text" name="username" placeholder="Username" required 
-                {# Preserves the input value on failed form submission #}
                 value="{{ request.POST.username }}"
-                {# Highlights input red if a login error occurred #}
                 class="{% if login_error %} input-error{% endif %}"
             >
+            
             <input type="password" name="password" placeholder="Password" required
-                {# Highlights input red if a login error occurred #}
                 class="{% if login_error %} input-error{% endif %}"
             >
             
             <a href="#" class="forgot">Forgot Password?</a>
             
-            {# RENDER LOGIN ERROR INLINE: Displays the error message below the password input #}
             {% if login_error %}
                 <p class="message error-inline">{{ login_error }}</p>
             {% endif %}
@@ -40,7 +37,14 @@
             <button type="submit" class="btn-primary">Sign in</button>
         </form>
 
-        <p class="register-link">Don't have an account? <a href="{% url 'register' %}">Register here.</a></p>
+        <p class="bottom-link">Don't have an account? <a href="{% url 'register' %}">Register here.</a></p>
+
+        <div class="back-home-container">
+            <a href="{% url 'landing' %}" class="back-link">
+                <span>&larr;</span> Back to Home
+            </a>
+        </div>
+
     </div>
 </body>
 </html>
