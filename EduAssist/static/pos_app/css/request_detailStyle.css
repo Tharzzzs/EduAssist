@@ -1,234 +1,218 @@
 /* =========================================
-    request_detailStyle.css
-    Styles for the Request Detail Page Content (FIXED LAYOUT)
+   request_detailStyle.css (Full-Width, Structured Items)
 ========================================= */
 
-/* Use the same root variables defined in the main CSS for consistency */
 :root {
-    --primary-maroon: #7c2d30;
-    --secondary-dark: #293241;
-    --light-bg: #f7f7f7;
-    --text-color: #4a4e69;
+    --primary-maroon: #7c2d30; /* Main Accent */
+    --secondary-dark: #293241; /* Primary Text */
+    --light-bg: #f8f9fa; /* Page Background */
+    --card-bg: #ffffff; /* Detail Card Background */
+    --text-color: #495057; /* General Text */
     --danger-color: #dc3545;
-    --success-color: #28a745;
+    --success-color: #198754;
     --warning-color: #ffc107;
-    --info-color: #17a2b8;
+    --info-color: #0d6efd;
     --border-color: #e9ecef;
-    --box-shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --box-shadow-subtle: 0 6px 16px rgba(0, 0, 0, 0.08);
     --interaction-color: #a24b4f;
     --subtle-text: #6c757d;
 }
 
 /* ===========================
-    MAIN LAYOUT & CONTAINER
+   BASE & CONTAINER
 =========================== */
 
-/* Main content container wrapper */
-.container {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 20px;
+body {
+    background-color: var(--light-bg);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Primary card holding all the details */
+/* Increased max-width for a full-page feel */
+.container {
+    max-width: 1400px; 
+    margin: auto;
+    padding: 0 30px;
+}
+
 .detail-container {
-    background: #fff;
-    padding: 45px;
-    border-radius: 16px;
-    box-shadow: var(--box-shadow-light);
-    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    padding: 40px 60px;
+    border-radius: 12px;
+    box-shadow: var(--box-shadow-subtle);
 }
 
 .detail-container h2 {
     color: var(--secondary-dark);
-    font-size: 32px;
-    font-weight: 800;
+    font-size: 32px; 
+    font-weight: 700;
     margin-bottom: 30px;
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 3px solid var(--primary-maroon);
     padding-bottom: 15px;
+    letter-spacing: 0.5px;
 }
 
 /* ===========================
-    DETAIL GRID SECTION - THREE COLUMNS PER ROW
+   DETAIL GRID SECTION - Two Columns for primary metadata
 =========================== */
 
 .detail-grid {
     display: grid;
-    /* FIX: Set up three equal columns (1fr 1fr 1fr) */
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px 40px;
+    /* Two larger, equal columns */
+    grid-template-columns: 1fr 1fr; 
+    gap: 30px; 
     margin-bottom: 40px;
 }
 
-.detail-item {
-    font-size: 16px;
-    padding: 12px 0;
-    /* FIX: Changed to border-bottom to avoid vertical lines in a three-column layout */
-    border-bottom: 1px solid #e9e9e9;
+/* New wrapper for each detail item */
+.detail-item-wrapper {
+    background-color: var(--light-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    /* Subtle shadow for lift */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); 
+}
 
+/* The actual content div inside the wrapper */
+.detail-item {
+    font-size: 17px;
+    padding: 0;
+    border-bottom: none;
     display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
+    flex-direction: column; /* Stack label and value */
+    align-items: flex-start;
 }
 
 .detail-item strong {
-    color: var(--primary-maroon);
+    color: var(--primary-maroon); /* Label color */
     font-weight: 700;
-    
-    /* Reduced width slightly for three columns */
-    width: 80px; 
-    
-    /* Left-align the label text */
-    text-align: left; 
-    
-    margin-right: 5px; 
-    flex-shrink: 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    width: auto; /* Remove fixed width */
 }
 
-.detail-item span {
+.detail-item span, .detail-item .tag-list {
     color: var(--text-color);
     font-weight: 500;
-    /* FIX: Allow span to take up remaining space in the smaller column, but don't force it to fill the whole grid cell */
-    flex-grow: 0;
+    font-size: 16px;
+    line-height: 1.5;
     text-align: left;
     word-break: break-word;
 }
 
-/* Tags section alignment */
+/* Status specific styling (needs to be full width) */
+.status {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: inline-block;
+    min-width: 100px;
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Tags styling */
 .tags-container {
+    /* Align tags to the top if they wrap */
     align-items: flex-start;
-    padding-bottom: 5px;
 }
 
 .tag-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    flex-grow: 1;
+    gap: 8px 10px;
 }
 
-/* Tags styling (Improved look) */
 .tag {
-    display: inline-block;
-    background-color: var(--light-bg);
+    background-color: var(--border-color);
     color: var(--secondary-dark);
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    border: 1px solid #d8d8d8;
-    white-space: nowrap;
-    margin: 0; 
-}
-
-
-/* ===========================
-    STATUS BADGES (Color Coding)
-=========================== */
-
-.status {
-    padding: 0.5rem 1rem;
+    padding: 5px 12px;
     border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    display: inline-block;
-    min-width: 100px; /* Reduced min-width slightly for tighter fit */
-    text-align: center;
-    color: white;
-    text-transform: uppercase;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.status.New {
-    background-color: var(--info-color);
-}
-
-.status.In_Progress {
-    background-color: var(--warning-color);
-    color: var(--secondary-dark);
-}
-
-.status.Closed, .status.Completed {
-    background-color: var(--success-color);
-}
-
-.status.Rejected {
-    background-color: var(--danger-color);
-}
-
-.status.Cancelled { 
-    background-color: var(--primary-maroon); 
-    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: none;
 }
 
 /* ===========================
-    DESCRIPTION & ATTACHMENTS
+   DESCRIPTION & ATTACHMENTS (Full Width Sections)
 =========================== */
 
 .description-section, .attachment-section {
+    grid-column: 1 / -1; /* Make these sections span both columns */
     margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-color);
+    padding-top: 0;
 }
 
 .description-section strong, .attachment-section strong {
     display: block;
     font-size: 20px;
-    color: var(--secondary-dark);
-    margin-bottom: 12px;
+    color: var(--secondary-dark); /* Use dark text for larger headers */
+    margin-bottom: 15px;
+    font-weight: 700;
+    border-left: 4px solid var(--primary-maroon);
+    padding-left: 10px;
 }
 
 .description-box {
-    background-color: #fff;
-    padding: 25px;
+    background-color: var(--light-bg);
+    padding: 30px;
     border-radius: 10px;
     border: 1px solid var(--border-color);
     line-height: 1.8;
     color: var(--text-color);
     white-space: pre-wrap;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.attachment-section {
+    margin-top: 25px;
 }
 
 .attachment-section a {
-    color: var(--primary-maroon);
+    color: var(--info-color);
     text-decoration: none;
     font-weight: 600;
-    transition: all 0.2s ease;
-    border-bottom: 2px solid var(--primary-maroon);
+    transition: color 0.2s;
     padding-bottom: 2px;
 }
 
 .attachment-section a:hover {
-    color: var(--interaction-color);
-    border-color: var(--interaction-color);
+    color: var(--secondary-dark);
+    text-decoration: underline;
 }
 
 /* ===========================
-    ACTION BUTTONS - IMPROVED DESIGN & CENTERING
+   ACTION BUTTONS (Consistent & Modern)
 =========================== */
 
 .detail-actions {
-    margin-top: 40px;
-    padding-top: 25px;
-    border-top: 1px solid var(--border-color);
+    grid-column: 1 / -1; 
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px dashed var(--border-color);
     display: flex;
-    gap: 15px;
-    /* Center the buttons horizontally */
+    gap: 20px;
     justify-content: center; 
 }
 
+/* FIX: Ensure anchor tags inside .detail-actions do not have an underline */
 .detail-actions a, .detail-actions button {
-    padding: 14px 28px; 
-    border-radius: 10px; 
-    text-decoration: none;
-    font-weight: 700; 
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600; 
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    border: none;
-    font-size: 17px; 
+    transition: all 0.3s ease;
+    border: 2px solid transparent; 
+    font-size: 16px; 
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    min-width: 150px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    min-width: 160px; 
+    
+    /* === THE FIX === */
+    text-decoration: none;
 }
 
 .btn-primary {
@@ -238,21 +222,21 @@
 
 .btn-primary:hover {
     background-color: #9f393e;
-    transform: translateY(-3px); 
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
-    background-color: #f8f9fa;
+    background-color: var(--card-bg);
     color: var(--secondary-dark);
-    border: 1px solid #ced4da;
+    border-color: var(--border-color);
     box-shadow: none; 
 }
 
 .btn-secondary:hover {
-    background-color: #e9ecef;
+    background-color: #f0f0f0;
+    border-color: #ced4da;
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-danger {
@@ -262,13 +246,13 @@
 
 .btn-danger:hover {
     background-color: #c82333;
-    transform: translateY(-3px); 
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 
 /* ===========================
-    MODAL STYLES (for Delete Confirmation)
+   MODAL STYLES (Unchanged) 
 =========================== */
 
 .modal {
@@ -279,39 +263,39 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.55);
+    background-color: rgba(41, 50, 65, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .modal-content {
-    background-color: #fff;
+    background-color: var(--card-bg);
     margin: auto;
-    padding: 30px;
-    border-radius: 12px;
+    padding: 35px;
+    border-radius: 10px;
     width: 90%;
-    max-width: 450px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 400px; 
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
     position: relative;
-    animation: fadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: fadeIn 0.3s ease-out;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px) scale(0.98); }
+    from { opacity: 0; transform: translateY(-30px) scale(0.95); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .close {
-    color: #aaa;
-    float: right;
-    font-size: 36px;
+    color: var(--subtle-text);
+    font-size: 32px;
     font-weight: 300;
     cursor: pointer;
     position: absolute;
-    top: 5px;
-    right: 15px;
+    top: 10px;
+    right: 20px;
     line-height: 1;
+    transition: color 0.2s;
 }
 
 .close:hover,
@@ -321,21 +305,22 @@
 
 .delete-modal-content h2 {
     color: var(--danger-color);
-    font-size: 26px;
+    font-size: 24px;
     margin-bottom: 20px;
     border-bottom: none;
     padding-bottom: 0;
+    font-weight: 700;
 }
 
 .warning-text {
-    font-size: 17px;
+    font-size: 16px;
     color: var(--secondary-dark);
-    line-height: 1.5;
-    margin-bottom: 10px;
+    line-height: 1.6;
+    margin-bottom: 15px;
 }
 
 .detail-text {
-    font-size: 15px;
+    font-size: 14px;
     color: var(--subtle-text);
     margin-bottom: 25px;
 }
@@ -343,7 +328,7 @@
 .button-group {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 15px;
     margin-top: 20px;
 }
 
@@ -354,6 +339,8 @@
     cursor: pointer;
     border: none;
     transition: all 0.2s ease;
+    min-width: unset;
+    box-shadow: none;
 }
 
 .button-group .btn-secondary {

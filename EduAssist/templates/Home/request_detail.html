@@ -5,7 +5,6 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'pos_app/css/request_detailStyle.css' %}">
-
 {% endblock %}
 
 {% block content %}
@@ -14,43 +13,64 @@
         <h2>Request Details</h2>
 
         <div class="detail-grid">
-            <div class="detail-item">
-                <strong>Title:</strong> <span>{{ req.title }}</span>
-            </div>
-
-            <div class="detail-item">
-                <strong>Status:</strong>
-                <span class="status {{ req.status }}">{{ req.get_status_display }}</span>
-            </div>
-
-            <div class="detail-item">
-                <strong>Priority:</strong>
-                <span>{{ req.get_priority_display }}</span>
-            </div>
-
-            <div class="detail-item">
-                <strong>Category:</strong>
-                <span>{{ req.category.name }}</span>
-            </div>
-
-            <div class="detail-item tags-container"> {# Added a class for specific tag alignment #}
-                <strong>Tags:</strong>
-                <div class="tag-list"> {# Wrapper for tags #}
-                    {% if req.tags.all %}
-                        {% for tag in req.tags.all %}
-                            <span class="tag">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <span>No tags provided.</span>
-                    {% endif %}
+            
+            {# Detail 1: Title #}
+            <div class="detail-item-wrapper">
+                <div class="detail-item">
+                    <strong>Title:</strong> <span>{{ req.title }}</span>
                 </div>
             </div>
 
-            <div class="detail-item">
-                <strong>Date:</strong> <span>{{ req.date|date:"Y-m-d" }}</span>
+            {# Detail 2: Status #}
+            <div class="detail-item-wrapper">
+                <div class="detail-item">
+                    <strong>Status:</strong>
+                    <span class="status {{ req.status }}">{{ req.get_status_display }}</span>
+                </div>
+            </div>
+
+            {# Detail 3: Priority #}
+            <div class="detail-item-wrapper">
+                <div class="detail-item">
+                    <strong>Priority:</strong>
+                    <span>{{ req.get_priority_display }}</span>
+                </div>
+            </div>
+
+            {# Detail 4: Date #}
+            <div class="detail-item-wrapper">
+                <div class="detail-item">
+                    <strong>Date:</strong> <span>{{ req.date|date:"Y-m-d" }}</span>
+                </div>
+            </div>
+
+            {# Detail 5: Category #}
+            <div class="detail-item-wrapper">
+                <div class="detail-item">
+                    <strong>Category:</strong>
+                    <span>{{ req.category.name }}</span>
+                </div>
+            </div>
+
+            {# Detail 6: Tags (Container needs to maintain structure) #}
+            <div class="detail-item-wrapper tags-container">
+                <div class="detail-item">
+                    <strong>Tags:</strong>
+                    <div class="tag-list"> 
+                        {% if req.tags.all %}
+                            {% for tag in req.tags.all %}
+                                <span class="tag">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <span>No tags provided.</span>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
         
+        {# Full-Width Sections follow the grid #}
+
         <div class="description-section">
             <strong>Description:</strong>
             <div class="description-box">{{ req.description }}</div>
@@ -69,8 +89,6 @@
             <a href="{% url 'dashboard' %}" class="btn-secondary">← Back to Dashboard</a>
             
             {% if request.user.is_staff %}
-            
-                {# STAFF ACTION: Link to the view that allows status change and commenting #}
             <a href="{% url 'approve_request' req.id %}" class="btn-primary">Update Status / Comment</a>
 
             <button 
@@ -82,7 +100,6 @@
             </button>
 
             {% elif request.user == req.user %}
-                {# USER ACTION: User can edit or delete their own request #}
             <a href="{% url 'edit_request' req.id %}" class="btn-primary">Edit Request</a>
             
             <button 
@@ -127,27 +144,15 @@
 
 {% block extra_js %}
 <script>
-    // Goal: Construct the final URL (e.g., /requests/13/delete/)
-
-    // 1. Get the base URL template, including the placeholder '0'.
-    // Result: A string like '/Home/requests/0/delete/'
     const deleteUrlTemplate = "{% url 'delete_request' 0 %}"; 
-    
-    // 2. We define the ID placeholder as a string to be replaced.
     const idPlaceholder = '0'; 
 
     const deleteModal = document.getElementById('deleteModal');
     const deleteRequestForm = document.getElementById('deleteRequestForm');
     const deleteRequestTitle = document.getElementById('deleteRequestTitle');
 
-    /**
-     * Opens the delete modal and sets the correct form action and title.
-     */
     function openDeleteModal(requestId, requestTitle) {
-        // Construct the final action URL by replacing the placeholder '0' with the actual ID.
-        // This ensures correct URL formatting (e.g., /Home/requests/13/delete/).
         deleteRequestForm.action = deleteUrlTemplate.replace(idPlaceholder, requestId);
-        
         deleteRequestTitle.textContent = requestTitle;
         deleteModal.style.display = 'flex';
     }
@@ -156,7 +161,6 @@
         deleteModal.style.display = 'none';
     }
 
-    // Close modal when clicking outside content
     window.addEventListener('click', (e) => {
         if (e.target === deleteModal) {
             closeDeleteModal();
