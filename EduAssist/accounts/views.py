@@ -99,22 +99,29 @@ def change_password(request):
 
 @login_required
 def profile(request):
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    # Define a default role for new profiles (e.g., 'STUDENT' or 'DEFAULT')
+    DEFAULT_ROLE = 'STUDENT' 
+
+    # FIX: Use 'defaults' to provide a non-null value for the 'role' field 
+    # when the profile object has to be created.
+    profile, created = Profile.objects.get_or_create(
+        user=request.user,
+        defaults={'role': DEFAULT_ROLE} # <--- THIS is the necessary change
+    )
 
     if request.method == 'POST':
-        # Bind POST data but restrict to specific editable fields
+        # ... (rest of your POST logic)
         form = ProfileForm(request.POST, instance=profile)
 
-        # ✅ Only allow these fields to be saved
         allowed_fields = {"contact_number", "program", "year_level"}
 
         if form.is_valid():
-            # Manually update only allowed fields
             for field_name in allowed_fields:
                 if field_name in form.cleaned_data:
                     setattr(profile, field_name, form.cleaned_data[field_name])
             
-            # ✅ Year level validation: must be 1-5
+            # Note: Assuming year_level is a CharField based on your previous code ('1' to '5'). 
+            # If it's an IntegerField, you should cast profile.year_level to int for comparison.
             if profile.year_level < '1' or profile.year_level > '5':
                 messages.error(request, "Year level must be between 1 and 5.")
                 return redirect('profile')
@@ -122,7 +129,6 @@ def profile(request):
                 profile.save()
                 return redirect('profile')
         else:
-            # Handle common validation issues
             contact = request.POST.get('contact_number', '').strip()
             if not contact:
                 messages.error(request, "Contact field cannot be empty.")
