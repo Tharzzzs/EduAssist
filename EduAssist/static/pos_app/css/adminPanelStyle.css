@@ -1,316 +1,361 @@
 /* ======================================= */
-/* 🚀 Admin Panel Styles (DOCUTRACKR Theme) */
-/* Requires color variables from dashboardStyle.css to be loaded first. */
+/* 🚀 Admin Panel Theme                    */
+/* Maroon (#993333) & Gold (#FFCC33)       */
 /* ======================================= */
 
-/* --- Main Container (Mimics Dashboard Card) --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-maroon: #993333;
+    --secondary-gold: #FFCC33;
+    --dark-maroon: #7A2828;
+    --light-bg: #ffffff;
+    --dark-text: #212529;
+    --border-color: #eee;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* --- Main Container --- */
 .container-fluid {
-    width: 95%; 
-    margin: auto;
-    background: var(--light-bg); /* White card background */
+    width: 95%;
+    max-width: 1400px;
+    margin: 0 auto 2rem auto;
+    background: var(--light-bg);
     padding: 2.5rem;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Title Styling --- */
-.container-fluid h2 {
-    color: var(--primary-maroon);
-    font-weight: 700;
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 0.5rem;
-}
-
-/* --- Table Styles (Consistent with Dashboard Table) --- */
-.table-responsive {
-    overflow-x: auto;
-}
-
-table {
+/* --- Layout Wrapper --- */
+.dashboard-grid {
+    display: block;
     width: 100%;
-    border-collapse: separate; 
-    border-spacing: 0;
-    margin-top: 1rem;
-    border-radius: 10px;
-    overflow: hidden; 
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    table-layout: fixed;
 }
 
-table th,
-table td {
-    padding: 1.2rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid #f0f0f0;
+/* --- Header & Actions --- */
+.content-area {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
-table thead th {
-    background: #f8f8f8; /* Light gray for header */
-    color: var(--dark-maroon); /* Dark maroon text */
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    font-weight: 700;
-    border-bottom: 2px solid var(--primary-maroon); /* Maroon separator */
+.top-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
 }
 
-table tr:nth-child(even) {
-    background: #fcfcfc; /* Subtle striping */
+.dashboard-title {
+    color: var(--primary-maroon);
+    font-weight: 800;
+    font-size: 2rem;
+    margin: 0;
+    line-height: 1.2;
 }
 
-table tr:hover {
-    background: #fffdf9; /* Light, warm hover effect */
-    box-shadow: inset 4px 0 0 0 var(--secondary-gold); /* Highlight using Gold */
+.sub-text { color: #666; font-size: 0.95rem; }
+
+/* --- Toolbar (Search/Filter) --- */
+.toolbar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 1.5rem;
 }
 
-/* --- Empty State --- */
-.empty {
-    text-align: center;
-    color: #777;
-    font-size: 1.1rem;
-    margin-top: 3rem;
-    padding: 2rem;
-    background: #f8f8f8;
-    border-radius: 10px;
-    border: 1px dashed #ddd;
+.search-box { flex-grow: 1; }
+
+.modern-input {
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    transition: all 0.3s;
 }
 
-/* --- Responsive Adaptations (Matches Dashboard) --- */
-@media (max-width: 768px) {
-    .container-fluid {
-        width: 98%;
-        padding: 1.5rem 1rem;
-    }
-    
-    /* Adapt table for small screens */
-    table, thead, tbody, th, td, tr {
-        display: block;
-    }
-    
-    thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-    
-    table tr {
-        border: 1px solid #eee;
-        margin-bottom: 10px;
-        border-radius: 6px;
-    }
-    
-    table td {
-        border: none;
-        position: relative;
-        padding-left: 50%;
-        text-align: right;
-        border-bottom: 1px dashed #f0f0f0;
-    }
-
-    table td:before {
-        content: attr(data-label);
-        position: absolute;
-        left: 10px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        text-align: left;
-        font-weight: 700;
-        color: var(--primary-maroon); /* Maroon label on mobile */
-        font-size: 0.9rem;
-    }
+.modern-input:focus {
+    border-color: var(--primary-maroon);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(153, 51, 51, 0.1);
 }
 
-.role-badge {
-    background: var(--primary-maroon);
-    color: white;
-
-    padding: 0.55rem 1rem;
-    border-radius: 4px;
-
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-
-    width: 160px;         /* ⭐ Fixed width based on SUPERADMIN */
-    display: flex;        
-    justify-content: center;  
-    align-items: center;
-
-    margin: 0 auto;       
-    gap: 8px; 
+.filter-select {
+    padding: 0.85rem 2rem 0.85rem 1.2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 0.95rem;
     cursor: pointer;
-    transition: 0.2s ease-in-out;
-    border: none;
 }
 
-.role-badge:hover {
-    background: var(--dark-maroon);
-    transform: scale(1.03);
+/* ======================================= */
+/* 🚀 USER CARD GRID (Replaces Table)      */
+/* ======================================= */
+
+.grid-header {
+    display: grid;
+    /* User Info | Contact | Role | Actions */
+    grid-template-columns: 1fr 200px 140px 100px; 
+    padding: 0 1.5rem 0.5rem 1.5rem;
+    gap: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #999;
+    letter-spacing: 0.5px;
 }
 
-/* Disabled = view only */
-.role-badge.disabled {
-    opacity: 0.75;
+.users-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.user-card {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    
+    /* Grid Layout */
+    display: grid;
+    grid-template-columns: 1fr 200px 140px 100px;
+    align-items: center;
+    gap: 20px;
+    
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(153, 51, 51, 0.08); 
+    border-color: var(--primary-maroon);
+    z-index: 2;
+}
+
+/* --- Column Styling --- */
+
+/* Col 1: User Info */
+.col-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    background-color: #f0f2f5;
+    color: var(--primary-maroon);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    border: 1px solid #e9ecef;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 700;
+    color: var(--dark-text);
+    font-size: 1rem;
+}
+
+.user-meta {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* Col 2: Contact */
+.col-contact {
+    font-size: 0.9rem;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Col 3: Role (Centered) */
+.col-role {
+    display: flex;
+    justify-content: center;
+}
+
+/* ======================================= */
+/* 🎨 ROLE BADGE STYLING (Maroon Theme)    */
+/* ======================================= */
+
+/* Default Role Badge (Read Only) */
+.role-badge {
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    width: 100%;
+    text-align: center;
     cursor: default;
-    pointer-events: none;
+    
+    /* THEME COLORS: Light Maroon Background + Dark Maroon Text */
+    background: #fff5f5; 
+    color: var(--primary-maroon);
+    border: 1px solid #fadcdc;
 }
 
+/* Editable Role Badge (Actionable) */
+.role-badge.editable {
+    /* THEME COLORS: Light Gold Background to indicate action */
+    background: #fff8e1;
+    color: #8a6d0b; /* Dark Gold/Brown text for contrast */
+    border: 1px solid #ffeeba;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.role-badge.editable:hover {
+    background: var(--secondary-gold);
+    color: var(--dark-maroon);
+    border-color: var(--secondary-gold);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Col 4: Actions */
+.col-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: #999;
+    font-size: 0.95rem;
+}
+
+.action-btn.delete:not(.disabled):hover {
+    background: #fff5f5;
+    color: #dc3545;
+}
+
+.action-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* --- Modals --- */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(3px);
-    justify-content: center;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
     align-items: center;
-    z-index: 9999 !important;
+    justify-content: center;
 }
+
+.modal.active { display: flex; }
 
 .modal-content {
     background: white;
-    padding: 2.5rem;
-    width: 480px;
-    border-radius: 14px;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.18);
-    text-align: left;
-
-    animation: popIn 0.25s ease-in-out;
-}
-
-/* Smooth scale-in animation */
-@keyframes popIn {
-    from { transform: scale(0.95); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
-}
-
-.modal-content h3 {
-    font-size: 1.7rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #222;
-}
-
-.modal-content p {
-    font-size: 1.05rem;
-    color: #444;
-    margin-bottom: 1rem;
-}
-
-#roleSelect {
     width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    margin-top: 0.35rem;
-    margin-bottom: 1.5rem;
-    outline: none;
+    max-width: 450px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    padding: 0;
+    overflow: hidden;
 }
 
-.modal-buttons {
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h3 { margin: 0; font-size: 1.25rem; color: var(--primary-maroon); }
+
+.modal-body { padding: 2rem 1.5rem; }
+
+.modal-footer {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
+    margin-top: 1.5rem;
 }
 
 .btn-cancel {
-    padding: 0.6rem 1.4rem;
-    background: #ddd;
-    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    background: #f1f3f5;
+    color: #495057;
     border: none;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn-cancel:hover {
-    background: #c8c8c8;
 }
 
 .btn-confirm {
-    padding: 0.6rem 1.4rem;
+    padding: 0.75rem 1.25rem;
     background: var(--primary-maroon);
     color: white;
-    border-radius: 8px;
     border: none;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.25s;
 }
+.btn-confirm:hover { background: var(--dark-maroon); }
 
-.btn-confirm:hover {
-    background: var(--dark-maroon);
-}
-
-.modal {
-    z-index: 9999 !important;
-}
-
-table th:nth-child(5),
-table td:nth-child(5) {
-    text-align: center;
-    white-space: nowrap;
-}
-
-.action-col {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-}
-
-.delete-btn {
-    background: #b60000;
+.btn-danger {
+    padding: 0.75rem 1.25rem;
+    background: #dc3545;
+    color: white;
     border: none;
-    padding: 0.45rem 0.9rem;
-    border-radius: 4px;
-    color: white;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-.delete-btn:hover {
-    background: #8d0000;
-    transform: scale(1.05);
-}
+.text-center { text-align: center; }
+.text-right { text-align: right; }
 
-.action-buttons {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: center;
-}
-
-.delete-btn {
-    background: var(--primary-maroon);
-    color: white;
-    padding: 0.55rem 0.9rem;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.delete-btn:hover {
-    background: var(--dark-maroon);
-    transform: scale(1.05);
-}
-
-.delete-btn i {
-    color: white;
-}
-
-/* Disabled delete button — grey + no click */
-.delete-btn.disabled-delete {
-    background: #ccc !important;
-    cursor: not-allowed !important;
-    pointer-events: none !important;
-    transform: none !important;
-}
-
-.delete-btn.disabled-delete i {
-    color: #666 !important;
+/* Responsive */
+@media (max-width: 900px) {
+    .grid-header { display: none; }
+    .user-card {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .col-user, .col-contact, .col-role, .col-actions { width: 100%; justify-content: flex-start; }
+    .col-actions { justify-content: flex-end; border-top: 1px dashed #eee; padding-top: 10px; }
+    .col-role { justify-content: flex-start; }
+    .role-badge { width: auto; display: inline-block; }
 }

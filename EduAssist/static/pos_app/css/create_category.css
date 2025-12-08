@@ -1,7 +1,11 @@
 /* ======================================= */
 /* 🚀 Create Category Page Styles          */
 /* Theme: Maroon (#993333) & Gold (#FFCC33)*/
+/* Font: Inter                             */
 /* ======================================= */
+
+/* 1. Import 'Inter' Font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
     --primary-maroon: #993333;
@@ -9,6 +13,20 @@
     --dark-maroon: #7A2828;
     --light-bg: #fcfcfc;
     --border-color: #e0e0e0;
+    
+    /* 2. Define the Font Variable */
+    --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* 3. Apply Font Globally */
+body {
+    font-family: var(--font-stack);
+    background-color: #f4f4f4; /* Matches dashboard background */
+}
+
+/* Ensure inputs and buttons inherit the font */
+input, select, button, textarea {
+    font-family: var(--font-stack);
 }
 
 /* --- Page Layout --- */
@@ -29,12 +47,13 @@
     font-weight: 800;
     font-size: 1.8rem;
     margin: 0.5rem 0 0 0;
+    letter-spacing: -0.5px;
 }
 
 .back-link .btn-link {
     color: #666;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.95rem;
     display: inline-flex;
     align-items: center;
@@ -66,7 +85,6 @@
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    /* Clean grey border only, no yellow accent */
     border: 1px solid var(--border-color);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -88,7 +106,7 @@
 .card-header-modern i {
     font-size: 1.2rem;
     color: var(--primary-maroon);
-    background: #fff5f5; /* Light maroon tint */
+    background: #fff5f5; 
     padding: 10px;
     border-radius: 8px;
 }
@@ -98,8 +116,7 @@
     font-size: 1.1rem;
     font-weight: 700;
     color: #333;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.2px;
 }
 
 .card-body {
@@ -107,10 +124,11 @@
 }
 
 .form-instruction {
-    font-size: 0.85rem;
-    color: #888;
+    font-size: 0.9rem;
+    color: #666;
     margin-top: 0;
     margin-bottom: 1.5rem;
+    line-height: 1.5;
 }
 
 /* --- Modern Inputs --- */
@@ -142,7 +160,7 @@
 
 .modern-input {
     width: 100%;
-    padding: 0.85rem 1rem 0.85rem 2.4rem; /* Padding-left allows space for icon */
+    padding: 0.85rem 1rem 0.85rem 2.4rem; 
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     font-size: 0.95rem;
@@ -151,6 +169,7 @@
     transition: all 0.3s ease;
     box-sizing: border-box;
     appearance: none;
+    font-weight: 500;
 }
 
 .modern-input:focus {
@@ -158,6 +177,11 @@
     border-color: var(--primary-maroon);
     background-color: #fff;
     box-shadow: 0 0 0 4px rgba(153, 51, 51, 0.1);
+}
+
+.modern-input::placeholder {
+    color: #999;
+    font-weight: 400;
 }
 
 .select-arrow {
@@ -234,6 +258,7 @@
     font-size: 0.85rem;
     text-transform: uppercase;
     border-bottom: 2px solid #e9ecef;
+    letter-spacing: 0.5px;
 }
 
 .styled-table tr:nth-child(even) {
@@ -241,7 +266,7 @@
 }
 
 .styled-table tr:hover {
-    background-color: #fffdf9; /* Light Gold tint */
+    background-color: #fffdf9; 
 }
 
 .main-text {
@@ -259,6 +284,7 @@
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .category-tag {
@@ -281,7 +307,7 @@
 /* --- Responsive (Mobile) --- */
 @media (max-width: 992px) {
     .split-grid {
-        grid-template-columns: 1fr; /* Stack everything vertically */
+        grid-template-columns: 1fr;
         gap: 2rem;
     }
     

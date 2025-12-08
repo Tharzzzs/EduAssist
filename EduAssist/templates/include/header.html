@@ -27,7 +27,7 @@
                My Requests
             </a>
             <a href="{% url 'add_request' %}"
-               class="btn btn-primary {% if request.resolver_match.url_name == 'add_request' %}active{% endif %}">
+               class="{% if request.resolver_match.url_name == 'add_request' %}active{% endif %}">
                Add Request
             </a>
         {% endif %}

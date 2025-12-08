@@ -1,124 +1,162 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Admin Panel{% endblock %}
+{% block title %}User Management{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
 <link rel="stylesheet" href="{% static 'pos_app/css/adminPanelStyle.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-    <h2>User Profiles</h2>
-    
-    <div class="top-actions">
-        <input type="text" id="search" placeholder="Search users" onkeyup="filterTable()">
+
+    <div class="dashboard-grid">
+        
+        <div class="content-area">
+            
+            <div class="top-actions">
+                <div class="header-group">
+                    <h2 class="dashboard-title">User Management</h2>
+                    <span class="sub-text">Manage system access and user roles</span>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <div class="search-box">
+                    <input type="text" id="search" class="modern-input" placeholder="Search name, program..." onkeyup="filterGrid()">
+                </div>
+                <select id="roleFilter" class="filter-select" onchange="filterGrid()">
+                    <option value="all">All Roles</option>
+                    <option value="SUPERADMIN">Super Admin</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="STUDENT">Student</option>
+                </select>
+            </div>
+
+            {% if users %}
+                <div class="grid-header">
+                    <span>User Profile</span>
+                    <span>Contact Info</span>
+                    <span class="text-center">Role</span>
+                    <span class="text-right">Actions</span>
+                </div>
+
+                <div class="users-grid" id="usersGrid">
+                    {% for profile in users %}
+                    <div class="user-card" data-role="{{ profile.role }}">
+                        
+                        <div class="col-user">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="user-details">
+                                <span class="user-name">{{ profile.user.username }}</span>
+                                <span class="user-meta">{{ profile.program }} • {{ profile.year_level }}</span>
+                            </div>
+                        </div>
+
+                        <div class="col-contact">
+                            {{ profile.contact }}
+                        </div>
+
+                        <div class="col-role">
+                            {% if request.user.profile.role == "SUPERADMIN" %}
+                            <button class="role-badge editable changeRoleBtn"
+                                  data-id="{{ profile.id }}"
+                                  data-role="{{ profile.role }}"
+                                  data-name="{{ profile.user.username }}"
+                                  title="Edit Role">
+                                {{ profile.role }} <i class="fas fa-pen" style="font-size:0.6rem; margin-left:4px;"></i>
+                            </button>
+                            {% else %}
+                            <span class="role-badge">
+                                {{ profile.role }}
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-actions">
+                            {% if request.user.id == profile.user.id %}
+                                <button class="action-btn disabled" title="Cannot delete yourself">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            {% elif request.user.profile.role == "ADMIN" and profile.role in "ADMIN SUPERADMIN" %}
+                                 <button class="action-btn disabled" title="Permission Denied">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            {% else %}
+                                <button class="action-btn delete" 
+                                        onclick="openDeleteModal('{{ profile.id }}', '{{ profile.user.username }}')"
+                                        title="Delete User">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <p id="noResultsMessage" style="display:none; text-align:center; padding:2rem; color:#888;">
+                    No users found matching your search.
+                </p>
+
+            {% else %}
+                <div style="text-align:center; padding:4rem; color:#888; border:2px dashed #eee; border-radius:12px;">
+                    <i class="fas fa-users-slash" style="font-size:2rem; margin-bottom:1rem;"></i>
+                    <p>No user profiles found.</p>
+                </div>
+            {% endif %}
+
         </div>
-
-    {% if users %}
-    <div class="table-responsive">
-        <table id="userTable">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Contact</th>
-                    <th>Program</th>
-                    <th>Year Level</th>
-                    <th>Manage</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for profile in users %}
-                <tr>
-                    <td data-label="Username">{{ profile.user.username }}</td>
-                    <td data-label="Contact">{{ profile.contact }}</td>
-                    <td data-label="Program">{{ profile.program }}</td>
-                    <td data-label="Year Level">{{ profile.year_level }}</td>
-                    <td>
-    <div class="action-buttons">
-
-        {% if request.user.profile.role == "SUPERADMIN" %}
-        <span class="role-badge changeRoleBtn"
-              data-id="{{ profile.id }}"
-              data-role="{{ profile.role }}"
-              data-name="{{ profile.user.username }}">
-            {{ profile.role }}
-            <i class="fas fa-edit"></i>
-        </span>
-        {% else %}
-        <span class="role-badge disabled">{{ profile.role }}</span>
-        {% endif %}
-
-        {% if request.user.id == profile.user.id %}
-            <!-- Can't delete yourself -->
-            <button class="delete-btn disabled-delete">
-                <i class="fas fa-trash"></i>
-            </button>
-
-        {% elif request.user.profile.role == "ADMIN" and profile.role in "ADMIN SUPERADMIN" %}
-            <!-- Admin cannot delete Admin or Superadmin -->
-            <button class="delete-btn disabled-delete">
-                <i class="fas fa-trash"></i>
-            </button>
-
-        {% else %}
-            <!-- Normal delete -->
-            <button class="delete-btn"
-                    data-id="{{ profile.id }}"
-                    data-name="{{ profile.user.username }}">
-                <i class="fas fa-trash"></i>
-            </button>
-        {% endif %}
-
     </div>
-</td>
-
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <p id="noResultsMessage"></p>
-    </div>
-    {% else %}
-    <p class="empty">No user profiles found.</p>
-    {% endif %}
 </div>
 
 <div id="roleModal" class="modal">
     <div class="modal-content">
-        <h3>Change Role</h3>
-        <p id="modalMessage"></p>
-
-        <form method="POST" id="roleForm">
-            {% csrf_token %}
-            <select name="role" id="roleSelect">
-                <option value="SUPERADMIN">Super Admin</option>
-                <option value="ADMIN">Admin</option>
-                <option value="STUDENT">Student</option>
-            </select>
-
-            <div class="modal-buttons">
-                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-confirm">Confirm</button>
-            </div>
-        </form>
+        <div class="modal-header">
+            <h3>Update Role</h3>
+            <i class="fas fa-times close-btn" onclick="closeModal()" style="cursor:pointer; color:#999;"></i>
+        </div>
+        <div class="modal-body">
+            <p id="modalMessage" style="margin-bottom: 1.5rem; color:#555;"></p>
+            <form method="POST" id="roleForm">
+                {% csrf_token %}
+                <div style="position:relative; margin-bottom: 2rem;">
+                    <select name="role" id="roleSelect" class="modern-input" style="appearance:none;">
+                        <option value="SUPERADMIN">Super Admin</option>
+                        <option value="ADMIN">Admin</option>
+                        <option value="STUDENT">Student</option>
+                    </select>
+                    <i class="fas fa-chevron-down" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:#999; pointer-events:none;"></i>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-confirm">Save Changes</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <div id="deleteModal" class="modal">
     <div class="modal-content">
-        <h3>Confirm Delete</h3>
-        <p id="deleteMessage"></p>
-
-        <form method="POST" id="deleteForm">
-            {% csrf_token %}
-            <div class="modal-buttons">
-                <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
-                <button type="submit" class="btn-confirm">Delete</button>
-            </div>
-        </form>
+        <div class="modal-header">
+            <h3 style="color:#dc3545;">Confirm Delete</h3>
+            <i class="fas fa-times close-btn" onclick="closeDeleteModal()" style="cursor:pointer; color:#999;"></i>
+        </div>
+        <div class="modal-body">
+            <p id="deleteMessage" style="font-weight:600;"></p>
+            <p style="color:#dc3545; font-size:0.9rem; margin-top:5px;">This action cannot be undone.</p>
+            <form method="POST" id="deleteForm">
+                {% csrf_token %}
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                    <button type="submit" class="btn-danger">Delete User</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -126,90 +164,78 @@
 
 {% block extra_js %}
 <script>
-function filterTable() {
+function filterGrid() {
     const searchInput = document.getElementById("search").value.toLowerCase();
-    const table = document.getElementById("userTable");
-    const tbody = table ? table.querySelector("tbody") : null;
-    const rows = tbody ? tbody.getElementsByTagName("tr") : [];
-    let visibleRowCount = 0;
+    const roleFilter = document.getElementById("roleFilter").value.toUpperCase();
+    
+    const grid = document.getElementById("usersGrid");
+    const cards = grid ? grid.getElementsByClassName("user-card") : [];
+    let visibleCount = 0;
 
-    if (!tbody) return;
+    if (!grid) return;
 
-    for (let i = 0; i < rows.length; i++) {
-        // Get all cell data from the current row
-        const cells = rows[i].getElementsByTagName('td');
-        let rowMatches = false;
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        
+        // Target specific elements for search
+        const nameEl = card.querySelector('.user-name');
+        const progEl = card.querySelector('.user-meta');
+        const roleAttribute = card.getAttribute('data-role');
 
-        // Iterate through all cells to see if any content matches the search input
-        for (let j = 0; j < cells.length; j++) {
-            const cellText = cells[j].textContent || cells[j].innerText;
-            if (cellText.toLowerCase().includes(searchInput)) {
-                rowMatches = true;
-                break;
-            }
-        }
+        if (!nameEl) continue;
 
-        if (rowMatches) {
-            rows[i].style.display = "";
-            visibleRowCount++;
+        const textContent = (nameEl.textContent + " " + (progEl ? progEl.textContent : "")).toLowerCase();
+        
+        const matchesSearch = textContent.includes(searchInput);
+        const matchesRole = (roleFilter === "ALL") || (roleAttribute === roleFilter);
+
+        if (matchesSearch && matchesRole) {
+            card.style.display = "grid"; // Must match CSS display property
+            visibleCount++;
         } else {
-            rows[i].style.display = "none";
+            card.style.display = "none";
         }
     }
 
-    // Display 'no results' message
     const noResults = document.getElementById("noResultsMessage");
     if (noResults) {
-        // Only show no results if the table has rows but none are visible
-        noResults.textContent = (visibleRowCount === 0 && rows.length > 0) 
-            ? "🚫 No user profiles match your search criteria." 
-            : "";
+        noResults.style.display = (visibleCount === 0 && cards.length > 0) ? "block" : "none";
     }
 }
 
-let modal = document.getElementById("roleModal")
-let form = document.getElementById("roleForm")
-let message = document.getElementById("modalMessage")
-let roleSelect = document.getElementById("roleSelect")
+/* Modal Logic */
+const roleModal = document.getElementById("roleModal");
+const deleteModal = document.getElementById("deleteModal");
+const roleForm = document.getElementById("roleForm");
+const deleteForm = document.getElementById("deleteForm");
 
 document.querySelectorAll(".changeRoleBtn").forEach(btn => {
     btn.addEventListener("click", function() {
-        let id = this.dataset.id
-        let username = this.dataset.name
-        let role = this.dataset.role
-
-        message.innerHTML = `Change role for <b>${username}</b>?`
-        form.action = `/accounts/change-role/${id}/`
-        roleSelect.value = role
-
-        modal.style.display = "flex"
-    })
-})
-
-function closeModal() {
-    modal.style.display = "none"
-}
-
-// DELETE MODAL
-let deleteModal = document.getElementById("deleteModal");
-let deleteForm = document.getElementById("deleteForm");
-let deleteMessage = document.getElementById("deleteMessage");
-
-document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.addEventListener("click", function () {
         let id = this.dataset.id;
         let username = this.dataset.name;
-
-        deleteMessage.innerHTML = `Are you sure you want to delete <b>${username}</b>?`;
-        deleteForm.action = `/accounts/delete-user/${id}/`;
-
-        deleteModal.style.display = "flex";
+        let role = this.dataset.role;
+        
+        document.getElementById("modalMessage").innerHTML = `Updating role for: <strong>${username}</strong>`;
+        roleForm.action = `/accounts/change-role/${id}/`;
+        document.getElementById("roleSelect").value = role;
+        
+        roleModal.classList.add("active");
     });
 });
 
-function closeDeleteModal() {
-    deleteModal.style.display = "none";
+function closeModal() { roleModal.classList.remove("active"); }
+
+function openDeleteModal(id, username) {
+    document.getElementById("deleteMessage").innerHTML = `Are you sure you want to delete <strong>${username}</strong>?`;
+    deleteForm.action = `/accounts/delete-user/${id}/`;
+    deleteModal.classList.add("active");
 }
 
+function closeDeleteModal() { deleteModal.classList.remove("active"); }
+
+window.onclick = function(event) {
+    if (event.target == roleModal) closeModal();
+    if (event.target == deleteModal) closeDeleteModal();
+}
 </script>
 {% endblock %}

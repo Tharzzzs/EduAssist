@@ -13,128 +13,146 @@
     <div class="dashboard-grid">
 
         <div class="summary-area">
+            <h3 class="section-label">Overview</h3>
             
             <div class="summary-card maroon-bg">
-                <p>Total Pending Requests</p>
-                <h3>{{ pending_count|default:0 }}</h3>
+                <div class="card-info">
+                    <p>Total Pending</p>
+                    <h3>{{ pending_count|default:0 }}</h3>
+                </div>
             </div>
 
             <div class="summary-card gold-bg">
-                <p>Total Approved Requests</p>
-                <h3>{{ approved_count|default:0 }}</h3>
+                <div class="card-info">
+                    <p>Total Approved</p>
+                    <h3>{{ approved_count|default:0 }}</h3>
+                </div>
             </div>
             
             <div class="summary-card light-bg">
-                <p>Total Requests</p>
-                <h3>{{ total_count|default:0 }}</h3>
+                <div class="card-info">
+                    <p>Total Requests</p>
+                    <h3>{{ total_count|default:0 }}</h3>
+                </div>
             </div>
-            
         </div>
 
-        <div class="table-area">
+        <div class="content-area">
             
             <div class="top-actions">
+                <div class="header-group">
+                    {% if user.is_staff %}
+                        <h2 class="dashboard-title">Admin Dashboard</h2>
+                    {% else %}
+                        <h2 class="dashboard-title">My Requests</h2>
+                    {% endif %}
+                    <span class="sub-text">Track and manage your documents</span>
+                </div>
+
                 {% if not user.is_staff %}
                     <a href="{% url 'add_request' %}" class="btn btn-primary">Add Request</a>
                 {% endif %}
-
-                <div class="search-and-filter">
-                    <input type="text" id="search" placeholder="Search requests..." onkeyup="filterTable()">
-                    <select class="filter-select" onchange="applyFilter(this.value)">
-                        <option value="all">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                </div>
             </div>
 
-            {% if user.is_staff %}
-                <h2 class="dashboard-title">All Requests (Admin View)</h2>
-            {% else %}
-                <h2 class="dashboard-title">My Requests</h2>
-            {% endif %}
+            <div class="toolbar">
+                <div class="search-box">
+                    <input type="text" id="search" placeholder="Search by title..." onkeyup="filterGrid()">
+                </div>
+                <select class="filter-select" onchange="applyFilter(this.value)">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
 
             {% if requests %}
-                <div class="table-responsive"> 
-                    <table id="requestsTable">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for req in requests %}
-                            <tr>
-                                <td data-label="Title">{{ req.title }}</td>
-                                <td data-label="Status"><span class="status {{ req.status|lower }}">{{ req.status }}</span></td>
-                                <td data-label="Date">{{ req.date }}</td>
-                                <td data-label="Actions">
-                                    <a href="{% url 'request_detail' req.id %}" class="view-btn">View Details</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="grid-header">
+                    <span>Title</span>
+                    <span>Date</span>
+                    <span class="text-center">Status</span>
+                    <span></span> </div>
+
+                <div class="requests-grid" id="requestsGrid">
+                    {% for req in requests %}
+                    <div class="request-card" data-status="{{ req.status|lower }}">
+                        
+                        <div class="col-title">
+                            <h4 class="req-title">{{ req.title }}</h4>
+                        </div>
+
+                        <div class="col-date">
+                            <span class="label">Date:</span>
+                            <span class="value">{{ req.date }}</span>
+                        </div>
+
+                        <div class="col-status">
+                            <span class="status-badge {{ req.status|lower }}">{{ req.status }}</span>
+                        </div>
+
+                        <div class="col-action">
+                            <a href="{% url 'request_detail' req.id %}" class="view-link">
+                                View
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
 
-                <p id="noResultsMessage"></p>
+                <p id="noResultsMessage" style="display:none;">No requests match your search.</p>
             {% else %}
-                <p class="empty">No requests found. Time to create one!</p>
+                <div class="empty-state">
+                    <h3>No Requests Found</h3>
+                    <p>Get started by creating a new request.</p>
+                </div>
             {% endif %}
 
         </div>
         
     </div>
-    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-// (Your existing filterTable and applyFilter JS goes here, unchanged)
-function filterTable() {
+function filterGrid() {
     const searchInput = document.getElementById("search").value.toLowerCase();
     const filterSelect = document.querySelector(".filter-select").value.toLowerCase();
-    const table = document.getElementById("requestsTable");
-    const tbody = table ? table.querySelector("tbody") : null;
-    const rows = tbody ? tbody.getElementsByTagName("tr") : [];
-    let visibleRowCount = 0;
+    
+    const grid = document.getElementById("requestsGrid");
+    const cards = grid ? grid.getElementsByClassName("request-card") : [];
+    let visibleCount = 0;
 
-    if (!tbody) return;
+    if (!grid) return;
 
-    for (let i = 0; i < rows.length; i++) {
-        // Updated selector for title and status based on column index
-        const titleCell = rows[i].querySelector('td:nth-child(1)');
-        const statusElement = rows[i].querySelector('td:nth-child(2) .status'); 
-        
-        if (!titleCell || !statusElement) continue;
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const titleElement = card.querySelector('.req-title');
+        const statusAttribute = card.getAttribute('data-status');
 
-        const titleText = titleCell.textContent.toLowerCase();
-        const statusText = statusElement.textContent.toLowerCase();
+        if (!titleElement) continue;
 
+        const titleText = titleElement.textContent.toLowerCase();
         const titleMatch = titleText.includes(searchInput);
-        const statusMatch = (filterSelect === 'all' || statusText.includes(filterSelect));
+        const statusMatch = (filterSelect === 'all' || statusAttribute === filterSelect);
 
         if (titleMatch && statusMatch) {
-            rows[i].style.display = "";
-            visibleRowCount++;
+            // Restore grid display
+            card.style.display = "grid"; 
+            visibleCount++;
         } else {
-            rows[i].style.display = "none";
+            card.style.display = "none";
         }
     }
 
     const noResults = document.getElementById("noResultsMessage");
     if (noResults) {
-        // Only show no results if the table has rows but none are visible
-        noResults.textContent = (visibleRowCount === 0 && rows.length > 0) ? "No requests match your search or filter criteria." : "";
+        noResults.style.display = (visibleCount === 0 && cards.length > 0) ? "block" : "none";
     }
 }
 
 function applyFilter(value) {
-    filterTable();
+    filterGrid();
 }
 </script>
 {% endblock %}
