@@ -360,3 +360,144 @@ body {
 .button-group .btn-danger:hover {
     background-color: #c82333;
 }
+
+/* ===========================
+   TOP HEADER (Match Edit Request Style)
+=========================== */
+
+.card-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 8px;
+}
+
+.card-top-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.card-top-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-maroon); /* same red title */
+    margin: 0;
+}
+
+.card-top-subtitle {
+    font-size: 14px;
+    color: var(--subtle-text);
+    margin: 0;
+}
+
+.card-top-back {
+    font-size: 14px;
+    color: var(--secondary-dark);
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 5px; /* aligns with title */
+}
+
+.card-top-back:hover {
+    text-decoration: underline;
+    color: var(--primary-maroon);
+}
+
+.card-header-divider {
+    border: none;
+    border-top: 1px solid #e5e5e5;
+    margin: 12px 0 25px;
+}
+/* ================================
+   MATCH DASHBOARD CARD STYLE
+================================ */
+
+.detail-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* EXACT 3 CARDS PER ROW */
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+
+.detail-card {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    padding: 1.3rem 1.5rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
+}
+
+/* Label text */
+.detail-card .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #999;
+    margin-bottom: 6px;
+}
+
+/* Value text */
+.detail-card .value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--secondary-dark);
+}
+
+/* Priority dot */
+.detail-card .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.priority-high .dot { background: #dc3545; }
+.priority-medium .dot { background: #ffc107; }
+.priority-low .dot { background: #198754; }
+
+/* Status badge (reuse dashboard style) */
+.status-badge {
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    width: fit-content;
+}
+
+.status-badge.pending { background: #fff8e1; color: #b45309; }
+.status-badge.approved { background: #f0fdf4; color: #15803d; }
+.status-badge.cancelled { background: #fef2f2; color: #b91c1c; }
+
+/* Tags */
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.tag-badge {
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.full-width-card {
+    grid-column: 1 / -1; /* Span all 3 columns */
+    margin-top: 0.5rem;
+}
+
+.description-text {
+    white-space: pre-wrap;
+    line-height: 1.6;
+    font-weight: 400 !important; /* Normal weight for description content */
+}
+

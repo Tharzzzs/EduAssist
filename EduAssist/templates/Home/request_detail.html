@@ -10,70 +10,76 @@
 {% block content %}
 <div class="container">
     <div class="detail-container">
-        <h2>Request Details</h2>
-
-        <div class="detail-grid">
-            
-            {# Detail 1: Title #}
-            <div class="detail-item-wrapper">
-                <div class="detail-item">
-                    <strong>Title:</strong> <span>{{ req.title }}</span>
-                </div>
+        <div class="card-top-header">
+            <div class="card-top-left">
+                <h1 class="card-top-title">View Request</h1>
+                <p class="card-top-subtitle">View full request details</p>
             </div>
 
-            {# Detail 2: Status #}
-            <div class="detail-item-wrapper">
-                <div class="detail-item">
-                    <strong>Status:</strong>
-                    <span class="status {{ req.status }}">{{ req.get_status_display }}</span>
-                </div>
-            </div>
-
-            {# Detail 3: Priority #}
-            <div class="detail-item-wrapper">
-                <div class="detail-item">
-                    <strong>Priority:</strong>
-                    <span>{{ req.get_priority_display }}</span>
-                </div>
-            </div>
-
-            {# Detail 4: Date #}
-            <div class="detail-item-wrapper">
-                <div class="detail-item">
-                    <strong>Date:</strong> <span>{{ req.date|date:"Y-m-d" }}</span>
-                </div>
-            </div>
-
-            {# Detail 5: Category #}
-            <div class="detail-item-wrapper">
-                <div class="detail-item">
-                    <strong>Category:</strong>
-                    <span>{{ req.category.name }}</span>
-                </div>
-            </div>
-
-            {# Detail 6: Tags (Container needs to maintain structure) #}
-            <div class="detail-item-wrapper tags-container">
-                <div class="detail-item">
-                    <strong>Tags:</strong>
-                    <div class="tag-list"> 
-                        {% if req.tags.all %}
-                            {% for tag in req.tags.all %}
-                                <span class="tag">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
-                        {% else %}
-                            <span>No tags provided.</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+            <a href="{% url 'dashboard' %}" class="card-top-back">
+                Back to Dashboard
+            </a>
         </div>
+
+        <hr class="card-header-divider">
+
+        <div class="detail-info-grid">
+
+    <!-- Title -->
+    <div class="detail-card hover-card">
+        <div class="label">Title</div>
+        <div class="value">{{ req.title }}</div>
+    </div>
+
+    <!-- Status -->
+    <div class="detail-card hover-card">
+        <div class="label">Status</div>
+        <span class="status-badge {{ req.status|lower }}">
+            {{ req.get_status_display }}
+        </span>
+    </div>
+
+    <!-- Priority -->
+    <div class="detail-card hover-card">
+        <div class="label">Priority</div>
+        <div class="value priority-{{ req.priority }}">
+            <span class="dot"></span>
+            {{ req.get_priority_display }}
+        </div>
+    </div>
+
+    <!-- Date -->
+    <div class="detail-card hover-card">
+        <div class="label">Date</div>
+        <div class="value">{{ req.date|date:"F d, Y" }}</div>
+    </div>
+
+    <!-- Category -->
+    <div class="detail-card hover-card">
+        <div class="label">Category</div>
+        <div class="value">{{ req.category.name }}</div>
+    </div>
+
+    <!-- Tags -->
+    <div class="detail-card hover-card">
+        <div class="label">Tags</div>
+        <div class="tag-list">
+            {% for tag in req.tags.all %}
+                <span class="tag-badge">{{ tag.name }}</span>
+            {% empty %}
+                <span class="no-data">No tags</span>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
         
         {# Full-Width Sections follow the grid #}
 
-        <div class="description-section">
-            <strong>Description:</strong>
-            <div class="description-box">{{ req.description }}</div>
+        <div class="detail-card hover-card full-width-card">
+            <div class="label">Description</div>
+            <div class="value description-text">{{ req.description }}</div>
         </div>
 
         <div class="attachment-section">
@@ -86,7 +92,6 @@
         </div>
 
         <div class="detail-actions">
-            <a href="{% url 'dashboard' %}" class="btn-secondary">← Back to Dashboard</a>
             
             {% if request.user.is_staff %}
             <a href="{% url 'approve_request' req.id %}" class="btn-primary">Update Status / Comment</a>
