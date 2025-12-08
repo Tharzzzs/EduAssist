@@ -1,17 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Create New Request{% endblock %}
+{% block title %}Create Request{% endblock %}
 
 {% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'pos_app/css/add_requestStyle.css' %}">
 {% endblock %}
 
 {% block content %}
 <main class="main-content-area">
-    <div class="card add-request-card">
-        <h1>Create Request</h1>
-        <p class="subtitle">Fill in the details below to submit a new request</p>
+    <div class="add-request-card">
+        
+        <div class="card-header">
+            <div>
+                <h1>New Request</h1>
+                <p class="subtitle">Submit a document request for approval</p>
+            </div>
+            <a href="{% url 'dashboard' %}" class="back-link">
+                Back to Dashboard
+            </a>
+        </div>
 
         <form method="POST" enctype="multipart/form-data" class="request-form">
             {% csrf_token %}
@@ -19,13 +28,13 @@
             <div class="form-grid">
 
                 <div class="form-group form-group-full">
-                    <label for="id_title">Title</label>
-                    <input type="text" id="id_title" name="title" required placeholder="A brief, descriptive summary of your request">
+                    <label for="id_title">Request Title</label>
+                    <input type="text" id="id_title" name="title" class="modern-input" required placeholder="e.g., Transcript for Spring Semester">
                 </div>
 
                 <div class="form-group">
-                    <label for="id_priority">Priority</label>
-                    <select id="id_priority" name="priority">
+                    <label for="id_priority">Priority Level</label>
+                    <select id="id_priority" name="priority" class="modern-select">
                         <option value="low">Low</option>
                         <option value="medium" selected>Medium</option>
                         <option value="high">High</option>
@@ -34,8 +43,13 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="id_tags">Tags</label>
+                    <input type="text" id="id_tags" name="tags" class="modern-input" placeholder="e.g., urgent, finance">
+                </div>
+
+                <div class="form-group">
                     <label for="id_category">Category</label>
-                    <select id="id_category" name="category" required>
+                    <select id="id_category" name="category" class="modern-select" required>
                         <option value="">Select Category</option>
                         {% for cat in categories %}
                             <option value="{{ cat.id }}">{{ cat.name }}</option>
@@ -45,36 +59,37 @@
 
                 <div class="form-group">
                     <label for="id_query_type">Query Type</label>
-                    <select name="category_choice" id="id_query_type" required>
-                        <option value="">Select Query Type</option>
+                    <select name="category_choice" id="id_query_type" class="modern-select" required>
+                        <option value="">Select Category First</option>
                         {% for choice in category_choices %}
                             <option value="{{ choice.id }}" data-category="{{ choice.category.id }}">
-                                {{ choice.value }} ({{ choice.category.name }})
+                                {{ choice.value }}
                             </option>
                         {% endfor %}
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="id_tags">Tags (comma separated)</label>
-                    <input type="text" id="id_tags" name="tags" placeholder="urgent, bug, finance">
+                <div class="form-group form-group-full">
+                    <label for="id_description">Description / Details</label>
+                    <textarea id="id_description" name="description" class="modern-textarea" required placeholder="Provide specific details regarding your request..."></textarea>
                 </div>
 
                 <div class="form-group form-group-full">
-                    <label for="id_description">Description</label>
-                    <textarea id="id_description" name="description" required rows="6" placeholder="Provide full details, steps, or required outcomes."></textarea>
-                </div>
-
-                <div class="form-group form-group-full file-upload-group">
-                    <label for="id_attachment">Attachment (Optional)</label>
-                    <input type="file" id="id_attachment" name="attachment">
+                    <label>Attachment (Optional)</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="id_attachment" name="attachment" class="file-input-hidden" onchange="updateFileName(this)">
+                        <div class="upload-content">
+                            <span class="upload-text" id="fileName">Click to upload file</span>
+                            <span class="upload-hint">PDF, PNG, JPG up to 10MB</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
             <div class="btn-group">
-                <button type="submit" class="button button-save">Submit Request</button>
-                <a href="{% url 'dashboard' %}" class="button button-cancel">Cancel</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-cancel">Cancel</a>
+                <button type="submit" class="btn btn-save">Submit Request</button>
             </div>
         </form>
     </div>
@@ -83,28 +98,43 @@
 
 {% block extra_js %}
 <script>
+    // --- 1. Category/Query Type Filter Logic ---
     const categorySelect = document.getElementById('id_category');
     const choiceSelect = document.getElementById('id_query_type');
+    const allOptions = Array.from(choiceSelect.options); 
 
     categorySelect.addEventListener('change', function() {
         const selectedCategory = this.value;
-        let foundMatch = false;
+        choiceSelect.innerHTML = '<option value="">Select Query Type</option>';
 
-        for (const option of choiceSelect.options) {
-            if (!option.value) continue;
-            option.style.display = 'none';
+        if (selectedCategory) {
+            const matchingOptions = allOptions.filter(option => 
+                option.dataset.category === selectedCategory
+            );
+            matchingOptions.forEach(option => {
+                choiceSelect.appendChild(option);
+            });
+            choiceSelect.disabled = false;
+        } else {
+            choiceSelect.disabled = true;
         }
-
-        for (const option of choiceSelect.options) {
-            if (option.dataset.category === selectedCategory) {
-                option.style.display = 'block';
-                foundMatch = true;
-            }
-        }
-
-        choiceSelect.value = '';
     });
 
-    categorySelect.dispatchEvent(new Event('change'));
+    if (!categorySelect.value) {
+        choiceSelect.disabled = true;
+    }
+
+    // --- 2. File Upload Name Update ---
+    function updateFileName(input) {
+        const fileNameSpan = document.getElementById('fileName');
+        if (input.files && input.files.length > 0) {
+            fileNameSpan.textContent = input.files[0].name;
+            fileNameSpan.style.color = "#2c3e50"; // Dark color for file name
+            fileNameSpan.style.fontWeight = "600";
+        } else {
+            fileNameSpan.textContent = "Click to upload file";
+            fileNameSpan.style.color = "#993333"; // Maroon link color
+        }
+    }
 </script>
 {% endblock %}
