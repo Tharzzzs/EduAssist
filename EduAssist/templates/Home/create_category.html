@@ -1,72 +1,149 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Create Category & Query Type{% endblock %}
+{% block title %}Manage Categories & Queries{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'pos_app/css/dashboardStyle.css' %}">
 <link rel="stylesheet" href="{% static 'pos_app/css/create_category.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-<div class="category-page-container">
-    <div class="back-link">
-        <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
-    </div>
-    <div class="card-grid">
-        <div class="form-column">
-            <h2>Create Category</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <label for="category_name">Category Name</label>
-                <input type="text" id="category_name" name="category_name" placeholder="e.g., Finance, Security" required>
-                <button type="submit" class="btn-submit">Create Category</button>
-            </form>
+<div class="container-fluid">
 
-            <h2>Create Query Type</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <label for="query_name">Query Type Name</label>
-                <input type="text" id="query_name" name="query_name" placeholder="e.g., Tuition, Late Fee" required>
-
-                <label for="category_for_query">Category</label>
-                <select id="category_for_query" name="category_for_query" required>
-                    <option value="">Select Category</option>
-                    {% for cat in categories %}
-                        <option value="{{ cat.id }}">{{ cat.name }}</option>
-                    {% endfor %}
-                </select>
-
-                <button type="submit" class="btn-submit">Create Query Type</button>
-            </form>
+    <div class="header-section">
+        <div class="back-link">
+            <a href="{% url 'dashboard' %}" class="btn-link">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
         </div>
-
-        <div class="list-column">
-            <div class="list-card">
-                <h3>Existing Categories</h3>
-                <ul>
-                    {% for cat in categories %}
-                        <li>
-                            <span>{{ cat.name }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="list-card">
-                <h3>Existing Query Types</h3>
-                <ul>
-                    {% for choice in choices %}
-                        <li>
-                            <span>{{ choice.category.name }}</span>
-                            <span class="query-value">{{ choice.value }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
+        <h2 class="page-title">Manage Categories & Query Types</h2>
     </div>
 
-    
+    <div class="split-grid">
+        
+        <div class="grid-column form-area">
+            
+            <div class="form-card">
+                <div class="card-header-modern">
+                    <i class="fas fa-folder-plus"></i>
+                    <h3>New Category</h3>
+                </div>
+                <div class="card-body">
+                    <p class="form-instruction">Create a broad group (e.g., "Academics", "Finance")</p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="category_name">Category Name</label>
+                            <div class="input-with-icon">
+                                <span class="icon-span"><i class="fas fa-tag"></i></span>
+                                <input type="text" id="category_name" name="category_name" class="modern-input" placeholder="Enter category name..." required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-plus-circle"></i> Create Category
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <div class="card-header-modern">
+                    <i class="fas fa-file-signature"></i>
+                    <h3>New Query Type</h3>
+                </div>
+                <div class="card-body">
+                    <p class="form-instruction">Create a specific request type (e.g., "Transcript")</p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="query_name">Query Type Name</label>
+                            <div class="input-with-icon">
+                                <span class="icon-span"><i class="fas fa-heading"></i></span>
+                                <input type="text" id="query_name" name="query_name" class="modern-input" placeholder="Enter query name..." required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category_for_query">Assign to Category</label>
+                            <div class="input-with-icon">
+                                <span class="icon-span"><i class="fas fa-layer-group"></i></span>
+                                <select id="category_for_query" name="category_for_query" class="modern-input" required>
+                                    <option value="">Select a Category...</option>
+                                    {% for cat in categories %}
+                                        <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <span class="select-arrow">▼</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-check-circle"></i> Create Query Type
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-column data-area">
+            
+            <div class="table-card">
+                <div class="table-header-row">
+                    <i class="fas fa-list"></i> Existing Categories
+                </div>
+                <div class="table-responsive">
+                    <table class="styled-table">
+                        <tbody>
+                            {% for cat in categories %}
+                            <tr>
+                                <td class="main-text">
+                                    <i class="fas fa-folder" style="color:#ffd700; margin-right:8px;"></i>
+                                    {{ cat.name }}
+                                </td>
+                                <td class="action-cell" style="text-align: right;">
+                                    <span class="status-badge">Active</span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="2" class="empty-text">No categories found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-header-row">
+                    <i class="fas fa-list-alt"></i> Existing Query Types
+                </div>
+                <div class="table-responsive">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Query Name</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for choice in choices %}
+                            <tr>
+                                <td class="main-text">{{ choice.value }}</td>
+                                <td>
+                                    <span class="category-tag">{{ choice.category.name }}</span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="2" class="empty-text">No query types found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 </div>
 {% endblock content %}

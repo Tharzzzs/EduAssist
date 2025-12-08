@@ -1,205 +1,296 @@
 /* ======================================= */
-/* 🚀 Create Category Page Styles (DOCUTRACKR Theme) */
-/* Requires color variables from dashboardStyle.css to be loaded first. */
+/* 🚀 Create Category Page Styles          */
+/* Theme: Maroon (#993333) & Gold (#FFCC33)*/
 /* ======================================= */
 
-/* Define the necessary accent color variable for standalone form use */
 :root {
-    --accent-color: var(--dark-text, #212529); 
+    --primary-maroon: #993333;
+    --secondary-gold: #FFCC33;
+    --dark-maroon: #7A2828;
+    --light-bg: #fcfcfc;
+    --border-color: #e0e0e0;
 }
 
-/* --- Page Container (Full Width / Full Page Look) --- */
-.category-page-container {
-    width: 95%; /* Takes up most of the page width */
-    margin: 40px auto 0 auto;
-    background: var(--light-bg); /* White background */
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 0 40px; 
+/* --- Page Layout --- */
+.container-fluid {
+    width: 95%;
+    margin: 0 auto 2rem auto;
+    padding: 2rem;
 }
 
-/* --- Main Grid Layout --- */
-.card-grid {
+.header-section {
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.page-title {
+    color: var(--primary-maroon);
+    font-weight: 800;
+    font-size: 1.8rem;
+    margin: 0.5rem 0 0 0;
+}
+
+.back-link .btn-link {
+    color: #666;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+}
+
+.back-link .btn-link:hover {
+    color: var(--primary-maroon);
+}
+
+/* --- Split Grid Layout --- */
+.split-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 3rem; /* Increased gap for separation */
-    padding: 0;                 /* Removed old padding, fixed spacing */
-    padding-bottom: 2.5rem; 
+    grid-template-columns: 1fr 1.5fr; /* 40% Left, 60% Right */
+    gap: 2.5rem;
     align-items: start;
 }
 
-/* --- Headings using Maroon --- */
-.category-page-container h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary-maroon);
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.category-page-container h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--dark-maroon); /* Darker heading for lists */
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
-
-/* --- Form Column Styling --- */
-.form-column form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem; 
-    padding: 1.5rem; /* Padding inside the form area to separate it from other forms/content */
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    background-color: #fcfcfc; /* Slight background for form area */
-}
-
-.form-column label {
-    font-weight: 600;
-    color: var(--accent-color);
-    margin-bottom: 0.2rem;
-    display: block; 
-}
-
-.form-column input[type="text"], 
-.form-column select {
-    /* FIX: Added box-sizing: border-box to prevent overflow */
-    box-sizing: border-box; 
-    width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    background-color: #fff;
-}
-
-.form-column input[type="text"]:focus, 
-.form-column select:focus {
-    border-color: var(--primary-maroon); 
-    box-shadow: 0 0 0 3px rgba(153, 51, 51, 0.2); 
-    outline: none;
-}
-
-/* --- Submit Button Styling (Maroon) --- */
-.btn-submit {
-    background-color: var(--primary-maroon); 
-    color: white;
-    padding: 0.85rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-top: 0.8rem;
-    transition: background-color 0.3s, transform 0.1s;
-}
-
-.btn-submit:hover {
-    background-color: var(--dark-maroon); 
-    transform: translateY(-1px);
-}
-
-/* --- List Column Styling --- */
-.list-column {
+.grid-column {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-.list-card {
+/* --- FORM CARDS (Left Column) --- */
+.form-card {
     background: #fff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border: 1px solid #eee;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    /* Clean grey border only, no yellow accent */
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.list-column ul {
-    list-style: none; 
-    padding-left: 0;
-    margin: 0;
+.form-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.list-column ul li {
-    padding: 0.7rem 0;
+.card-header-modern {
+    background-color: #fff;
+    padding: 1.2rem 1.5rem;
     border-bottom: 1px solid #f0f0f0;
-    font-size: 0.95rem;
-    color: var(--accent-color);
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    transition: background-color 0.2s;
+    gap: 12px;
 }
 
-.list-column ul li:hover {
-    background-color: #fafafa;
-}
-
-/* Visual cue: Gold bullet */
-.list-column ul li::before {
-    content: "•";
-    color: var(--secondary-gold); /* Gold bullet */
-    font-weight: bold;
+.card-header-modern i {
     font-size: 1.2rem;
-    display: inline-block; 
-    width: 1em;
-    margin-right: 0.5rem;
+    color: var(--primary-maroon);
+    background: #fff5f5; /* Light maroon tint */
+    padding: 10px;
+    border-radius: 8px;
 }
 
-.list-column ul li:last-child {
-    border-bottom: none;
+.card-header-modern h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.list-column .query-value {
+.card-body {
+    padding: 1.5rem 1.8rem;
+}
+
+.form-instruction {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+/* --- Modern Inputs --- */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
     font-weight: 600;
+    color: #444;
+    font-size: 0.9rem;
 }
 
-/* --- Back Link Style --- */
-.back-link {
-    margin-bottom: 20px;        /* ⭐ Clean spacing below */
-    padding: 20px 0 0 0; 
-}
-
-.back-link a {
-    color: var(--primary-maroon); 
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s;
-    display: inline-flex;
+.input-with-icon {
+    position: relative;
+    display: flex;
     align-items: center;
-    gap: 0.5rem;
 }
 
-.back-link a:hover {
+.icon-span {
+    position: absolute;
+    left: 12px;
+    color: #aaa;
+    font-size: 0.9rem;
+    z-index: 10;
+}
+
+.modern-input {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 2.4rem; /* Padding-left allows space for icon */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #333;
+    background-color: #fcfcfc;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    appearance: none;
+}
+
+.modern-input:focus {
+    outline: none;
+    border-color: var(--primary-maroon);
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(153, 51, 51, 0.1);
+}
+
+.select-arrow {
+    position: absolute;
+    right: 15px;
+    color: #888;
+    font-size: 0.7rem;
+    pointer-events: none;
+}
+
+/* --- Buttons --- */
+.btn-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0.9rem;
+    gap: 8px;
+    background-color: var(--primary-maroon);
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 0.5rem;
+}
+
+.btn-block:hover {
+    background-color: var(--dark-maroon);
+    transform: translateY(-1px);
+}
+
+/* --- TABLE CARDS (Right Column) --- */
+.table-card {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.table-header-row {
+    background: var(--primary-maroon);
+    color: #fff;
+    padding: 1rem 1.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.styled-table th, 
+.styled-table td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.styled-table th {
+    background-color: #f8f9fa;
     color: var(--dark-maroon);
-    text-decoration: underline;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e9ecef;
 }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 768px) {
-    .category-page-container {
-        width: 100%;
-        margin-top: 20px;
-        border-radius: 0;
-        box-shadow: none;
-        padding: 0 20px;
-    }
-    .card-grid {
-        grid-template-columns: 1fr;
+.styled-table tr:nth-child(even) {
+    background-color: #fcfcfc;
+}
+
+.styled-table tr:hover {
+    background-color: #fffdf9; /* Light Gold tint */
+}
+
+.main-text {
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.status-badge {
+    background-color: #e6fffa;
+    color: #00b894;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.category-tag {
+    background-color: #fff8e1; /* Pale gold */
+    color: #bfa020; /* Darker gold text */
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #ffeeba;
+}
+
+.empty-text {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* --- Responsive (Mobile) --- */
+@media (max-width: 992px) {
+    .split-grid {
+        grid-template-columns: 1fr; /* Stack everything vertically */
         gap: 2rem;
-        padding: 0; 
     }
-    .form-column form {
+    
+    .container-fluid {
+        width: 100%;
         padding: 1rem;
     }
-    .back-link {
-        padding: 0;
-        margin-bottom: 15px;
+
+    .form-card, .table-card {
+        border-radius: 8px;
     }
 }
