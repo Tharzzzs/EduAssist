@@ -30,7 +30,7 @@ body {
 }
 
 /* ===========================
-   HEADER
+   HEADER CONTAINER
 =========================== */
 header {
     background-color: var(--primary-maroon);
@@ -43,19 +43,17 @@ header {
     width: 100%;
 
     display: flex;
-    justify-content: space-between; /* Keeps logo and menu at ends */
+    justify-content: space-between; 
     align-items: center;
 
     height: 70px;
     z-index: 2000;
-
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 /* ===========================
-   LOGO (BIGGER)
+   1. LOGO
 =========================== */
-
 header .logo {
     padding: 0 4px;
     border-radius: 5px;
@@ -63,6 +61,8 @@ header .logo {
     font-weight: 650;
     letter-spacing: 0.3px;
     text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    /* Prevent logo from shrinking */
+    flex-shrink: 0;
 }
 
 .edu {
@@ -74,21 +74,18 @@ header .logo {
 }
 
 /* ===========================
-   NAVIGATION (CENTERED)
+   2. NAVIGATION (CENTERED)
 =========================== */
 .main-nav {
-    /* FIX: Push navigation to the center by using auto margins on both sides. */
     margin-left: auto; 
     margin-right: auto;
-    /* Ensure it remains a flex container if needed for responsive layout */
     display: flex; 
     align-items: center;
 }
 
 .main-nav a {
     color: white;
-    /* Removed margin-left to prevent extra space before the first link */
-    margin-left: 20px; /* Use a consistent margin between links */
+    margin-left: 20px; 
     padding-right: 5px; 
     text-decoration: none;
     font-weight: 500;
@@ -97,7 +94,6 @@ header .logo {
     transition: var(--hover-transition);
 }
 
-/* FIX: Remove the margin on the very first element inside .main-nav */
 .main-nav a:first-child {
     margin-left: 0;
 }
@@ -113,20 +109,140 @@ header .logo {
 }
 
 /* ===========================
-   USER MENU / DROPDOWN
+   3. RIGHT ACTIONS (NOTIF + MENU)
 =========================== */
+.header-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between bell and burger menu */
+    flex-shrink: 0;
+}
+
+/* --- Notification System --- */
+.notification-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.notif-toggle-btn {
+    font-size: 20px;
+    padding: 8px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: var(--hover-transition);
+    position: relative; /* Anchor for the badge */
+}
+
+.notif-toggle-btn:hover {
+    color: var(--secondary-gold);
+    transform: scale(1.1);
+}
+
+/* The red number badge */
+.badge {
+    position: absolute;
+    top: 0;
+    right: -2px;
+    background-color: var(--secondary-gold);
+    color: var(--primary-maroon);
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 4px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-maroon);
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- Notification Dropdown Specifics --- */
+.notif-dropdown {
+    width: 320px; /* Wider than the user menu */
+    right: -60px; /* Shift slightly to align better */
+    padding: 0;
+}
+
+.notif-dropdown::before {
+    right: 74px; /* Align the little arrow above the bell */
+}
+
+.notif-header {
+    background-color: #f8f9fa;
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #444;
+    border-bottom: 1px solid #eee;
+}
+
+.notif-item {
+    display: flex !important; /* Override default block */
+    align-items: flex-start !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #f1f1f1;
+    gap: 12px;
+    white-space: normal; /* Allow text to wrap */
+}
+
+.notif-item:last-child {
+    border-bottom: none;
+}
+
+.notif-item:hover {
+    background-color: #fff9f9 !important;
+}
+
+/* Highlight unread items */
+.notif-item.unread {
+    background-color: #fcf1f1;
+    border-left: 3px solid var(--primary-maroon);
+}
+
+.notif-icon {
+    margin-top: 3px;
+    color: var(--primary-maroon);
+    font-size: 1.1rem;
+}
+
+.notif-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.notif-msg {
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.notif-time {
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.no-notif {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* --- User Menu Container --- */
 .user-menu-container {
     position: relative;
     display: flex;
     align-items: center;
-    /* Prevent the user menu from being pushed out by the centered nav */
-    flex-shrink: 0; 
 }
 
-/* Three-line menu button */
 .menu-toggle-btn {
     font-size: 28px;
-    padding: 10px 14px;
+    padding: 8px;
     color: white;
     background: none;
     border: none;
@@ -139,10 +255,12 @@ header .logo {
     border-radius: 6px;
 }
 
-/* ===== Dropdown Menu ===== */
+/* ===========================
+   SHARED DROPDOWN STYLES
+=========================== */
 .dropdown-menu {
     position: absolute;
-    top: calc(100% + 12px);
+    top: calc(100% + 14px); /* Distance from button */
     right: 0;
     background: #fff;
     border-radius: 12px;
@@ -154,19 +272,22 @@ header .logo {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.08);
+    z-index: 2100; /* Higher than header */
 }
 
+/* The little triangle arrow on top */
 .dropdown-menu::before {
     content: '';
     position: absolute;
     top: -6px;
-    right: 18px;
+    right: 18px; /* Default right position for user menu */
     width: 12px;
     height: 12px;
     background: #fff;
     transform: rotate(45deg);
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     border-top: 1px solid rgba(0, 0, 0, 0.08);
+    z-index: 2101;
 }
 
 .dropdown-menu.show {
@@ -210,14 +331,15 @@ header .logo {
 }
 
 
-/* ===== Responsive Design ===== */
+/* ===========================
+   RESPONSIVE DESIGN
+=========================== */
 @media (max-width: 968px) {
     header {
         padding: 14px 24px;
     }
     
     .main-nav {
-        /* On smaller screens, allow the default responsive behavior */
         margin-left: 20px; 
         margin-right: 20px;
     }
@@ -230,35 +352,36 @@ header .logo {
 
 @media (max-width: 768px) {
     header {
-        /* Fallback to wrapping on small screens */
         flex-wrap: wrap;
         gap: 12px;
+        height: auto; /* Allow height to grow */
+        padding-bottom: 10px;
     }
     
     .logo {
         font-size: 1.5rem;
     }
     
+    .header-right-actions {
+        order: 2; /* Keep user actions on the right */
+    }
+
     .main-nav {
-        /* When wrapping, force full width and center content */
-        order: 3;
+        order: 3; /* Move nav below logo and actions */
         width: 100%;
         justify-content: center;
         flex-wrap: wrap;
         margin-left: 0;
         margin-right: 0;
+        margin-top: 10px;
     }
     
     .main-nav a {
-        margin-left: 15px; /* Adjust spacing when links wrap */
+        margin-left: 15px; 
     }
 
     .main-nav a:first-child {
         margin-left: 0;
-    }
-    
-    .user-menu-container {
-        order: 2;
     }
 }
 
@@ -268,8 +391,18 @@ header .logo {
         font-size: 0.85rem;
     }
     
+    /* Make dropdowns fit small screens */
     .dropdown-menu {
-        right: -10px;
+        right: -10px; 
         min-width: 200px;
+    }
+
+    .notif-dropdown {
+        width: 280px; /* Slightly smaller width */
+        right: -80px; /* Shift to stay on screen */
+    }
+    
+    .notif-dropdown::before {
+        right: 94px; /* Re-align arrow */
     }
 }

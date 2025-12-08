@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 User = get_user_model()
 
@@ -78,3 +79,15 @@ class Request(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.get_status_display()}"
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    # Use a string 'Request' if the Request model is in this same file to avoid errors
+    related_request = models.ForeignKey('Request', on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f"Notification for {self.user.username}"

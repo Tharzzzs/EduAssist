@@ -1,93 +1,180 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'pos_app/css/header.css' %}">
-<header>
 
+<header>
     <div class="logo">
         <span class="edu">Edu</span><span class="highlight-assist">Assist</span>
     </div>
 
     <nav class="main-nav">
-    {% if user.is_staff %}
-        <a href="{% url 'dashboard' %}"
-           class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-           All Requests
-        </a>
-
-        <a href="{% url 'admin_dashboard' %}"
-           class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
-           Admin Panel
-        </a>
-
-        <a href="{% url 'create_category' %}"
-           class="{% if request.resolver_match.url_name == 'create_category' %}active{% endif %}">
-           Create Category
-        </a>
-    {% else %}
-        <a href="{% url 'dashboard' %}"
-           class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-           My Requests
-        </a>
-        <a href="{% url 'add_request' %}"
-           class="btn btn-primary {% if request.resolver_match.url_name == 'add_request' %}active{% endif %}">
-           Add Request
-        </a>
-    {% endif %}
-
-   
-</nav>
-
-    <div class="user-menu-container">
-        <button class="menu-toggle-btn" onclick="toggleMenu()">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-
-        <div class="dropdown-menu" id="userDropdown">
-            
-            <a href="{% url 'profile' %}">
-                <i class="fa-solid fa-user-circle"></i> Profile
+        {% if user.is_staff %}
+            <a href="{% url 'dashboard' %}"
+               class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+               All Requests
             </a>
-            
-            <a href="{% url 'settings' %}">
-                <i class="fa-solid fa-gear"></i> Settings
+            <a href="{% url 'admin_dashboard' %}"
+               class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+               Admin Panel
             </a>
-            
-            {% if user.is_staff %}
-                <a href="{% url 'all_feedback' %}" >
-                    <i class="fa-solid fa-comment"></i> All Feedback
-                </a>
-            {% else %}
-                <a href="{% url 'submit_feedback' %}" >
-                    <i class="fa-solid fa-comment"></i> Give Feedback
-                </a>
-            {% endif %}
+            <a href="{% url 'create_category' %}"
+               class="{% if request.resolver_match.url_name == 'create_category' %}active{% endif %}">
+               Create Category
+            </a>
+        {% else %}
+            <a href="{% url 'dashboard' %}"
+               class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+               My Requests
+            </a>
+            <a href="{% url 'add_request' %}"
+               class="btn btn-primary {% if request.resolver_match.url_name == 'add_request' %}active{% endif %}">
+               Add Request
+            </a>
+        {% endif %}
+    </nav>
 
-            <a href="{% url 'logout' %}" class="logout-link">
-                <i class="fa-solid fa-sign-out-alt"></i> Logout
-            </a>
+    <div class="header-right-actions">
+        
+        <div class="notification-container">
+            <button class="notif-toggle-btn" onclick="toggleNotifications()">
+                <i class="fa-solid fa-bell"></i>
+                {% if unread_notifications_count > 0 %}
+                    <span class="badge">{{ unread_notifications_count }}</span>
+                {% endif %}
+            </button>
+
+            <div class="dropdown-menu notif-dropdown" id="notifDropdown">
+                <div class="notif-header">Notifications</div>
+                
+                {% if recent_notifications %}
+                    {% for notif in recent_notifications %}
+                        <a href="{% if notif.related_request %}{% url 'request_detail' notif.related_request.id %}{% else %}#{% endif %}" 
+                           class="notif-item {% if not notif.is_read %}unread{% endif %}">
+                            <div class="notif-icon">
+                                <i class="fa-solid fa-info-circle"></i>
+                            </div>
+                            <div class="notif-content">
+                                <p class="notif-msg">{{ notif.message }}</p>
+                                <span class="notif-time">{{ notif.created_at|timesince }} ago</span>
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-notif">No new notifications</div>
+                {% endif %}
+            </div>
         </div>
+
+        <div class="user-menu-container">
+            <button class="menu-toggle-btn" onclick="toggleMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="{% url 'profile' %}">
+                    <i class="fa-solid fa-user-circle"></i> Profile
+                </a>
+                
+                <a href="{% url 'settings' %}">
+                    <i class="fa-solid fa-gear"></i> Settings
+                </a>
+                
+                {% if user.is_staff %}
+                    <a href="{% url 'all_feedback' %}">
+                        <i class="fa-solid fa-comment"></i> All Feedback
+                    </a>
+                {% else %}
+                    <a href="{% url 'submit_feedback' %}">
+                        <i class="fa-solid fa-comment"></i> Give Feedback
+                    </a>
+                {% endif %}
+
+                <a href="{% url 'logout' %}" class="logout-link">
+                    <i class="fa-solid fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+
     </div>
 </header>
 
 <script>
-function toggleMenu() {
-    const dropdown = document.getElementById('userDropdown');
-    // Check if the dropdown exists before toggling the class
-    if (dropdown) {
-        dropdown.classList.toggle('show');
-    }
-}
-
-// Close the dropdown if the user clicks outside of the menu button area
-window.onclick = function(event) {
-    // We use .closest() to check if the clicked element or any of its parents 
-    // matches the menu toggle button.
-    if (!event.target.closest('.menu-toggle-btn')) {
+    function toggleMenu() {
         const dropdown = document.getElementById('userDropdown');
-        if (dropdown && dropdown.classList.contains('show')) {
-            dropdown.classList.remove('show');
+        const notifDropdown = document.getElementById('notifDropdown');
+        
+        // Close notification if it's open
+        if (notifDropdown && notifDropdown.classList.contains('show')) {
+            notifDropdown.classList.remove('show');
+        }
+
+        if (dropdown) {
+            dropdown.classList.toggle('show');
         }
     }
-}
 
+    function toggleNotifications() {
+        const notifDropdown = document.getElementById('notifDropdown');
+        const userDropdown = document.getElementById('userDropdown');
+
+        // Close user menu if it's open
+        if (userDropdown && userDropdown.classList.contains('show')) {
+            userDropdown.classList.remove('show');
+        }
+
+        if (notifDropdown) {
+            notifDropdown.classList.toggle('show');
+            
+            // NEW: If opening the dropdown, mark items as read
+            if (notifDropdown.classList.contains('show')) {
+                markAsRead();
+            }
+        }
+    }
+
+    function markAsRead() {
+        const badge = document.querySelector('.notification-container .badge');
+
+        // Only run if a badge exists (meaning there are unread items)
+        if (badge) {
+            fetch("{% url 'mark_notifications_read' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 1. Remove the red number badge
+                    badge.remove();
+
+                    // 2. Remove the 'unread' style from list items
+                    const unreadItems = document.querySelectorAll('.notif-item.unread');
+                    unreadItems.forEach(item => {
+                        item.classList.remove('unread');
+                    });
+                }
+            })
+            .catch(error => console.error('Error marking notifications read:', error));
+        }
+    }
+
+    // Close dropdowns if clicked outside
+    window.onclick = function(event) {
+        if (!event.target.closest('.menu-toggle-btn') && !event.target.closest('.user-menu-container')) {
+            const userDropdown = document.getElementById('userDropdown');
+            if (userDropdown && userDropdown.classList.contains('show')) {
+                userDropdown.classList.remove('show');
+            }
+        }
+
+        if (!event.target.closest('.notif-toggle-btn') && !event.target.closest('.notification-container')) {
+            const notifDropdown = document.getElementById('notifDropdown');
+            if (notifDropdown && notifDropdown.classList.contains('show')) {
+                notifDropdown.classList.remove('show');
+            }
+        }
+    }
 </script>

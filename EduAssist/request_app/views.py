@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.template.loader import render_to_string
 
-from .models import Request, Category, CategoryChoice, Tag
+from .models import Request, Category, CategoryChoice, Tag, Notification
 from .forms import SearchForm, RequestForm
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import RequestSerializer, TagSerializer
 from eduassist_app.email_service import send_notification_email
+
 # from eduassist_app.utils import send_notification_email
 # ------------------------
 # Dashboard (Updated for Priority Sorting)
@@ -304,6 +305,9 @@ def create_category(request):
 # ------------------------
 # Approve/Update Request Status (Admin Action)
 # ------------------------
+# ------------------------
+# Approve/Update Request Status (Admin Action)
+# ------------------------
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def approve_request(request, id):
@@ -318,10 +322,23 @@ def approve_request(request, id):
         req.status = new_status
         req.save()
 
-        # Only send email if status changed
+        # Only send email AND notification if status changed
         if is_status_changed:
 
-            # SELECT TEMPLATE + SUBJECT
+            # =======================================================
+            # 1. CREATE NOTIFICATION (This was missing!)
+            # =======================================================
+            try:
+                Notification.objects.create(
+                    user=req.user,  # Alert the Student
+                    message=f"Your request '{req.title}' has been updated to {req.get_status_display()}.",
+                    related_request=req
+                )
+            except Exception as e:
+                print(f"Error creating notification: {e}")
+            # =======================================================
+
+            # 2. SELECT TEMPLATE + SUBJECT
             if new_status == "approved":
                 template_file = "request_approved"
                 email_subject = f"Your Request '{req.title}' Has Been Approved"
@@ -333,12 +350,12 @@ def approve_request(request, id):
                     f"Your Request '{req.title}' Status Updated to {req.get_status_display()}"
                 )
 
-            # SEND EMAIL
+            # 3. SEND EMAIL
             try:
                 send_notification_email(
                     subject=email_subject,
                     to_email=req.user.email,
-                    template_name=template_file,   # <-- FIXED
+                    template_name=template_file,
                     context_data={
                         "name": req.user.first_name,
                         "title": req.title,
@@ -365,3 +382,13 @@ def approve_request(request, id):
             "status_choices": Request.STATUS_CHOICES,
         },
     )
+
+@login_required
+def mark_notifications_read(request):
+    if request.method == "POST":
+        # Update all unread notifications for this user to read=True
+        Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+        return JsonResponse({'success': True})
+    
+    return JsonResponse({'success': False}, status=400)
+

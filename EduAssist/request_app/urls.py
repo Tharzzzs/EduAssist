@@ -13,7 +13,7 @@ urlpatterns = [
     path('add/', views.add_request, name='add_request'),
     path('create-category/', views.create_category, name='create_category'),
     path('requests/<int:id>/approve/', views.approve_request, name='approve_request'),
-
+    path('notifications/mark-read/', views.mark_notifications_read, name='mark_notifications_read'),
     # # Categories and Tags (if you have function-based views for them)
     # path('categories/', views.category_list, name='category-list'),
     # path('tags/', views.tag_list, name='tag-list'),
