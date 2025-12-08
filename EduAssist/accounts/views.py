@@ -213,3 +213,37 @@ def change_role_view(request, user_id):
         return redirect("admin_dashboard")
 
     return redirect("admin_dashboard")
+
+@login_required
+def delete_user_view(request, user_id):
+
+    current = request.user.profile
+    target = get_object_or_404(Profile, id=user_id)
+    target_user = target.user
+
+    # Only ADMIN or SUPERADMIN may delete
+    if current.role not in ["ADMIN", "SUPERADMIN"]:
+        return HttpResponseForbidden("You are not allowed to delete users.")
+
+    # cant delete own account
+    if request.user == target_user:
+        return HttpResponseForbidden("You cannot delete your own account.")
+
+    # ADMIN restrictions:
+    # -> Admin can ONLY delete STUDENTS
+    if current.role == "ADMIN":
+        if target.role != "STUDENT":
+            return HttpResponseForbidden("Admins can only delete student accounts.")
+
+    # SUPERADMIN restrictions:
+    # -> Superadmin cannot delete other superadmins
+    if current.role == "SUPERADMIN" and target.role == "SUPERADMIN":
+        return HttpResponseForbidden("Superadmins cannot delete each other.")
+
+    # Perform deletion
+    if request.method == "POST":
+        target_user.delete()
+        messages.success(request, "User deleted successfully.")
+        return redirect('admin_dashboard')
+
+    return redirect('admin_dashboard')

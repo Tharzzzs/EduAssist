@@ -254,3 +254,63 @@ table td:nth-child(5) {
     text-align: center;
     white-space: nowrap;
 }
+
+.action-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.delete-btn {
+    background: #b60000;
+    border: none;
+    padding: 0.45rem 0.9rem;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.delete-btn:hover {
+    background: #8d0000;
+    transform: scale(1.05);
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+
+.delete-btn {
+    background: var(--primary-maroon);
+    color: white;
+    padding: 0.55rem 0.9rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.delete-btn:hover {
+    background: var(--dark-maroon);
+    transform: scale(1.05);
+}
+
+.delete-btn i {
+    color: white;
+}
+
+/* Disabled delete button — grey + no click */
+.delete-btn.disabled-delete {
+    background: #ccc !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    transform: none !important;
+}
+
+.delete-btn.disabled-delete i {
+    color: #666 !important;
+}
