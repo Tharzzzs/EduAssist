@@ -13,6 +13,8 @@ from .forms import ProfileForm, SearchForm
 from django.http import HttpResponseForbidden
 from feedback.models import Feedback
 import re
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
 
 def login_view(request):
     # Initialize an empty dictionary for context
@@ -55,7 +57,7 @@ def register_view(request):
         
         required_domain = "@cit.edu"
         
-        # Combined regex pattern for mandatory complexity requirements (8 chars, 1 lower, 1 upper, 1 special)
+        # Combined regex pattern for mandatory complexity requirements
         complexity_pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=-]).{8,}$')
 
         # --- VALIDATION CHAIN ---
@@ -74,7 +76,8 @@ def register_view(request):
             
         else:
             try:
-                # 1. Run all password validators from settings.py (including CommonPasswordValidator)
+                # 1. Run all password validators from settings.py
+                # We create a temporary user object because some validators check user attributes (like username similarity)
                 validate_password(password, user=User(username=username))
                 
                 # 2. If validation passes, check if username exists
