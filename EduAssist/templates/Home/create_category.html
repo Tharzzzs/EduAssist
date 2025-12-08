@@ -10,7 +10,9 @@
 
 {% block content %}
 <div class="category-page-container">
-    
+    <div class="back-link">
+        <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+    </div>
     <div class="card-grid">
         <div class="form-column">
             <h2>Create Category</h2>
@@ -65,8 +67,6 @@
         </div>
     </div>
 
-    <div class="back-link">
-        <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
-    </div>
+    
 </div>
 {% endblock content %}
