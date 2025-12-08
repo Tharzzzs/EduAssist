@@ -54,6 +54,7 @@
             <div class="quick-actions-card">
                 <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
                 <form method="get" action="{% url 'change_password' %}">
+                    <input type="hidden" name="next" value="profile">
                     <button type="submit" class="action-btn">
                         <i class="fas fa-key"></i>
                         Change Password

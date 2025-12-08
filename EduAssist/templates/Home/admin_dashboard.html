@@ -26,7 +26,7 @@
                     <th>Contact</th>
                     <th>Program</th>
                     <th>Year Level</th>
-                    <th>Role</th>
+                    <th>Manage</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,20 +37,44 @@
                     <td data-label="Program">{{ profile.program }}</td>
                     <td data-label="Year Level">{{ profile.year_level }}</td>
                     <td>
-                        {% if request.user.profile.role == "SUPERADMIN" %}
-                        <!-- Clickable -->
-                        <span class="role-badge changeRoleBtn"
-                              data-id="{{ profile.id }}"
-                              data-role="{{ profile.role }}"
-                              data-name="{{ profile.user.username }}">
-                              {{ profile.role }}
-                              <i class="fas fa-edit"></i>
-                        </span>
-                        {% else %}
-                        <!-- NON-clickable for ADMIN -->
-                        <span class="role-badge disabled">{{ profile.role }}</span>
-                        {% endif %}
-                    </td>
+    <div class="action-buttons">
+
+        {% if request.user.profile.role == "SUPERADMIN" %}
+        <span class="role-badge changeRoleBtn"
+              data-id="{{ profile.id }}"
+              data-role="{{ profile.role }}"
+              data-name="{{ profile.user.username }}">
+            {{ profile.role }}
+            <i class="fas fa-edit"></i>
+        </span>
+        {% else %}
+        <span class="role-badge disabled">{{ profile.role }}</span>
+        {% endif %}
+
+        {% if request.user.id == profile.user.id %}
+            <!-- Can't delete yourself -->
+            <button class="delete-btn disabled-delete">
+                <i class="fas fa-trash"></i>
+            </button>
+
+        {% elif request.user.profile.role == "ADMIN" and profile.role in "ADMIN SUPERADMIN" %}
+            <!-- Admin cannot delete Admin or Superadmin -->
+            <button class="delete-btn disabled-delete">
+                <i class="fas fa-trash"></i>
+            </button>
+
+        {% else %}
+            <!-- Normal delete -->
+            <button class="delete-btn"
+                    data-id="{{ profile.id }}"
+                    data-name="{{ profile.user.username }}">
+                <i class="fas fa-trash"></i>
+            </button>
+        {% endif %}
+
+    </div>
+</td>
+
                 </tr>
                 {% endfor %}
             </tbody>
@@ -82,6 +106,22 @@
         </form>
     </div>
 </div>
+
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3>Confirm Delete</h3>
+        <p id="deleteMessage"></p>
+
+        <form method="POST" id="deleteForm">
+            {% csrf_token %}
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button type="submit" class="btn-confirm">Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -149,5 +189,27 @@ document.querySelectorAll(".changeRoleBtn").forEach(btn => {
 function closeModal() {
     modal.style.display = "none"
 }
+
+// DELETE MODAL
+let deleteModal = document.getElementById("deleteModal");
+let deleteForm = document.getElementById("deleteForm");
+let deleteMessage = document.getElementById("deleteMessage");
+
+document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+        let id = this.dataset.id;
+        let username = this.dataset.name;
+
+        deleteMessage.innerHTML = `Are you sure you want to delete <b>${username}</b>?`;
+        deleteForm.action = `/accounts/delete-user/${id}/`;
+
+        deleteModal.style.display = "flex";
+    });
+});
+
+function closeDeleteModal() {
+    deleteModal.style.display = "none";
+}
+
 </script>
 {% endblock %}

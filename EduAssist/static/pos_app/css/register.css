@@ -3,6 +3,7 @@
     --primary-color: #750000;
     --secondary-accent: #000000;
     --light-background: #ffffff;
+    --secondary-gold: #FFCC33;
     --page-background: #f8f9fa; /* Subtle off-white page background */
     --dark-text: #212529; 
     --light-text: #6c757d;
@@ -48,7 +49,7 @@ body {
 }
 
 .highlight-logo {
-    color: var(--primary-color);
+    color: var(--secondary-gold);
 }
 
 .title {
