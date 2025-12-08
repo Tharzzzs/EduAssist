@@ -63,6 +63,7 @@
                     View Profile
                 </a>
                 <form method="get" action="{% url 'change_password' %}">
+                    <input type="hidden" name="next" value="settings">
                     <button type="submit" class="action-btn">
                         <i class="fas fa-key"></i>
                         Change Password
