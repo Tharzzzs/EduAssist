@@ -2,6 +2,7 @@
 :root {
     --primary-color: #750000;
     --secondary-accent: #000000;
+    --secondary-gold: #FFCC33;  
     --light-background: #ffffff;
     --page-background: #f8f9fa; /* Subtle off-white page background */
     --dark-text: #212529; 
@@ -42,7 +43,7 @@ body {
 }
 
 .highlight-logo {
-    color: var(--primary-color);
+    color: var(--secondary-gold);
 }
 
 .title {

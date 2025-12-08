@@ -155,59 +155,6 @@
                     </div>
                 </div>
 
-                <!-- Privacy Section -->
-                <div class="settings-card" id="privacy">
-                    <div class="card-header">
-                        <div class="header-icon">
-                            <i class="fas fa-user-shield"></i>
-                        </div>
-                        <div>
-                            <h2>Privacy & Security</h2>
-                            <p>Manage your privacy preferences</p>
-                        </div>
-                    </div>
-
-                    <div class="card-body">
-                        <div class="toggle-group">
-                            <div class="toggle-item">
-                                <div class="toggle-content">
-                                    <i class="fas fa-eye"></i>
-                                    <div>
-                                        <h4>Profile Visibility</h4>
-                                        <p>Allow others to view your profile information</p>
-                                    </div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input 
-                                        type="checkbox" 
-                                        name="profile_visible" 
-                                        {% if settings.profile_visible %}checked{% endif %}
-                                    >
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-
-                            <div class="toggle-item">
-                                <div class="toggle-content">
-                                    <i class="fas fa-share-nodes"></i>
-                                    <div>
-                                        <h4>Data Sharing</h4>
-                                        <p>Allow sharing of anonymized data for analytics</p>
-                                    </div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input 
-                                        type="checkbox" 
-                                        name="allow_data_sharing" 
-                                        {% if settings.allow_data_sharing %}checked{% endif %}
-                                    >
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Save Button -->
                 <div class="form-actions">
                     <button type="submit" class="btn-save">
