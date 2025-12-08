@@ -19,7 +19,7 @@
         <form method="post" class="auth-form">
             {% csrf_token %}
             
-            <input type="text" name="username" placeholder="Username" required 
+            <input type="text" name="username" placeholder="Full Name" required 
                 value="{{ request.POST.username }}"
                 class="{% if login_error %} input-error{% endif %}"
             >
