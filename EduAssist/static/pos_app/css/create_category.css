@@ -11,10 +11,11 @@
 /* --- Page Container (Full Width / Full Page Look) --- */
 .category-page-container {
     width: 95%; /* Takes up most of the page width */
-    margin: auto;
+    margin: 40px auto 0 auto;
     background: var(--light-bg); /* White background */
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 0 40px; 
 }
 
 /* --- Main Grid Layout --- */
@@ -22,7 +23,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr; 
     gap: 3rem; /* Increased gap for separation */
-    padding: 2.5rem; /* Padding applied here to distance content from container edges */
+    padding: 0;                 /* Removed old padding, fixed spacing */
+    padding-bottom: 2.5rem; 
     align-items: start;
 }
 
@@ -160,8 +162,8 @@
 
 /* --- Back Link Style --- */
 .back-link {
-    padding: 0 2.5rem 2.5rem; /* Padding at the bottom, outside the grid */
-    text-align: left;
+    margin-bottom: 20px;        /* ⭐ Clean spacing below */
+    padding: 20px 0 0 0; 
 }
 
 .back-link a {
@@ -183,19 +185,21 @@
 @media (max-width: 768px) {
     .category-page-container {
         width: 100%;
-        margin: 0;
+        margin-top: 20px;
         border-radius: 0;
         box-shadow: none;
+        padding: 0 20px;
     }
     .card-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
-        padding: 1.5rem; 
+        padding: 0; 
     }
     .form-column form {
         padding: 1rem;
     }
     .back-link {
-        padding: 0 1.5rem 1.5rem;
+        padding: 0;
+        margin-bottom: 15px;
     }
 }
