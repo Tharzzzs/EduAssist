@@ -46,7 +46,8 @@ header {
     justify-content: space-between; 
     align-items: center;
 
-    height: 70px;
+    /* Kept height strictly at 70px */
+    height: 70px; 
     z-index: 2000;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
@@ -61,7 +62,6 @@ header .logo {
     font-weight: 650;
     letter-spacing: 0.3px;
     text-shadow: 0 1px 2px rgba(0,0,0,0.25);
-    /* Prevent logo from shrinking */
     flex-shrink: 0;
 }
 
@@ -81,21 +81,20 @@ header .logo {
     margin-right: auto;
     display: flex; 
     align-items: center;
+    /* Added Gap to space out links without adding height */
+    gap: 50px; 
 }
 
 .main-nav a {
     color: white;
-    margin-left: 20px; 
-    padding-right: 5px; 
     text-decoration: none;
     font-weight: 500;
     font-size: 16px;
     opacity: 0.9;
     transition: var(--hover-transition);
-}
-
-.main-nav a:first-child {
-    margin-left: 0;
+    /* Removed margin-left, relying on gap instead */
+    margin-left: 0; 
+    padding: 5px 0; /* Minimal padding to keep height low */
 }
 
 .main-nav a:hover {
@@ -114,7 +113,7 @@ header .logo {
 .header-right-actions {
     display: flex;
     align-items: center;
-    gap: 20px; /* Space between bell and burger menu */
+    gap: 20px; 
     flex-shrink: 0;
 }
 
@@ -133,7 +132,7 @@ header .logo {
     border: none;
     cursor: pointer;
     transition: var(--hover-transition);
-    position: relative; /* Anchor for the badge */
+    position: relative; 
 }
 
 .notif-toggle-btn:hover {
@@ -141,7 +140,6 @@ header .logo {
     transform: scale(1.1);
 }
 
-/* The red number badge */
 .badge {
     position: absolute;
     top: 0;
@@ -160,15 +158,15 @@ header .logo {
     align-items: center;
 }
 
-/* --- Notification Dropdown Specifics --- */
+/* --- Notification Dropdown --- */
 .notif-dropdown {
-    width: 320px; /* Wider than the user menu */
-    right: -60px; /* Shift slightly to align better */
+    width: 320px;
+    right: -60px;
     padding: 0;
 }
 
 .notif-dropdown::before {
-    right: 74px; /* Align the little arrow above the bell */
+    right: 74px;
 }
 
 .notif-header {
@@ -181,12 +179,12 @@ header .logo {
 }
 
 .notif-item {
-    display: flex !important; /* Override default block */
+    display: flex !important;
     align-items: flex-start !important;
     padding: 12px 16px !important;
     border-bottom: 1px solid #f1f1f1;
     gap: 12px;
-    white-space: normal; /* Allow text to wrap */
+    white-space: normal;
 }
 
 .notif-item:last-child {
@@ -197,7 +195,6 @@ header .logo {
     background-color: #fff9f9 !important;
 }
 
-/* Highlight unread items */
 .notif-item.unread {
     background-color: #fcf1f1;
     border-left: 3px solid var(--primary-maroon);
@@ -260,7 +257,7 @@ header .logo {
 =========================== */
 .dropdown-menu {
     position: absolute;
-    top: calc(100% + 14px); /* Distance from button */
+    top: calc(100% + 14px);
     right: 0;
     background: #fff;
     border-radius: 12px;
@@ -272,15 +269,14 @@ header .logo {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.08);
-    z-index: 2100; /* Higher than header */
+    z-index: 2100;
 }
 
-/* The little triangle arrow on top */
 .dropdown-menu::before {
     content: '';
     position: absolute;
     top: -6px;
-    right: 18px; /* Default right position for user menu */
+    right: 18px;
     width: 12px;
     height: 12px;
     background: #fff;
@@ -330,22 +326,19 @@ header .logo {
     color: var(--secondary-dark)
 }
 
-
 /* ===========================
    RESPONSIVE DESIGN
 =========================== */
 @media (max-width: 968px) {
     header {
-        padding: 14px 24px;
+        padding: 0 24px; /* Reduced side padding slightly */
     }
     
     .main-nav {
-        margin-left: 20px; 
-        margin-right: 20px;
+        gap: 25px; /* Reduced gap on smaller screens */
     }
     
     .main-nav a {
-        padding: 8px 14px;
         font-size: 0.9rem;
     }
 }
@@ -354,8 +347,8 @@ header .logo {
     header {
         flex-wrap: wrap;
         gap: 12px;
-        height: auto; /* Allow height to grow */
-        padding-bottom: 10px;
+        height: auto; 
+        padding: 10px 24px;
     }
     
     .logo {
@@ -363,46 +356,31 @@ header .logo {
     }
     
     .header-right-actions {
-        order: 2; /* Keep user actions on the right */
+        order: 2; 
     }
 
     .main-nav {
-        order: 3; /* Move nav below logo and actions */
+        order: 3; 
         width: 100%;
         justify-content: center;
         flex-wrap: wrap;
-        margin-left: 0;
-        margin-right: 0;
         margin-top: 10px;
-    }
-    
-    .main-nav a {
-        margin-left: 15px; 
-    }
-
-    .main-nav a:first-child {
-        margin-left: 0;
+        gap: 15px; 
     }
 }
 
 @media (max-width: 480px) {
-    .main-nav a {
-        padding: 8px 12px;
-        font-size: 0.85rem;
-    }
-    
-    /* Make dropdowns fit small screens */
     .dropdown-menu {
         right: -10px; 
         min-width: 200px;
     }
 
     .notif-dropdown {
-        width: 280px; /* Slightly smaller width */
-        right: -80px; /* Shift to stay on screen */
+        width: 280px;
+        right: -80px; 
     }
     
     .notif-dropdown::before {
-        right: 94px; /* Re-align arrow */
+        right: 94px;
     }
 }
