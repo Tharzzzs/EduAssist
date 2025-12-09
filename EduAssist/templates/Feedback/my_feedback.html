@@ -7,13 +7,64 @@
 </head>
 
 <div class="container">
-    <h2>My Feedback</h2>
-    <ul>
+    <!-- Page Header with Give Feedback Button -->
+    <div class="page-header">
+        <h2><i class="fa-solid fa-comments"></i> My Feedback</h2>
+        <a href="{% url 'submit_feedback' %}" class="btn-give-feedback">
+            <i class="fa-solid fa-plus"></i> Give Feedback
+        </a>
+    </div>
+
+    <!-- Feedback Statistics -->
+    {% if feedbacks %}
+    <div class="feedback-stats">
+        <div class="stat-card">
+            <i class="fa-solid fa-comment-dots"></i>
+            <div class="stat-value">{{ feedbacks|length }}</div>
+            <div class="stat-label">Total Feedback</div>
+        </div>
+        <div class="stat-card">
+            <i class="fa-solid fa-star"></i>
+            <div class="stat-value">{{ average_rating|default:"N/A" }}</div>
+            <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="stat-card">
+            <i class="fa-solid fa-calendar"></i>
+            <div class="stat-value">{{ latest_feedback_date|date:"M d"|default:"N/A" }}</div>
+            <div class="stat-label">Latest Feedback</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Feedback List Header -->
+    <div class="feedback-list-header">
+        <h3>Your Feedback History</h3>
+        {% if feedbacks %}
+        <div class="sort-options">
+            <label for="sortFeedback" style="font-size: 0.9rem; color: #666;">Sort by:</label>
+            <select id="sortFeedback">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="highest">Highest Rating</option>
+                <option value="lowest">Lowest Rating</option>
+            </select>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Feedback List -->
+    <ul id="feedbackList">
         {% for f in feedbacks %}
-            <li>
+            <li data-rating="{{ f.rating }}" data-date="{{ f.created_at|date:'Y-m-d' }}">
                 <div class="feedback-content">
-                    <strong><i class="fa-solid fa-star"></i> {{ f.rating }} Stars</strong> 
-                    — {{ f.comment|truncatechars:70 }}
+                    <div>
+                        <strong><i class="fa-solid fa-star"></i> {{ f.rating }} Stars</strong>
+                        <span class="feedback-date">
+                            <i class="fa-regular fa-clock"></i> {{ f.created_at|date:"M d, Y" }}
+                        </span>
+                        <br>
+                        <span style="color: #555; margin-top: 8px; display: inline-block;">{{ f.comment|truncatechars:100 }}</span>
+                    </div>
                 </div>
                 <div class="actions">
                     <a href="{% url 'edit_feedback' f.id %}" class="btn-secondary" style="margin: 0;">
@@ -25,22 +76,38 @@
                 </div>
             </li>
         {% empty %}
-            <li style="text-align: center; color: var(--text-color-muted); padding: 40px;">No feedback submitted yet.</li>
+            <li class="empty-state">
+                <i class="fa-solid fa-inbox"></i>
+                <p>You haven't submitted any feedback yet.</p>
+                <a href="{% url 'submit_feedback' %}" class="btn-give-feedback">
+                    <i class="fa-solid fa-plus"></i> Submit Your First Feedback
+                </a>
+            </li>
         {% endfor %}
     </ul>
     
-    <div style="margin-top: 30px;">
-        <a href="{% url 'profile' %}" class="btn-secondary">Back to Profile</a>
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="{% url 'profile' %}" class="btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Profile
+        </a>
     </div>
 </div>
 
+<!-- Delete Modal -->
 <div id="deleteModal">
     <div class="modal-content">
-        <p>Are you sure you want to delete this feedback?</p>
-        <form id="deleteForm" method="post">
+        <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; color: var(--error-red); margin-bottom: 15px;"></i>
+        <p><strong>Are you sure you want to delete this feedback?</strong></p>
+        <p style="font-size: 0.9rem; color: #666;">This action cannot be undone.</p>
+        <form id="deleteForm" method="post" style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
             {% csrf_token %}
-            <button type="submit" class="btn-primary">Yes, Delete</button>
-            <button type="button" id="cancelDelete" class="btn-secondary">Cancel</button>
+            <button type="submit" class="btn-primary">
+                <i class="fa-solid fa-check"></i> Yes, Delete
+            </button>
+            <button type="button" id="cancelDelete" class="btn-secondary">
+                <i class="fa-solid fa-times"></i> Cancel
+            </button>
         </form>
     </div>
 </div>
@@ -49,12 +116,15 @@
     const modal = document.getElementById('deleteModal');
     const deleteForm = document.getElementById('deleteForm');
     const cancelBtn = document.getElementById('cancelDelete');
+    const feedbackList = document.getElementById('feedbackList');
+    const sortSelect = document.getElementById('sortFeedback');
 
+    // Delete functionality
     document.querySelectorAll('.deleteBtn').forEach(btn => {
         btn.addEventListener('click', function() {
             const url = this.dataset.url;
-            deleteForm.action = url; // Dynamically set form action to Django delete URL
-            modal.style.display = 'flex'; // Display modal
+            deleteForm.action = url;
+            modal.style.display = 'flex';
         });
     });
 
@@ -62,10 +132,32 @@
         modal.style.display = 'none';
     });
 
-    // Close modal if user clicks outside modal content
     window.addEventListener('click', function(e) {
         if (e.target === modal) {
             modal.style.display = 'none';
         }
     });
+
+    // Sort functionality
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            const sortValue = this.value;
+            const items = Array.from(feedbackList.querySelectorAll('li:not(.empty-state)'));
+            
+            items.sort((a, b) => {
+                if (sortValue === 'newest') {
+                    return new Date(b.dataset.date) - new Date(a.dataset.date);
+                } else if (sortValue === 'oldest') {
+                    return new Date(a.dataset.date) - new Date(b.dataset.date);
+                } else if (sortValue === 'highest') {
+                    return parseInt(b.dataset.rating) - parseInt(a.dataset.rating);
+                } else if (sortValue === 'lowest') {
+                    return parseInt(a.dataset.rating) - parseInt(b.dataset.rating);
+                }
+            });
+
+            // Re-append sorted items
+            items.forEach(item => feedbackList.appendChild(item));
+        });
+    }
 </script>

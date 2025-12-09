@@ -59,9 +59,10 @@
             </div>
             
             <div class="action-buttons">
-                <a href="{% url 'my_feedback' %}" class="btn btn-secondary">
-                    <span class="back-icon">←</span> Back
-                </a>
+                <button type="button" class="btn btn-secondary" id="backBtn">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+
                 <button type="submit" class="btn btn-primary">
                     Save Changes <span class="send-icon">→</span>
                 </button>
@@ -70,4 +71,10 @@
     </div>
 </div>
 
+<script>
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = '{% url "my_feedback" %}';
+    });
+    
+</script>
 {% endblock %}

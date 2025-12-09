@@ -18,6 +18,11 @@
 
         <form method="post">
             {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="errorlist nonfield">
+            {{ form.non_field_errors }}
+                </div>
+             {% endif %}
 
             <div class="form-fields">
                 <div class="rating-section">
@@ -51,9 +56,10 @@
             </div>
 
             <div class="action-buttons">
-                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
-                    <span class="back-icon">←</span> Back
-                </a>
+                <button type="button" class="btn btn-secondary" id="backBtn">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+
                 <button type="submit" class="btn btn-primary">
                     Send Feedback <span class="send-icon">→</span>
                 </button>
@@ -61,4 +67,11 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = '{% url "my_feedback" %}';
+    });
+    
+</script>
 {% endblock %}

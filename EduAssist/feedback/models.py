@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from request_app.models import Request
+
 
 class Feedback(models.Model):
     RATING_CHOICES = [
@@ -11,6 +13,7 @@ class Feedback(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="feedback", null=True, blank=True)
     rating = models.IntegerField(choices=RATING_CHOICES)
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

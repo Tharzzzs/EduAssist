@@ -1,14 +1,21 @@
 from django import forms
 from .models import Feedback
+from request_app.models import Request
 
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
-        fields = ['rating', 'comment']
+        fields = ['request', 'rating', 'comment']
         widgets = {
             'rating': forms.RadioSelect(),
             'comment': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Write your feedback...'}),
         }
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['request'].queryset = Request.objects.filter(user=user)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -17,3 +24,5 @@ class FeedbackForm(forms.ModelForm):
 
         if rating == 1 and not comment:
             raise forms.ValidationError("Please provide a comment to help us improve.")
+
+        return cleaned_data
